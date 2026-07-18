@@ -1,0 +1,29 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Log a weigh-in
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+Container_Boundary(web, "Ledger Web App") {
+  Component(page, "LogWeighInPage", "Angular component", "Stepper, note field, and save action")
+  Component(sheet, "QuickWeighInSheet", "Angular component", "Bottom sheet opened from the floating action control")
+  Component(client, "WeighInsApi", "Angular HTTP service", "Typed weigh-ins client in ledger/api")
+}
+Container_Boundary(api, "Ledger API") {
+  Component(ctrl, "WeighInsController", "ASP.NET Core controller", "Exposes /api/v1/weigh-ins endpoints")
+  Component(validator, "LogWeighInCommandValidator", "FluentValidation", "Validates weight bounds and note length per L2-015")
+  Component(handler, "LogWeighInCommandHandler", "MediatR handler", "Upserts the owner's entry for one calendar day")
+  Component(entity, "WeighIn", "Domain entity", "Owns UserId, Date, WeightKg, and Note")
+  ComponentDb(db, "Ledger Database", "SQL Server", "Persists weigh-ins with a unique userId+date")
+}
+
+Rel(member, page, "Logs today's weight using", "HTTPS")
+Rel(member, sheet, "Logs a quick weigh-in using", "HTTPS")
+Rel(page, client, "Builds the typed command")
+Rel(sheet, client, "Builds the typed command")
+Rel(client, ctrl, "Calls POST /api/v1/weigh-ins", "JSON/HTTPS")
+Rel(ctrl, validator, "Validates input with per L2-015")
+Rel(ctrl, handler, "Sends LogWeighInCommand")
+Rel(handler, entity, "Loads and upserts one per day per L2-016")
+Rel(handler, db, "Persists the encoded note as text per L2-068", "EF Core")
+@enduml

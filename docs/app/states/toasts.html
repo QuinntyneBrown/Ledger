@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Toasts &amp; snackbars — Ledger states</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <link rel="stylesheet" href="../../../design-system/assets/docs.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+  <style>
+    .state-list { display:flex; flex-direction:column; gap:var(--space-4); max-width:520px; }
+    .state-list .au-toast { position:static; animation:none; }
+    .trigger-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:var(--space-3); }
+  </style>
+</head>
+<body class="gallery-body">
+  <div class="gallery-wrap">
+    <div class="doc-breadcrumb"><a href="../../index.html">Home</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> <a href="../index.html">Ledger</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Toasts</div>
+    <div class="au-row-flex au-between au-wrap" style="gap:var(--space-4);margin-bottom:var(--space-7)">
+      <div><h1 class="doc-title" style="font-size:var(--text-3xl)">Toasts &amp; snackbars</h1><p class="doc-lead">Transient feedback for every action.</p></div>
+      <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+    </div>
+
+    <div class="au-card au-card--pad-lg" style="margin-bottom:var(--space-8)">
+      <span class="au-eyebrow">Live · tap to fire</span>
+      <div class="trigger-grid" style="margin-top:var(--space-4)">
+        <button class="au-btn au-btn--outlined" data-toast="Weight logged — 74.8 kg" data-toast-action="Undo">Weight logged + Undo</button>
+        <button class="au-btn au-btn--outlined" data-toast="Goal updated">Goal updated</button>
+        <button class="au-btn au-btn--outlined" data-toast="Entry deleted" data-toast-type="info" data-toast-action="Undo">Entry deleted</button>
+        <button class="au-btn au-btn--outlined" data-toast="Couldn’t save — you’re offline" data-toast-type="error" data-toast-action="Retry">Save failed</button>
+        <button class="au-btn au-btn--outlined" data-toast="Reminder set for 8:00 AM" data-toast-type="info">Reminder set</button>
+        <button class="au-btn au-btn--outlined" data-toast="Data exported">Data exported</button>
+      </div>
+    </div>
+
+    <span class="au-eyebrow" style="margin-bottom:var(--space-4)">Every variant</span>
+    <div class="state-list">
+      <div class="au-toast au-toast--success"><svg class="au-icon au-toast-icon"><use href="#i-check-circle"></use></svg><span class="au-toast-msg">Weight logged — 74.8 kg</span><button class="au-toast-action">Undo</button></div>
+      <div class="au-toast au-toast--success"><svg class="au-icon au-toast-icon"><use href="#i-check-circle"></use></svg><span class="au-toast-msg">Goal updated</span></div>
+      <div class="au-toast au-toast--info"><svg class="au-icon au-toast-icon"><use href="#i-info"></use></svg><span class="au-toast-msg">Entry deleted</span><button class="au-toast-action">Undo</button></div>
+      <div class="au-toast au-toast--info"><svg class="au-icon au-toast-icon"><use href="#i-bell"></use></svg><span class="au-toast-msg">Reminder set for 8:00 AM</span></div>
+      <div class="au-toast au-toast--error"><svg class="au-icon au-toast-icon"><use href="#i-alert-circle"></use></svg><span class="au-toast-msg">Couldn’t save — you’re offline</span><button class="au-toast-action">Retry</button></div>
+      <div class="au-toast au-toast--error"><svg class="au-icon au-toast-icon"><use href="#i-alert-circle"></use></svg><span class="au-toast-msg">That weight looks off — check the value</span></div>
+      <div class="au-toast au-toast--success"><svg class="au-icon au-toast-icon"><use href="#i-trophy"></use></svg><span class="au-toast-msg">New milestone — −2.5 kg!</span><button class="au-toast-action">View</button></div>
+    </div>
+
+    <div class="doc-callout" style="margin-top:var(--space-8);max-width:640px">
+      <svg class="au-icon"><use href="#i-info"></use></svg>
+      <div class="doc-callout-body">Fire toasts anywhere with <code>data-toast="…"</code> (optional <code>data-toast-type</code> and <code>data-toast-action</code>) or <code>window.Aurora.toast(msg, {type, action})</code>. They auto-dismiss and stack bottom-center.</div>
+    </div>
+  </div>
+</body>
+</html>

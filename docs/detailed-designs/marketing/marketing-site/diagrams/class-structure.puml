@@ -1,0 +1,125 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Marketing site
+
+enum Theme {
+  Light
+  Dark
+  System
+}
+
+enum ConsentChoice {
+  Granted
+  Declined
+  Unset
+}
+
+class MarketingSite {
+  +LandingPage Landing
+  +LegalPage[] LegalPages
+  +RobotsAndSitemap Discovery
+}
+
+class LandingPage {
+  +HeroSection Hero
+  +FeatureSection[] Features
+  +SeoMetadata Seo
+  +Render(theme: Theme): void
+}
+
+class HeroSection {
+  +string Headline
+  +string SubHeadline
+  +CtaLink PrimaryCta
+  +CtaLink SecondaryCta
+}
+
+class FeatureSection {
+  +string Title
+  +string Body
+  +string ImageAsset
+}
+
+class CtaLink {
+  +string Label
+  +string AppAuthRoute
+  +Activate(): void
+}
+
+class LegalPage {
+  +string Slug
+  +string Title
+  +SeoMetadata Seo
+}
+
+class SeoMetadata {
+  +string Title
+  +string Description
+  +string CanonicalUrl
+  +OpenGraph Og
+  +TwitterCard Twitter
+  +string StructuredData
+}
+
+class OpenGraph {
+  +string Title
+  +string Description
+  +string Image
+  +string Type
+}
+
+class TwitterCard {
+  +string Card
+  +string Title
+  +string Image
+}
+
+class ConsentBanner {
+  +Present(): void
+  +Record(choice: ConsentChoice): void
+}
+
+class ConsentStore {
+  +Read(): ConsentRecord
+  +Record(choice: ConsentChoice): ConsentRecord
+}
+
+class ConsentRecord {
+  +ConsentChoice Choice
+  +DateTime DecidedAt
+}
+
+class AnalyticsLoader {
+  +LoadIfConsented(record: ConsentRecord): void
+}
+
+class RobotsAndSitemap {
+  +string Robots
+  +string Sitemap
+}
+
+MarketingSite *-- LandingPage : owns
+MarketingSite *-- "*" LegalPage : owns
+MarketingSite *-- RobotsAndSitemap : owns
+LandingPage *-- HeroSection : composes
+LandingPage *-- "*" FeatureSection : composes
+LandingPage --> SeoMetadata : emits
+LandingPage --> Theme : renders in
+LegalPage --> SeoMetadata : emits
+HeroSection --> "2" CtaLink : offers
+SeoMetadata --> OpenGraph : includes
+SeoMetadata --> TwitterCard : includes
+ConsentBanner ..> ConsentStore : records via
+ConsentStore --> ConsentRecord : persists
+ConsentRecord --> ConsentChoice : holds
+AnalyticsLoader ..> ConsentRecord : gated by
+@enduml

@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Theming — Aurora Design System</title>
+  <meta name="description" content="Aurora's token architecture — primitives to semantic to component — how light and dark work through [data-theme], and how to add a brand.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+  <style>
+    /* Token-tier flow */
+    .pat-tiers { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: stretch; gap: var(--space-3); }
+    .pat-tier { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface-1); padding: var(--space-5); }
+    .pat-tier-k { font-family: var(--font-mono); font-size: var(--text-2xs); text-transform: uppercase; letter-spacing: var(--tracking-wider); color: var(--text-lo); }
+    .pat-tier-t { font-weight: var(--weight-bold); font-size: var(--text-base); margin: var(--space-1) 0 var(--space-3); }
+    .pat-tier code { display: block; font-family: var(--font-mono); font-size: var(--text-2xs); color: var(--text-mid); padding: 4px 0; }
+    .pat-tier code b { color: var(--brand-strong); font-weight: var(--weight-semibold); }
+    .pat-tier-arrow { display: grid; place-items: center; color: var(--text-lo); }
+    @media (max-width: 720px) {
+      .pat-tiers { grid-template-columns: 1fr; }
+      .pat-tier-arrow { transform: rotate(90deg); }
+    }
+
+    /* Per-example theme scope — the light overrides re-declared for a nested element */
+    .pat-theme-scope { background: var(--canvas); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-7); transition: background var(--dur-base) var(--ease-standard); width: min(360px, 100%); }
+    .pat-theme-scope[data-theme="light"] {
+      color-scheme: light;
+      --canvas: #f7f8fb; --canvas-inset: #eef0f6;
+      --surface-1: #ffffff; --surface-2: #ffffff; --surface-3: #f2f4f9; --surface-sunken: #eceff5;
+      --border: rgba(18,21,31,0.1); --border-strong: rgba(18,21,31,0.2); --border-faint: rgba(18,21,31,0.05); --divider: rgba(18,21,31,0.08);
+      --text-hi: #141720; --text-mid: #515a70; --text-lo: #7c8498;
+      --brand: var(--gold-600); --brand-strong: var(--gold-700); --brand-hover: var(--gold-500); --brand-press: var(--gold-700);
+      --brand-subtle: rgba(217,134,15,0.12); --brand-subtle-hover: rgba(217,134,15,0.18); --brand-ring: rgba(217,134,15,0.4);
+      --good: var(--teal-600); --good-subtle: rgba(13,157,140,0.12); --good-text: var(--teal-700);
+      --bad: var(--coral-600); --bad-subtle: rgba(226,61,61,0.1); --bad-text: var(--coral-600);
+      --aurora-soft: linear-gradient(120deg, rgba(124,92,255,0.1), rgba(20,194,171,0.1), rgba(245,165,36,0.12));
+      --shadow-1: 0 1px 2px rgba(18,21,31,0.08), 0 1px 1px rgba(18,21,31,0.04);
+      --shadow-3: 0 14px 30px rgba(18,21,31,0.1), 0 3px 8px rgba(18,21,31,0.06);
+      --highlight-top: inset 0 1px 0 rgba(255,255,255,0.7);
+      --shadow-glow-brand: 0 0 0 1px rgba(217,134,15,0.18), 0 10px 28px rgba(245,165,36,0.22);
+    }
+    /* Alternate-brand scope — reskinned by overriding semantic brand tokens only */
+    .pat-brand-scope { --brand: var(--violet-500); --brand-strong: var(--violet-300); --brand-hover: var(--violet-400); --brand-press: var(--violet-600); --brand-subtle: rgba(124,92,255,0.16); --brand-ring: rgba(124,92,255,0.5); --text-on-gold: #ffffff; --shadow-glow-brand: 0 0 0 1px rgba(124,92,255,0.25), 0 8px 30px rgba(124,92,255,0.3); }
+    .pat-swatchflip { display: flex; gap: var(--space-2); }
+    .pat-swatchflip i { width: 34px; height: 34px; border-radius: var(--radius-sm); border: 1px solid var(--border); display: block; }
+  </style>
+</head>
+<body class="doc-body">
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation"><svg class="au-icon"><use href="#i-menu"></use></svg></button>
+    <a class="doc-brand" href="../index.html"><span class="doc-brandmark"></span><span class="doc-brand-name">Aurora<small>Design System</small></span></a>
+    <nav class="doc-header-nav">
+      <a href="../foundations/getting-started.html">Foundations</a>
+      <a href="../components/button.html">Components</a>
+      <a href="theming.html" class="is-active">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <!-- ============ CANONICAL SIDEBAR ============ -->
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="../foundations/getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="../foundations/color.html">Color</a>
+        <a class="doc-navlink" href="../foundations/typography.html">Typography</a>
+        <a class="doc-navlink" href="../foundations/spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="../foundations/elevation.html">Elevation</a>
+        <a class="doc-navlink" href="../foundations/shape.html">Shape</a>
+        <a class="doc-navlink" href="../foundations/iconography.html">Iconography</a>
+        <a class="doc-navlink" href="../foundations/motion.html">Motion</a>
+        <a class="doc-navlink" href="../foundations/accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="../components/button.html">Button</a>
+        <a class="doc-navlink" href="../components/text-field.html">Text field</a>
+        <a class="doc-navlink" href="../components/select.html">Select</a>
+        <a class="doc-navlink" href="../components/switch.html">Switch</a>
+        <a class="doc-navlink" href="../components/checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="../components/slider.html">Slider</a>
+        <a class="doc-navlink" href="../components/date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="../components/card.html">Card</a>
+        <a class="doc-navlink" href="../components/list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="../components/chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="../components/avatar.html">Avatar</a>
+        <a class="doc-navlink" href="../components/progress.html">Progress</a>
+        <a class="doc-navlink" href="../components/gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="../components/chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="../components/dialog.html">Dialog</a>
+        <a class="doc-navlink" href="../components/snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="../components/banner.html">Banner</a>
+        <a class="doc-navlink" href="../components/tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="../components/empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="../components/tabs.html">Tabs</a>
+        <a class="doc-navlink" href="../components/navigation.html">Navigation</a>
+        <a class="doc-navlink" href="../components/milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="data-viz.html">Data visualization</a>
+        <a class="doc-navlink is-active" href="theming.html">Theming</a>
+        <a class="doc-navlink" href="motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Patterns <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Theming</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-palette"></use></svg> Pattern · Foundations</span>
+          <h1 class="doc-title">Theming</h1>
+          <p class="doc-lead">Every color, shadow and radius in the product resolves through a <strong style="color:var(--text-hi)">three-tier token pipeline</strong>. Components never see a hex value — they reference intent. Flip one attribute and the entire surface re-themes, because the meaning stays constant while the values underneath swap out.</p>
+        </div>
+
+        <!-- ARCHITECTURE -->
+        <section class="doc-section">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-layers"></use></svg> The token pipeline</h2>
+          <p class="doc-section-lead">Tokens flow one direction. <strong>Primitives</strong> are raw values with no opinion. <strong>Semantic</strong> tokens give them a job and are the only layer that changes between themes. <strong>Components</strong> consume semantic tokens exclusively — so a component written once works in every theme and brand, forever.</p>
+
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">theming/pipeline</span></div>
+            <div class="doc-canvas doc-canvas--stack" style="padding:var(--space-7)">
+              <div class="pat-tiers">
+                <div class="pat-tier">
+                  <div class="pat-tier-k">Tier 1</div>
+                  <div class="pat-tier-t">Primitives</div>
+                  <code>--gold-400: <b>#f9c349</b></code>
+                  <code>--teal-400: <b>#37e0c8</b></code>
+                  <code>--ink-800: <b>#12151f</b></code>
+                  <div class="au-caption au-mt-2">Raw. Never referenced by components.</div>
+                </div>
+                <div class="pat-tier-arrow"><svg class="au-icon"><use href="#i-arrow-right"></use></svg></div>
+                <div class="pat-tier">
+                  <div class="pat-tier-k">Tier 2</div>
+                  <div class="pat-tier-t">Semantic</div>
+                  <code>--brand: <b>var(--gold-400)</b></code>
+                  <code>--good: <b>var(--teal-400)</b></code>
+                  <code>--surface-1: <b>var(--ink-800)</b></code>
+                  <div class="au-caption au-mt-2">The layer that flips per theme.</div>
+                </div>
+                <div class="pat-tier-arrow"><svg class="au-icon"><use href="#i-arrow-right"></use></svg></div>
+                <div class="pat-tier">
+                  <div class="pat-tier-k">Tier 3</div>
+                  <div class="pat-tier-t">Component</div>
+                  <code>.au-btn--primary {</code>
+                  <code>&nbsp;&nbsp;background: <b>var(--brand)</b></code>
+                  <code>}</code>
+                  <div class="au-caption au-mt-2">Consumes intent, never hex.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-info"></use></svg>
+            <div class="doc-callout-body"><strong>The rule that makes it work.</strong> A component may only reference Tier 2. The moment a component hardcodes <code>#f9c349</code> or reaches for <code>--gold-400</code> directly, it stops being themeable — and it will look wrong in light mode or under a new brand.</div>
+          </div>
+        </section>
+
+        <!-- LIGHT VS DARK -->
+        <section class="doc-section">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-sun"></use></svg> Light &amp; dark</h2>
+          <p class="doc-section-lead">Ledger is dark-first, so the default <code>:root</code> carries the dark semantic values. Light is a pure override block, <code>:root[data-theme="light"]</code>, that re-points the same semantic names at lighter values. Nothing else in the codebase knows which theme is live.</p>
+
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>:root, :root[data-theme="dark"] {   /* default — dark */
+  --surface-1: var(--ink-800);
+  --text-hi:   #f4f6fb;
+  --brand:     var(--gold-400);
+}
+:root[data-theme="light"] {          /* override — light */
+  --surface-1: #ffffff;
+  --text-hi:   #141720;
+  --brand:     var(--gold-600);      /* deeper gold for contrast on white */
+}</code></pre>
+          </div>
+        </section>
+
+        <!-- SAME CARD, PER-EXAMPLE TOGGLE -->
+        <section class="doc-section">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-refresh"></use></svg> One card, both themes</h2>
+          <p class="doc-section-lead">Here's the payoff. The card below is authored <strong>once</strong> with semantic tokens. The toggle flips <code>data-theme</code> on the card's wrapper only — every value inside re-resolves, while the rest of this (dark) page doesn't move. Same markup, two skins.</p>
+
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">theming/scoped-toggle</span>
+              <div class="doc-example-tools">
+                <button class="au-btn au-btn--sm au-btn--outlined" data-scope-theme="themeDemo"><svg class="au-icon"><use href="#i-moon"></use></svg> <span data-scope-label>Light</span></button>
+              </div>
+            </div>
+            <div class="doc-canvas">
+              <div class="pat-theme-scope" id="themeDemo" data-theme="light">
+                <div class="au-card au-card--raised">
+                  <div class="au-card-head">
+                    <span class="au-card-title"><svg class="au-icon" style="width:16px"><use href="#i-activity"></use></svg> This week</span>
+                    <span class="au-chip au-chip--good"><svg class="au-icon"><use href="#i-trending-down"></use></svg> −0.4</span>
+                  </div>
+                  <div class="au-stat">
+                    <span class="au-stat-value">74.9<small>kg</small></span>
+                    <span class="au-caption">1.9 kg from your goal</span>
+                  </div>
+                  <div class="au-progress au-mt-4"><div class="au-progress-bar" style="width:73%"></div></div>
+                  <button class="au-btn au-btn--primary au-btn--block au-mt-4"><svg class="au-icon"><use href="#i-plus"></use></svg> Log weight</button>
+                </div>
+                <div class="au-caption" style="text-align:center;margin-top:var(--space-4)">This surface owns its theme — the page around it stays dark.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;!-- Global toggle (persists to localStorage) — provided by aurora.js --&gt;
+&lt;button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"&gt;
+  &lt;svg class="au-icon"&gt;&lt;use href="#i-sun"/&gt;&lt;/svg&gt;
+&lt;/button&gt;
+
+&lt;!-- Scoped: set data-theme on any wrapper to re-theme just that subtree --&gt;
+&lt;div data-theme="light"&gt; … a fully light island inside a dark page … &lt;/div&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- ADD A BRAND -->
+        <section class="doc-section">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-sparkles"></use></svg> Adding a brand</h2>
+          <p class="doc-section-lead">Because components read intent, reskinning is a Tier-2 job: override the handful of <code>--brand-*</code> tokens (and the aurora stops) and every button, chip, focus ring and gauge follows — without touching a single component rule. Below, the same components run gold and a violet alt-brand side by side.</p>
+
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">theming/brand</span></div>
+            <div class="doc-canvas" style="gap:var(--space-8)">
+              <div class="au-stack au-stack-4 au-center" style="text-align:center">
+                <div class="pat-swatchflip"><i style="background:var(--gold-400)"></i><i style="background:var(--gold-300)"></i></div>
+                <div class="au-caption au-mono">--brand: gold-400</div>
+                <button class="au-btn au-btn--primary"><svg class="au-icon"><use href="#i-target"></use></svg> Set goal</button>
+                <span class="au-chip au-chip--brand"><svg class="au-icon"><use href="#i-flame"></use></svg> 12-day streak</span>
+              </div>
+              <div class="au-stack au-stack-4 au-center pat-brand-scope" style="text-align:center">
+                <div class="pat-swatchflip"><i style="background:var(--violet-500)"></i><i style="background:var(--violet-300)"></i></div>
+                <div class="au-caption au-mono">--brand: violet-500</div>
+                <button class="au-btn au-btn--primary"><svg class="au-icon"><use href="#i-target"></use></svg> Set goal</button>
+                <span class="au-chip au-chip--brand"><svg class="au-icon"><use href="#i-flame"></use></svg> 12-day streak</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>/* An alternate brand — override intent, not components */
+.theme-violet {
+  --brand:        var(--violet-500);
+  --brand-strong: var(--violet-300);
+  --brand-subtle: rgba(124, 92, 255, 0.16);
+  --brand-ring:   rgba(124, 92, 255, 0.5);
+  --aurora-start: var(--violet-600);   /* re-tune the signature gradient */
+}
+/* .au-btn--primary, .au-chip--brand, gauges, focus rings — all follow. */</code></pre>
+          </div>
+        </section>
+
+        <!-- DO / DON'T -->
+        <section class="doc-section">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-check-circle"></use></svg> Do &amp; don't</h2>
+          <div class="doc-dodont">
+            <div class="doc-guide doc-guide--do">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-check"></use></svg> Do</div>
+              <div class="doc-guide-body">
+                <pre style="margin:0;font-family:var(--font-mono);font-size:var(--text-xs);color:var(--good-text);line-height:1.7">color: var(--text-hi);
+background: var(--surface-1);
+border: 1px solid var(--border);</pre>
+              </div>
+              <div class="doc-guide-note">Reference semantic tokens — the component adapts to every theme.</div>
+            </div>
+            <div class="doc-guide doc-guide--dont">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-x"></use></svg> Don't</div>
+              <div class="doc-guide-body">
+                <pre style="margin:0;font-family:var(--font-mono);font-size:var(--text-xs);color:var(--bad-text);line-height:1.7">color: #f4f6fb;
+background: var(--ink-800);
+border: 1px solid #ffffff17;</pre>
+              </div>
+              <div class="doc-guide-note">Don't hardcode hex or reach for Tier-1 primitives — both break light mode.</div>
+            </div>
+          </div>
+        </section>
+
+        <div class="doc-callout">
+          <svg class="au-icon"><use href="#i-info"></use></svg>
+          <div class="doc-callout-body"><strong>Accessibility.</strong> Each theme sets <code>color-scheme</code> so form controls and scrollbars match, and both palettes are tuned to hold WCAG AA contrast for text and UI. The global toggle persists the choice to <code>localStorage</code> and respects the system preference on first visit.</div>
+        </div>
+
+        <!-- PAGER -->
+        <nav class="doc-pager">
+          <a href="data-viz.html"><small>Previous</small><span>Data visualization</span></a>
+          <a class="doc-pager-next" href="motion-feedback.html"><small>Next</small><span>Motion &amp; feedback</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Per-example theme scope toggle (page-scoped; independent of the global data-theme-toggle)
+    document.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-scope-theme]");
+      if (!btn) return;
+      var scope = document.getElementById(btn.getAttribute("data-scope-theme"));
+      if (!scope) return;
+      var next = scope.getAttribute("data-theme") === "light" ? "dark" : "light";
+      scope.setAttribute("data-theme", next);
+      var label = btn.querySelector("[data-scope-label]");
+      if (label) label.textContent = next === "light" ? "Light" : "Dark";
+      var use = btn.querySelector("use");
+      if (use) use.setAttribute("href", next === "light" ? "#i-moon" : "#i-sun");
+    });
+  </script>
+
+</body>
+</html>

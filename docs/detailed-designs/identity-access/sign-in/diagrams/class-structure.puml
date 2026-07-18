@@ -1,0 +1,86 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Sign in
+
+class SignInCommand {
+  +string Email
+  +string Password
+}
+
+class SignInCommandHandler {
+  +Handle(command: SignInCommand): Task<Result<AuthTokens>>
+}
+
+class RefreshTokenCommand {
+  +string RefreshToken
+}
+
+class RefreshTokenCommandHandler {
+  +Handle(command: RefreshTokenCommand): Task<Result<AuthTokens>>
+}
+
+class AuthTokens {
+  +string AccessToken
+  +DateTime AccessTokenExpiresAt
+  +string RefreshToken
+}
+
+class User {
+  +Guid Id
+  +string Email
+  +string PasswordHash
+  +bool EmailVerified
+}
+
+class RefreshToken {
+  +Guid Id
+  +Guid UserId
+  +string TokenHash
+  +DateTime ExpiresAt
+  +DateTime RevokedAt
+  +bool IsActive(now: DateTime): bool
+  +Revoke(): void
+}
+
+interface IPasswordHasher {
+  +Verify(password: string, hash: string): bool
+}
+
+interface ITokenService {
+  +IssueAccessToken(user: User): string
+  +IssueRefreshToken(user: User): RefreshToken
+}
+
+interface ILockoutPolicy {
+  +IsLocked(email: string): bool
+  +RecordFailure(email: string): void
+  +Reset(email: string): void
+}
+
+interface IAuditLog {
+  +Record(event: string, actor: string): Task
+}
+
+SignInCommandHandler ..> SignInCommand : handles
+SignInCommandHandler --> User : loads
+SignInCommandHandler ..> IPasswordHasher : verifies password
+SignInCommandHandler ..> ILockoutPolicy : checks and records per L2-009
+SignInCommandHandler ..> ITokenService : issues tokens per L2-004
+SignInCommandHandler ..> IAuditLog : records per L2-072
+SignInCommandHandler --> AuthTokens : returns
+RefreshTokenCommandHandler ..> RefreshTokenCommand : handles
+RefreshTokenCommandHandler --> RefreshToken : validates and rotates
+RefreshTokenCommandHandler ..> ITokenService : issues access token per L2-008
+RefreshTokenCommandHandler --> AuthTokens : returns
+ITokenService --> RefreshToken : creates
+User "1" --> "*" RefreshToken : owns
+@enduml

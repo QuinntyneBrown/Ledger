@@ -1,0 +1,66 @@
+@startuml
+title UML sequence behaviour — Earn badges: evaluate the catalog on a weigh-in change
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "LogWeighInPage" as page
+  participant "WeighInsApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "WeighInsController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "LogWeighInCommandHandler" as weighInHandler
+  participant "EvaluateMilestonesCommandHandler" as handler
+  participant "BadgeCatalog" as catalog
+  participant "Milestone" as entity
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+
+actor -> page : Save today's weight
+page -> client : Build typed request
+client -> controller : HTTPS request POST /api/v1/weigh-ins
+controller -> controller : Authenticate and authorize owner
+controller -> weighInHandler : Send LogWeighInCommand
+weighInHandler -> db : Upsert entry for the day per L2-016
+db --> weighInHandler : Commit
+weighInHandler -> handler : Send EvaluateMilestonesCommand after the weigh-in change
+handler -> db : Load owner weigh-ins, goal, streak, and earned milestones
+db --> handler : Owner-scoped state
+handler -> catalog : Evaluate the eight rules per L2-034
+note right of catalog
+  Weight-loss rules measure start weight
+  to the lowest sustained value per L2-034
+end note
+catalog --> handler : Newly satisfied badge types
+loop each newly satisfied badge not already earned
+  handler -> entity : Award once with EarnedAt per L2-034
+  entity --> handler : Earned milestone
+end
+note right of handler
+  Already-earned badges are never revoked
+  (earning is monotonic per L2-034)
+end note
+handler -> db : Save new milestones in one unit of work
+db --> handler : Commit
+handler --> weighInHandler : Awarded milestones
+weighInHandler --> controller : Typed result
+controller --> client : HTTP response or ProblemDetails
+client --> page : Log result with any newly earned badges
+page --> actor : Present logged weight and new badges
+@enduml

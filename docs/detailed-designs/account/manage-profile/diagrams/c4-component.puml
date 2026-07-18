@@ -1,0 +1,32 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Manage profile
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+System_Ext(email, "Email provider", "Sends verification, reset, and notification email via SMTP")
+
+Container_Boundary(web, "Ledger Web App") {
+  Component(page, "ProfilePage", "Angular component", "Renders and edits profile fields and avatar")
+  Component(client, "AccountApi", "Angular HTTP service", "Typed client in ledger/api for account endpoints")
+}
+
+Container_Boundary(api, "Ledger API") {
+  Component(ctrl, "ProfileController", "ASP.NET Core controller", "Exposes /api/v1/profile endpoints")
+  Component(updateHandler, "UpdateProfileCommandHandler", "MediatR handler", "Applies name, email, and height changes for the owner")
+  Component(avatarHandler, "UploadAvatarCommandHandler", "MediatR handler", "Validates and stores the avatar image")
+  Component(user, "User", "Domain entity", "Holds identity, height, avatar reference, and email-verification state")
+  ComponentDb(db, "Ledger Database", "SQL Server", "Persists User records")
+}
+
+Rel(member, page, "Uses", "HTTPS")
+Rel(page, client, "Calls")
+Rel(client, ctrl, "Calls /api/v1/profile", "JSON/HTTPS")
+Rel(ctrl, updateHandler, "Sends UpdateProfileCommand")
+Rel(ctrl, avatarHandler, "Sends UploadAvatarCommand")
+Rel(updateHandler, user, "Loads and mutates")
+Rel(avatarHandler, user, "Sets avatar reference on")
+Rel(updateHandler, db, "Persists", "EF Core")
+Rel(avatarHandler, db, "Persists", "EF Core")
+Rel(updateHandler, email, "Sends verification email on email change", "SMTP")
+@enduml

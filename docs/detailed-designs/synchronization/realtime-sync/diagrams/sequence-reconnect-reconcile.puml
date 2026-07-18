@@ -1,0 +1,48 @@
+@startuml
+title UML sequence behaviour — Reconnect and reconcile missed changes
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle { BorderColor #344054 FontColor #101828 }
+skinparam package  { BorderColor #667085 FontColor #101828 BackgroundColor #F9FAFB }
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "RealtimeService" as rt
+  participant "SyncApi" as client
+  participant "Dashboard" as page
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "LedgerHub" as hub
+  participant "SyncController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "GetChangesSinceQueryHandler" as handler
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+
+rt -> rt : Detect the dropped connection and enter reconnecting
+... connectivity returns ...
+rt -> hub : Reconnect and present the JWT bearer token
+hub -> hub : Authenticate and re-add the connection to Group(user id) per L2-067
+hub --> rt : Connected
+rt -> client : Request changes since the last-applied watermark
+client -> controller : HTTPS GET /api/v1/sync/changes?since={watermark}
+controller -> controller : Authenticate and scope to the owner per L2-067
+controller -> handler : Send GetChangesSinceQuery
+handler -> db : Read the owner-scoped change feed after the watermark
+db --> handler : Missed changes ordered by server timestamp
+handler --> controller : Missed changes
+controller --> client : HTTP response with the missed changes
+client --> rt : Missed changes
+alt Missed changes exist
+  rt -> page : Apply missed creates, edits, and deletes per L2-055
+  page --> actor : Reflect the reconciled state without a manual refresh
+  rt -> rt : Advance the watermark to the latest server timestamp
+else None missed
+  rt -> rt : Keep the current watermark
+end
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Manage a password
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+System_Boundary(ledger, "Ledger") {
+  Container(web, "Ledger Web App", "Angular 21 SPA", "Member-facing responsive web app")
+  Container(api, "Ledger API", "ASP.NET Core, MediatR", "CQRS application and domain logic; hosts the SignalR hub")
+  ContainerDb(db, "Ledger Database", "SQL Server", "Members, reset tokens, and refresh tokens")
+}
+System_Ext(email, "Email provider", "Sends verification, reset, and notification email via SMTP")
+
+Rel(member, web, "Requests, resets, or changes a password over", "HTTPS")
+Rel(web, api, "Calls the password endpoints", "JSON/HTTPS")
+Rel(api, db, "Reads accounts; writes reset tokens; revokes sessions", "EF Core")
+Rel(api, email, "Sends the reset link and confirmation via", "SMTP")
+@enduml

@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data visualization — Aurora Design System</title>
+  <meta name="description" content="Principles for calm, honest charts: trend over points, always show the goal, annotate meaning, moving averages, choosing viz colors, and the dial vs line vs sparkline decision.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+  <style>
+    .pat-legend { display: flex; gap: var(--space-5); justify-content: center; flex-wrap: wrap; font-size: var(--text-xs); color: var(--text-mid); margin-top: var(--space-4); }
+    .pat-legend span { display: inline-flex; align-items: center; gap: var(--space-2); }
+    .pat-legend i { width: 16px; height: 3px; border-radius: 2px; display: inline-block; }
+    .pat-legend i.is-dash { background-image: repeating-linear-gradient(90deg, currentColor 0 4px, transparent 4px 8px); height: 2px; }
+    .pat-vizgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-3); grid-auto-rows: min-content; align-items: start; width: 100%; }
+    .pat-decide { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+    @media (max-width: 720px) { .pat-decide { grid-template-columns: 1fr; } }
+    .pat-decide-card { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; background: var(--surface-1); }
+    .pat-decide-canvas { display: grid; place-items: center; min-height: 150px; padding: var(--space-5); background: radial-gradient(var(--grid-line) 1px, transparent 1px); background-size: 20px 20px; }
+    .pat-decide-meta { padding: var(--space-4); border-top: 1px solid var(--divider); }
+    .pat-decide-meta h4 { font-size: var(--text-sm); font-weight: var(--weight-semibold); display: flex; align-items: center; gap: var(--space-2); }
+    .pat-decide-meta p { font-size: var(--text-xs); color: var(--text-lo); margin-top: var(--space-2); line-height: var(--leading-normal); }
+  </style>
+</head>
+<body class="doc-body">
+
+  <!-- gauge + chart gradients -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <linearGradient id="auroraGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="var(--aurora-start)"></stop>
+      <stop offset="52%" stop-color="var(--aurora-mid)"></stop>
+      <stop offset="100%" stop-color="var(--aurora-end)"></stop>
+    </linearGradient>
+    <linearGradient id="auChartArea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="var(--viz-2)" stop-opacity="0.35"></stop>
+      <stop offset="100%" stop-color="var(--viz-2)" stop-opacity="0"></stop>
+    </linearGradient>
+  </defs></svg>
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation"><svg class="au-icon"><use href="#i-menu"></use></svg></button>
+    <a class="doc-brand" href="../index.html"><span class="doc-brandmark"></span><span class="doc-brand-name">Aurora<small>Design System</small></span></a>
+    <nav class="doc-header-nav">
+      <a href="../foundations/getting-started.html">Foundations</a>
+      <a href="../components/button.html">Components</a>
+      <a href="data-viz.html" class="is-active">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <!-- ============ CANONICAL SIDEBAR ============ -->
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="../foundations/getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="../foundations/color.html">Color</a>
+        <a class="doc-navlink" href="../foundations/typography.html">Typography</a>
+        <a class="doc-navlink" href="../foundations/spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="../foundations/elevation.html">Elevation</a>
+        <a class="doc-navlink" href="../foundations/shape.html">Shape</a>
+        <a class="doc-navlink" href="../foundations/iconography.html">Iconography</a>
+        <a class="doc-navlink" href="../foundations/motion.html">Motion</a>
+        <a class="doc-navlink" href="../foundations/accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="../components/button.html">Button</a>
+        <a class="doc-navlink" href="../components/text-field.html">Text field</a>
+        <a class="doc-navlink" href="../components/select.html">Select</a>
+        <a class="doc-navlink" href="../components/switch.html">Switch</a>
+        <a class="doc-navlink" href="../components/checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="../components/slider.html">Slider</a>
+        <a class="doc-navlink" href="../components/date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="../components/card.html">Card</a>
+        <a class="doc-navlink" href="../components/list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="../components/chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="../components/avatar.html">Avatar</a>
+        <a class="doc-navlink" href="../components/progress.html">Progress</a>
+        <a class="doc-navlink" href="../components/gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="../components/chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="../components/dialog.html">Dialog</a>
+        <a class="doc-navlink" href="../components/snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="../components/banner.html">Banner</a>
+        <a class="doc-navlink" href="../components/tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="../components/empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="../components/tabs.html">Tabs</a>
+        <a class="doc-navlink" href="../components/navigation.html">Navigation</a>
+        <a class="doc-navlink" href="../components/milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="data-entry.html">Data entry</a>
+        <a class="doc-navlink is-active" href="data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="theming.html">Theming</a>
+        <a class="doc-navlink" href="motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Patterns <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Data visualization</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-activity"></use></svg> Pattern · Data</span>
+          <h1 class="doc-title">Data visualization</h1>
+          <p class="doc-lead">A weight chart is emotional. A single heavy morning shouldn't read as failure, and a good week shouldn't be buried in noise. Aurora's charts are built to tell the <strong style="color:var(--text-hi)">truth about the trend</strong> — calm, honest and always anchored to the goal — using nothing but hand-written SVG.</p>
+        </div>
+
+        <!-- HERO + PRINCIPLES -->
+        <section class="doc-section">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-sparkles"></use></svg> Four principles</h2>
+          <div class="au-card au-card--pad-lg" style="margin-bottom:var(--space-7)">
+            <div class="au-row-flex au-between" style="margin-bottom:var(--space-4)">
+              <div class="au-stat"><span class="au-stat-label">90-day trend</span><span class="au-stat-value">74.9<small>kg</small></span></div>
+              <span class="au-chip au-chip--good"><svg class="au-icon"><use href="#i-trending-down"></use></svg> −3.5 kg</span>
+            </div>
+            <div class="au-chart">
+              <svg viewBox="0 0 640 240" preserveAspectRatio="none" role="img" aria-label="Weight trending down from 78.4 to 74.9 kilograms over 90 days, now above the 73.0 kilogram goal line">
+                <g class="au-chart-grid">
+                  <line x1="40" y1="20" x2="620" y2="20"></line>
+                  <line x1="40" y1="70" x2="620" y2="70"></line>
+                  <line x1="40" y1="120" x2="620" y2="120"></line>
+                  <line x1="40" y1="170" x2="620" y2="170"></line>
+                  <line x1="40" y1="220" x2="620" y2="220"></line>
+                </g>
+                <path class="au-chart-band" d="M40,24 L216,40 L392,72 L612,112 L612,150 L392,108 L216,78 L40,58 Z"></path>
+                <line class="au-chart-goal" x1="40" y1="196" x2="620" y2="196"></line>
+                <path class="au-chart-area" d="M40,37 L84,46 L128,31 L172,51 L216,63 L260,57 L304,77 L348,89 L392,83 L436,103 L480,114 L524,123 L568,117 L612,137 L612,220 L40,220 Z"></path>
+                <path class="au-chart-line au-chart-line--ma" d="M40,42 L128,44 L216,55 L304,68 L392,86 L480,104 L568,120 L612,130"></path>
+                <path class="au-chart-line au-chart-draw" d="M40,37 L84,46 L128,31 L172,51 L216,63 L260,57 L304,77 L348,89 L392,83 L436,103 L480,114 L524,123 L568,117 L612,137"></path>
+                <g>
+                  <line x1="304" y1="77" x2="304" y2="20" stroke="var(--brand)" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"></line>
+                  <circle cx="304" cy="77" r="4" class="au-chart-dot au-chart-dot--hi"></circle>
+                </g>
+                <circle cx="612" cy="137" r="5" class="au-chart-dot"></circle>
+              </svg>
+            </div>
+            <div class="pat-legend">
+              <span><i style="background:var(--viz-2)"></i> Daily</span>
+              <span><i style="background:var(--viz-1)"></i> 7-day average</span>
+              <span><i style="background:var(--viz-band)"></i> Range band</span>
+              <span style="color:var(--brand)"><i class="is-dash" style="color:var(--brand)"></i> Goal 73.0 kg</span>
+            </div>
+          </div>
+
+          <div class="doc-prose">
+            <ul>
+              <li><strong>Trend over points.</strong> The daily line is deliberately quiet; the 7-day average is the confident, thicker read. People should see the direction of travel, not fixate on one weigh-in.</li>
+              <li><strong>The goal is always visible.</strong> A dashed brand line sits in every chart. Progress only means something relative to a target, so the target is never off-screen.</li>
+              <li><strong>Annotate meaning, not noise.</strong> Mark milestones, plateaus and events — a marked point should have a reason. Never label every data point.</li>
+              <li><strong>Draw on entry.</strong> The line animates in once, then holds perfectly still. Under <code>prefers-reduced-motion</code> it simply appears.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- MOVING AVERAGES -->
+        <section class="doc-section">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-trending-down"></use></svg> Moving averages</h2>
+          <p class="doc-section-lead">Body weight swings a kilo a day on water alone. A <strong>7-day moving average</strong> filters that noise into the signal people actually care about. Draw the raw daily series thin and low-contrast; draw the average thicker on top. The average — not any single dot — is what the eye should land on.</p>
+
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">viz/moving-average</span>
+              <div class="doc-example-tools"><button class="au-icon-btn au-icon-btn--sm" data-theme-toggle aria-label="Toggle theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button></div>
+            </div>
+            <div class="doc-canvas doc-canvas--stack">
+              <svg class="au-chart" viewBox="0 0 640 220" preserveAspectRatio="none" role="img" aria-label="Noisy daily weights with a smooth 7-day average trending down" style="height:200px">
+                <g class="au-chart-grid">
+                  <line x1="20" y1="30" x2="620" y2="30"></line>
+                  <line x1="20" y1="90" x2="620" y2="90"></line>
+                  <line x1="20" y1="150" x2="620" y2="150"></line>
+                </g>
+                <!-- noisy daily -->
+                <path class="au-chart-line" style="stroke:var(--viz-2);stroke-width:1.5;opacity:0.4" d="M20,60 L60,44 L100,78 L140,52 L180,96 L220,70 L260,104 L300,82 L340,120 L380,96 L420,132 L460,108 L500,140 L540,120 L580,150 L620,132"></path>
+                <!-- smooth average -->
+                <path class="au-chart-line au-chart-line--ma" style="stroke:var(--viz-1);stroke-width:3;opacity:1" d="M20,66 L100,70 L180,80 L260,92 L340,106 L420,118 L500,128 L620,140"></path>
+              </svg>
+              <div class="pat-legend">
+                <span><i style="background:var(--viz-2);opacity:0.5"></i> Daily reading (noise)</span>
+                <span><i style="background:var(--viz-1);height:4px"></i> 7-day average (signal)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-info"></use></svg>
+            <div class="doc-callout-body"><strong>Read the average, judge the trend.</strong> When someone asks “am I losing weight?”, they mean the average line's slope — never the gap between two adjacent mornings. Copy and callouts should always quote the averaged figure.</div>
+          </div>
+        </section>
+
+        <!-- CHOOSING COLORS -->
+        <section class="doc-section">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-palette"></use></svg> Choosing visualization colors</h2>
+          <p class="doc-section-lead">Series colors come from a fixed, ordered ramp — <code>--viz-1</code> through <code>--viz-5</code> — tuned for contrast in both themes. Assign them <strong>in order</strong> and stop when you run out; if a chart needs a sixth color, it needs fewer series. Semantic meaning always wins: the primary weight series is teal because <strong>down is good</strong>, and the goal is brand gold.</p>
+
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">viz/palette</span></div>
+            <div class="doc-canvas doc-canvas--stack">
+              <div class="pat-vizgrid">
+                <div class="doc-swatch"><div class="doc-swatch-chip" style="background:var(--viz-1)"></div><div class="doc-swatch-meta"><div class="doc-swatch-name">Series 1</div><div class="doc-swatch-val">--viz-1 · gold</div></div></div>
+                <div class="doc-swatch"><div class="doc-swatch-chip" style="background:var(--viz-2)"></div><div class="doc-swatch-meta"><div class="doc-swatch-name">Series 2</div><div class="doc-swatch-val">--viz-2 · teal</div></div></div>
+                <div class="doc-swatch"><div class="doc-swatch-chip" style="background:var(--viz-3)"></div><div class="doc-swatch-meta"><div class="doc-swatch-name">Series 3</div><div class="doc-swatch-val">--viz-3 · violet</div></div></div>
+                <div class="doc-swatch"><div class="doc-swatch-chip" style="background:var(--viz-4)"></div><div class="doc-swatch-meta"><div class="doc-swatch-name">Series 4</div><div class="doc-swatch-val">--viz-4 · sky</div></div></div>
+                <div class="doc-swatch"><div class="doc-swatch-chip" style="background:var(--viz-5)"></div><div class="doc-swatch-meta"><div class="doc-swatch-name">Series 5</div><div class="doc-swatch-val">--viz-5 · coral</div></div></div>
+                <div class="doc-swatch"><div class="doc-swatch-chip" style="background:var(--viz-band)"></div><div class="doc-swatch-meta"><div class="doc-swatch-name">Range band</div><div class="doc-swatch-val">--viz-band</div></div></div>
+              </div>
+              <span class="doc-swatch-note">Grid &amp; axis use <code>--viz-grid</code> / <code>--viz-axis</code> — barely-there, never competing with the data.</span>
+            </div>
+          </div>
+
+          <div class="doc-prose">
+            <ul>
+              <li><strong>Teal (<code>--viz-2</code>) is the weight line</strong> — the "on track / loss is good" color, used for the primary daily series.</li>
+              <li><strong>Gold (<code>--viz-1</code>)</strong> carries the average and anything brand-critical, like the goal marker.</li>
+              <li><strong>Coral (<code>--viz-5</code>)</strong> appears only for regressions or over-goal states — never as a neutral fifth category.</li>
+              <li>Never encode a category with color alone — pair it with a legend, a direct label, or a distinct line style.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- DIAL VS LINE VS SPARKLINE -->
+        <section class="doc-section">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-grid"></use></svg> Dial vs line vs sparkline</h2>
+          <p class="doc-section-lead">Three shapes, three questions. Pick the one that matches what the person is asking at that moment — don't reach for a chart when a number and a goal will do.</p>
+
+          <div class="pat-decide">
+            <div class="pat-decide-card">
+              <div class="pat-decide-canvas">
+                <div class="au-gauge" data-value="73" data-sweep="360" style="width:130px;height:130px" role="img" aria-label="73 percent to goal">
+                  <svg viewBox="0 0 120 120" width="130" height="130"><circle class="au-gauge-track" cx="60" cy="60" r="52" stroke-width="11"></circle><circle class="au-gauge-arc" cx="60" cy="60" r="52" stroke-width="11"></circle></svg>
+                  <div class="au-gauge-center"><div class="au-gauge-value" style="font-size:var(--text-2xl)">73%</div></div>
+                </div>
+              </div>
+              <div class="pat-decide-meta">
+                <h4><svg class="au-icon au-text-lo" style="width:16px"><use href="#i-target"></use></svg> Dial</h4>
+                <p>“How close am I?” One value against one goal. The hero of the dashboard — use exactly one per view.</p>
+              </div>
+            </div>
+            <div class="pat-decide-card">
+              <div class="pat-decide-canvas">
+                <svg class="au-chart" viewBox="0 0 260 120" preserveAspectRatio="none" role="img" aria-label="Downward weight trend line with goal" style="height:110px">
+                  <line class="au-chart-goal" x1="0" y1="100" x2="260" y2="100"></line>
+                  <path class="au-chart-area" d="M0,30 L52,40 L104,34 L156,58 L208,66 L260,80 L260,120 L0,120 Z"></path>
+                  <path class="au-chart-line" d="M0,30 L52,40 L104,34 L156,58 L208,66 L260,80"></path>
+                </svg>
+              </div>
+              <div class="pat-decide-meta">
+                <h4><svg class="au-icon au-text-lo" style="width:16px"><use href="#i-activity"></use></svg> Line</h4>
+                <p>“Which way am I heading?” A series over time, with average, band and goal. The detail view.</p>
+              </div>
+            </div>
+            <div class="pat-decide-card">
+              <div class="pat-decide-canvas">
+                <svg class="au-sparkline" viewBox="0 0 240 40" preserveAspectRatio="none" role="img" aria-label="7-day micro trend, gently down"><path d="M0,26 L30,22 L60,28 L90,18 L120,20 L150,12 L180,15 L210,8 L240,10"></path></svg>
+              </div>
+              <div class="pat-decide-meta">
+                <h4><svg class="au-icon au-text-lo" style="width:16px"><use href="#i-trending-down"></use></svg> Sparkline</h4>
+                <p>“At a glance?” A label-free micro-trend for a card or row. Shape only — no axes, no goal.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- DO / DON'T -->
+        <section class="doc-section">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-check-circle"></use></svg> Do &amp; don't</h2>
+          <div class="doc-dodont">
+            <div class="doc-guide doc-guide--do">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-check"></use></svg> Do</div>
+              <div class="doc-guide-body">
+                <svg class="au-chart" viewBox="0 0 240 120" preserveAspectRatio="none" style="height:100px">
+                  <line class="au-chart-goal" x1="0" y1="96" x2="240" y2="96"></line>
+                  <path class="au-chart-line au-chart-line--ma" style="opacity:1" d="M0,30 L48,38 L96,46 L144,58 L192,66 L240,74"></path>
+                  <path class="au-chart-line" style="stroke:var(--viz-2);opacity:0.4;stroke-width:1.5" d="M0,26 L48,44 L96,40 L144,64 L192,60 L240,80"></path>
+                </svg>
+              </div>
+              <div class="doc-guide-note">One measure, one axis, goal in view, average leading.</div>
+            </div>
+            <div class="doc-guide doc-guide--dont">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-x"></use></svg> Don't</div>
+              <div class="doc-guide-body">
+                <svg class="au-chart" viewBox="0 0 240 120" preserveAspectRatio="none" style="height:100px">
+                  <path class="au-chart-line" style="stroke:var(--viz-1);stroke-width:2.5" d="M0,20 L48,60 L96,30 L144,70 L192,40 L240,66"></path>
+                  <path class="au-chart-line" style="stroke:var(--viz-3);stroke-width:2.5" d="M0,80 L48,40 L96,74 L144,34 L192,72 L240,30"></path>
+                  <path class="au-chart-line" style="stroke:var(--viz-5);stroke-width:2.5" d="M0,50 L48,84 L96,44 L144,90 L192,54 L240,96"></path>
+                </svg>
+              </div>
+              <div class="doc-guide-note">No dual-axis charts and no rainbow of series — spaghetti hides the trend.</div>
+            </div>
+          </div>
+        </section>
+
+        <div class="doc-callout">
+          <svg class="au-icon"><use href="#i-info"></use></svg>
+          <div class="doc-callout-body"><strong>Accessibility.</strong> Every chart is decorative SVG, so it carries <code>role="img"</code> and an <code>aria-label</code> that states the trend in words (“down 3.5 kg over 90 days, 1.9 kg above goal”). Meaning is never left to color alone — line weight, dashes and direct labels do the work too, and the whole thing prints and renders identically offline.</div>
+        </div>
+
+        <!-- PAGER -->
+        <nav class="doc-pager">
+          <a href="data-entry.html"><small>Previous</small><span>Data entry</span></a>
+          <a class="doc-pager-next" href="theming.html"><small>Next</small><span>Theming</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

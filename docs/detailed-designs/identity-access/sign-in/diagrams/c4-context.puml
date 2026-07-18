@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Sign in
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+System(app, "Ledger", "Responsive weight-tracking web application")
+
+Rel(member, app, "Signs in and renews a session using", "HTTPS")
+@enduml

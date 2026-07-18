@@ -1,0 +1,86 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Export and erase data
+
+class AccountController {
+  +Export(): Task<IActionResult>
+  +DeleteAll(command: DeleteAllDataCommand): Task<IActionResult>
+  +DeleteAccount(command: DeleteAccountCommand): Task<IActionResult>
+}
+
+class ExportDataQuery {
+  +Guid UserId
+}
+
+class ExportDataQueryHandler {
+  +Handle(query: ExportDataQuery): Task<FileResult>
+  -Neutralize(field: string): string
+}
+
+class DeleteAllDataCommand {
+  +Guid UserId
+  +string Confirmation
+}
+
+class DeleteAllDataCommandHandler {
+  +Handle(command: DeleteAllDataCommand): Task<Result>
+}
+
+class DeleteAccountCommand {
+  +Guid UserId
+}
+
+class DeleteAccountCommandHandler {
+  +Handle(command: DeleteAccountCommand): Task<Result>
+}
+
+class AuditLogger {
+  +Record(action: string, actor: Guid, source: string): Task
+}
+
+class AuditRecord {
+  +Guid Id
+  +DateTime TimestampUtc
+  +Guid Actor
+  +string Action
+  +string Source
+}
+
+class WeighIn {
+  +Guid Id
+  +Guid UserId
+  +DateOnly Date
+  +double WeightKg
+  +string Note
+}
+
+class User {
+  +Guid Id
+  +string Name
+  +string Email
+  +Anonymize(): void
+}
+
+AccountController ..> ExportDataQuery : sends
+AccountController ..> DeleteAllDataCommand : sends
+AccountController ..> DeleteAccountCommand : sends
+ExportDataQueryHandler ..> ExportDataQuery : handles
+DeleteAllDataCommandHandler ..> DeleteAllDataCommand : handles
+DeleteAccountCommandHandler ..> DeleteAccountCommand : handles
+ExportDataQueryHandler --> WeighIn : reads all owner entries
+DeleteAllDataCommandHandler --> WeighIn : deletes owner entries
+DeleteAccountCommandHandler --> User : erases / anonymizes
+ExportDataQueryHandler ..> AuditLogger : records export
+DeleteAllDataCommandHandler ..> AuditLogger : records delete-all
+DeleteAccountCommandHandler ..> AuditLogger : records deletion
+AuditLogger --> AuditRecord : writes
+@enduml

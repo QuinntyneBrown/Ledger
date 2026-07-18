@@ -1,0 +1,29 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Marketing site
+
+Person(visitor, "Visitor", "Prospective member browsing the marketing site")
+Container_Boundary(site, "Marketing Site") {
+  Component(landing, "LandingPage", "Page component", "Server-rendered landing route composing hero and feature sections per L2-057 and L2-058")
+  Component(hero, "HeroSection", "Section component", "Value proposition and primary/secondary call-to-action per L2-057")
+  Component(features, "FeatureSections", "Section components", "Describe the core loop with Aurora visuals per L2-058")
+  Component(legal, "LegalPages", "Page components", "Terms, Privacy, and consent detail pages per L2-061")
+  Component(consent, "ConsentBanner", "UI component", "Presents and records the cookie/consent choice per L2-061")
+  Component(loader, "AnalyticsLoader", "Client module", "Loads non-essential analytics only after consent per L2-061")
+  Component(seo, "SeoMetadata", "Rendering concern", "Per-page title, meta description, canonical, OG/Twitter tags, structured data per L2-060")
+  Component(discovery, "RobotsAndSitemap", "Static assets", "robots.txt and sitemap for crawler indexability per L2-060")
+}
+Container(web, "Ledger Web App", "Angular 21 SPA", "Hosts the auth routes the CTA targets")
+System_Ext(analytics, "Analytics provider", "Optional, non-essential analytics loaded only after consent per L2-061")
+
+Rel(visitor, landing, "Requests the landing page", "HTTPS")
+Rel(landing, hero, "Renders")
+Rel(landing, features, "Renders")
+Rel(landing, seo, "Emits per-page metadata per L2-060")
+Rel(landing, consent, "Presents on first visit per L2-061")
+Rel(legal, seo, "Emits per-page metadata per L2-060")
+Rel(hero, web, "Routes to the app auth routes per L2-062", "HTTPS")
+Rel(consent, loader, "Enables only after consent per L2-061")
+Rel(loader, analytics, "Loads analytics scripts from", "HTTPS")
+@enduml

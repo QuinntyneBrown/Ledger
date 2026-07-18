@@ -1,0 +1,110 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Web app shell
+
+enum Theme {
+  Light
+  Dark
+  System
+}
+
+enum Unit {
+  Kg
+  Lbs
+}
+
+enum Breakpoint {
+  XS
+  SM
+  MD
+  LG
+  XL
+}
+
+package "ledger-app" {
+  class AppShellComponent {
+    +ngOnInit(): void
+    +activeBreakpoint: Breakpoint
+  }
+  class AppRouter {
+    +routes: Route[]
+    +loadFeature(path: string): Promise<NgModule>
+  }
+  class AuthGuard {
+    +canMatch(route: Route): Observable<boolean | UrlTree>
+  }
+  class ThemeService {
+    +current: Theme
+    +apply(theme: Theme): void
+    +prefersReducedMotion(): boolean
+  }
+  class UnitService {
+    +current: Unit
+    +apply(unit: Unit): void
+  }
+  class NavigationComponent {
+    +mode: NavMode
+    +render(breakpoint: Breakpoint): void
+  }
+}
+
+enum NavMode {
+  BottomTabBar
+  SideNavigation
+}
+
+package "ledger/api" {
+  class AuthApi {
+    +getSession(): Observable<SessionState>
+    +refresh(): Observable<SessionState>
+  }
+}
+
+package "ledger/domain" {
+  class SessionState {
+    +boolean isAuthenticated
+    +Guid userId
+  }
+  class Preferences {
+    +Unit unit
+    +Theme theme
+    +DayOfWeek weekStartsOn
+  }
+}
+
+package "ledger/components" {
+  class DialogComponent {
+    +open(): void
+    +trapFocus(): void
+  }
+  class SheetComponent {
+    +open(): void
+    +trapFocus(): void
+  }
+}
+
+AppShellComponent *--> ThemeService : composes
+AppShellComponent *--> UnitService : composes
+AppShellComponent *--> AppRouter : hosts outlet for
+AppShellComponent *--> NavigationComponent : renders
+AppRouter ..> AuthGuard : evaluates
+AuthGuard --> AuthApi : reads session from
+AuthApi --> SessionState : returns
+ThemeService --> Theme : applies
+UnitService --> Unit : applies
+NavigationComponent --> Breakpoint : reads
+NavigationComponent --> NavMode : selects
+NavigationComponent ..> DialogComponent : uses
+NavigationComponent ..> SheetComponent : uses
+UnitService ..> Preferences : reads
+ThemeService ..> Preferences : reads
+@enduml

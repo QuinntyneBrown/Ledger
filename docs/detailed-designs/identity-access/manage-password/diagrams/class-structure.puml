@@ -1,0 +1,88 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Manage a password
+
+class RequestPasswordResetCommand {
+  +string Email
+}
+
+class RequestPasswordResetCommandHandler {
+  +Handle(command: RequestPasswordResetCommand): Task<Result>
+}
+
+class ResetPasswordCommand {
+  +string Token
+  +string NewPassword
+}
+
+class ResetPasswordCommandHandler {
+  +Handle(command: ResetPasswordCommand): Task<Result>
+}
+
+class ChangePasswordCommand {
+  +Guid UserId
+  +string CurrentPassword
+  +string NewPassword
+}
+
+class ChangePasswordCommandHandler {
+  +Handle(command: ChangePasswordCommand): Task<Result>
+}
+
+class User {
+  +Guid Id
+  +string Email
+  +string PasswordHash
+  +DateTime PasswordUpdatedAt
+  +SetPassword(hash: string): void
+}
+
+class PasswordResetToken {
+  +Guid Id
+  +Guid UserId
+  +string TokenHash
+  +DateTime ExpiresAt
+  +DateTime ConsumedAt
+  +bool IsUsable(now: DateTime): bool
+  +Consume(): void
+}
+
+interface IPasswordHasher {
+  +Hash(password: string): string
+  +Verify(password: string, hash: string): bool
+}
+
+interface IEmailSender {
+  +SendResetLink(email: string, token: string): Task
+  +SendConfirmation(email: string): Task
+}
+
+interface ISessionRevoker {
+  +RevokeAll(userId: Guid): Task
+  +RevokeAllExcept(userId: Guid, currentTokenId: Guid): Task
+}
+
+RequestPasswordResetCommandHandler ..> RequestPasswordResetCommand : handles
+RequestPasswordResetCommandHandler --> PasswordResetToken : issues
+RequestPasswordResetCommandHandler ..> IEmailSender : sends reset link
+ResetPasswordCommandHandler ..> ResetPasswordCommand : handles
+ResetPasswordCommandHandler --> PasswordResetToken : loads and consumes
+ResetPasswordCommandHandler ..> IPasswordHasher : hashes new password
+ResetPasswordCommandHandler --> User : updates hash
+ResetPasswordCommandHandler ..> ISessionRevoker : revokes all per L2-006
+ResetPasswordCommandHandler ..> IEmailSender : sends confirmation
+ChangePasswordCommandHandler ..> ChangePasswordCommand : handles
+ChangePasswordCommandHandler ..> IPasswordHasher : verifies current and hashes new
+ChangePasswordCommandHandler --> User : updates hash
+ChangePasswordCommandHandler ..> ISessionRevoker : revokes others per L2-007
+User "1" --> "*" PasswordResetToken : owns
+@enduml

@@ -1,0 +1,50 @@
+@startuml
+title UML sequence behaviour — Log today's weight
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle { BorderColor #344054 FontColor #101828 }
+skinparam package  { BorderColor #667085 FontColor #101828 BackgroundColor #F9FAFB }
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "LogWeighInPage" as page
+  participant "WeighInsApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "WeighInsController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "LogWeighInCommandHandler" as handler
+  participant "WeighIn" as entity
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+actor -> page : Adjust the value by 0.1 with the stepper per L2-013
+actor -> page : Enter an optional note (<= 280 chars) per L2-013
+page -> page : Validate the numeric value client-side per L2-015
+actor -> page : Save
+page -> client : Build typed LogWeighInCommand
+client -> controller : HTTPS POST /api/v1/weigh-ins
+controller -> controller : Authenticate and authorize the owner
+controller -> handler : Send LogWeighInCommand
+alt Weight outside 20.0-500.0 kg per L2-015
+  handler --> controller : Validation failure
+  controller --> client : 400 ProblemDetails with the bound message per L2-015
+  client --> page : Show the bound error
+  page --> actor : Present the validation error
+else Within bounds
+  handler -> db : Load the entry for userId+date
+  db --> handler : Existing entry or none
+  handler -> entity : Upsert one entry per calendar day per L2-016
+  entity --> handler : Stored weigh-in
+  handler -> db : Save the note as encoded text per L2-068 in one unit of work
+  db --> handler : Commit
+  handler --> controller : Typed weigh-in result
+  controller --> client : 200 with the saved entry
+  client --> page : Success
+  page --> actor : Toast "Weight logged" with Undo per L2-020
+end
+@enduml

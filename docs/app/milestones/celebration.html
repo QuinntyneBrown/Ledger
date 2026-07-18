@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Badge unlocked — Ledger</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+  <style>
+    .celebrate-screen {
+      background:
+        radial-gradient(600px 420px at 50% 18%, rgba(124, 92, 255, 0.22), transparent 62%),
+        radial-gradient(520px 400px at 50% 100%, rgba(249, 195, 73, 0.14), transparent 60%);
+    }
+    .celebrate-medal-big { width: 128px; height: 128px; }
+    .celebrate-medal-big .au-icon { width: 56px; height: 56px; }
+    .celebrate-title { font-family: var(--font-display); font-size: var(--text-3xl); font-weight: var(--weight-heavy); letter-spacing: var(--tracking-tight); }
+    .celebrate-actions { display: flex; flex-direction: column; gap: var(--space-3); width: 100%; max-width: 300px; margin-top: var(--space-3); }
+  </style>
+</head>
+<body class="app-body">
+
+  <div class="app-frame">
+    <div class="app-statusbar">
+      <span>9:41</span>
+      <span class="app-statusbar-right">
+        <svg class="au-icon" style="width:15px"><use href="#i-activity"></use></svg>
+        <svg class="au-icon" style="width:15px"><use href="#i-droplet"></use></svg>
+        <span class="au-mono" style="font-size:11px">100%</span>
+      </span>
+    </div>
+
+    <div class="app-screen celebrate-screen" style="display:flex;flex-direction:column">
+      <!-- dismiss -->
+      <div class="app-header" style="background:none;border:none;justify-content:flex-end;position:relative">
+        <a class="au-icon-btn" href="milestones.html" aria-label="Close"><svg class="au-icon"><use href="#i-x"></use></svg></a>
+      </div>
+
+      <!-- CELEBRATION -->
+      <div class="celebrate au-fill" style="justify-content:center">
+        <!-- confetti -->
+        <div class="confetti" aria-hidden="true">
+          <i style="left:6%;background:var(--viz-1);animation-delay:-0.1s"></i>
+          <i style="left:12%;background:var(--viz-3);animation-delay:-0.9s"></i>
+          <i style="left:18%;background:var(--good);animation-delay:-1.7s"></i>
+          <i style="left:24%;background:var(--brand);animation-delay:-0.5s"></i>
+          <i style="left:30%;background:var(--viz-2);animation-delay:-2.1s"></i>
+          <i style="left:36%;background:var(--viz-3);animation-delay:-1.2s"></i>
+          <i style="left:42%;background:var(--viz-1);animation-delay:-0.3s"></i>
+          <i style="left:48%;background:var(--good);animation-delay:-1.9s"></i>
+          <i style="left:54%;background:var(--brand);animation-delay:-0.7s"></i>
+          <i style="left:60%;background:var(--viz-2);animation-delay:-1.4s"></i>
+          <i style="left:66%;background:var(--viz-3);animation-delay:-0.2s"></i>
+          <i style="left:72%;background:var(--viz-1);animation-delay:-2.3s"></i>
+          <i style="left:78%;background:var(--good);animation-delay:-1.0s"></i>
+          <i style="left:84%;background:var(--brand);animation-delay:-0.6s"></i>
+          <i style="left:90%;background:var(--viz-2);animation-delay:-1.6s"></i>
+          <i style="left:9%;background:var(--brand);animation-delay:-2.4s"></i>
+          <i style="left:45%;background:var(--viz-1);animation-delay:-2.6s"></i>
+          <i style="left:69%;background:var(--good);animation-delay:-0.4s"></i>
+          <i style="left:33%;background:var(--viz-2);animation-delay:-2.0s"></i>
+          <i style="left:87%;background:var(--viz-3);animation-delay:-1.1s"></i>
+        </div>
+
+        <div class="au-eyebrow" style="justify-content:center"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-sparkles"></use></svg> Badge unlocked</div>
+
+        <div class="au-medal au-medal--violet celebrate-medal celebrate-medal-big">
+          <svg class="au-icon au-icon--fill"><use href="#i-flame"></use></svg>
+        </div>
+
+        <div>
+          <div class="celebrate-title">7-Day Streak</div>
+          <p class="au-lead" style="margin-top:var(--space-3);max-width:30ch">You've logged your weight 7 days in a row. Consistency is how the graph bends — keep it alive.</p>
+        </div>
+
+        <div class="au-row-flex au-gap-2" style="justify-content:center">
+          <span class="au-chip au-chip--brand"><svg class="au-icon"><use href="#i-flame"></use></svg> Streak 12</span>
+          <span class="au-chip au-chip--good"><svg class="au-icon"><use href="#i-trending-down"></use></svg> −3.5 kg</span>
+        </div>
+
+        <div class="celebrate-actions">
+          <button class="au-btn au-btn--primary au-btn--lg au-btn--block" data-toast="Keep it going!" data-toast-type="success" onclick="location.href='milestones.html'">
+            Keep going
+          </button>
+          <button class="au-btn au-btn--outlined au-btn--lg au-btn--block" data-toast="Badge shared" data-toast-type="info">
+            <svg class="au-icon"><use href="#i-share"></use></svg> Share badge
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

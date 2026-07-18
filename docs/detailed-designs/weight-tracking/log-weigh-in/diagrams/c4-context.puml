@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Log a weigh-in
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+System(ledger, "Ledger", "Weight-tracking web application")
+
+Rel(member, ledger, "Logs today's weight in", "HTTPS")
+@enduml

@@ -1,0 +1,26 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Configure preferences
+
+Container_Boundary(web, "Ledger Web App") {
+  Component(page, "PreferencesPage", "Angular component", "Presents unit, theme, and week-start controls")
+  Component(client, "AccountApi", "Angular HTTP service", "Typed client in ledger/api for account endpoints")
+}
+
+Container_Boundary(api, "Ledger API") {
+  Component(ctrl, "PreferencesController", "ASP.NET Core controller", "Exposes /api/v1/preferences endpoint")
+  Component(handler, "ChangePreferenceCommandHandler", "MediatR handler", "Applies preference changes for the owner")
+  Component(entity, "Preferences", "Domain entity", "Holds unit, theme, and week-start settings")
+  Component(hub, "Realtime Hub", "ASP.NET Core SignalR hub", "Broadcasts to the member's other sessions")
+  ComponentDb(db, "Ledger Database", "SQL Server", "Persists Preferences")
+}
+
+Rel(page, client, "Calls")
+Rel(client, ctrl, "Calls /api/v1/preferences", "JSON/HTTPS")
+Rel(ctrl, handler, "Sends ChangePreferenceCommand")
+Rel(handler, entity, "Loads and mutates")
+Rel(handler, db, "Persists", "EF Core")
+Rel(handler, hub, "Publishes preferences-changed event per L2-048")
+Rel(hub, client, "Pushes preference update", "WebSocket")
+@enduml

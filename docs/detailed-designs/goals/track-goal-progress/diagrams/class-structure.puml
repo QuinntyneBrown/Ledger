@@ -1,0 +1,80 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Track goal progress
+
+enum GoalDirection {
+  Loss
+  Gain
+}
+
+enum ScheduleStatus {
+  Ahead
+  OnTrack
+  Behind
+}
+
+class Goal {
+  +Guid Id
+  +Guid UserId
+  +decimal StartWeightKg
+  +decimal GoalWeightKg
+  +DateOnly TargetDate
+  +GoalDirection Direction
+  +PercentComplete(currentWeightKg: decimal): int
+  +RemainingKg(currentWeightKg: decimal): decimal
+  +IsReached(currentWeightKg: decimal): bool
+}
+
+class WeighIn {
+  +DateOnly Date
+  +decimal WeightKg
+}
+
+class GetGoalProgressQuery {
+  +Guid UserId
+}
+
+class GetGoalProgressQueryHandler {
+  +Handle(query: GetGoalProgressQuery, ct: CancellationToken): Task<GoalProgressDto>
+}
+
+class TrendSmoother {
+  +WeeklyRateKg(entries: IReadOnlyList<WeighIn>): decimal?
+}
+
+class PaceProjection {
+  +decimal WeeklyRateKg
+  +DateOnly ProjectedDate
+  +ScheduleStatus Status
+  +int DaysDelta
+}
+
+class GoalProgressDto {
+  +int PercentComplete
+  +decimal StartWeightKg
+  +decimal CurrentWeightKg
+  +decimal GoalWeightKg
+  +decimal RemainingKg
+  +bool IsReached
+  +bool HasSufficientData
+  +PaceProjection Pace
+}
+
+GetGoalProgressQueryHandler ..> GetGoalProgressQuery : handles
+GetGoalProgressQueryHandler --> Goal : reads and computes
+GetGoalProgressQueryHandler ..> WeighIn : reads recent
+GetGoalProgressQueryHandler ..> TrendSmoother : uses
+GetGoalProgressQueryHandler --> GoalProgressDto : returns
+GoalProgressDto o-- "0..1" PaceProjection : includes
+PaceProjection --> ScheduleStatus : has
+Goal --> GoalDirection : has
+@enduml

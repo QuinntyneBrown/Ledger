@@ -1,0 +1,32 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Earn badges
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+
+Container_Boundary(web, "Ledger Web App") {
+  Component(page, "BadgesPage", "Angular component", "Renders earned and locked badges, next-badge progress, and celebrations")
+  Component(client, "MilestonesApi", "Angular HTTP service", "Typed client for /api/v1/milestones in ledger/api")
+}
+
+Container_Boundary(api, "Ledger API") {
+  Component(ctrl, "MilestonesController", "ASP.NET Core controller", "Exposes /api/v1/milestones endpoints")
+  Component(query, "GetBadgesQueryHandler", "MediatR handler", "Returns earned and locked badges with progress")
+  Component(weighInHandler, "LogWeighInCommandHandler", "MediatR handler", "Persists a weigh-in and dispatches milestone evaluation")
+  Component(evalHandler, "EvaluateMilestonesCommandHandler", "MediatR handler", "Evaluates catalog rules after a weigh-in change and awards badges once")
+  Component(catalog, "BadgeCatalog", "Domain service", "Holds the eight badge definitions and their earning rules")
+  Component(entity, "Milestone", "Domain entity", "Records an earned badge with its type and earned timestamp")
+  ComponentDb(db, "Ledger Database", "SQL Server", "Persists milestones and the weigh-ins, goal, and streak they derive from")
+}
+
+Rel(member, page, "Uses", "HTTPS")
+Rel(page, client, "Reads badges through")
+Rel(client, ctrl, "Calls", "JSON/HTTPS")
+Rel(ctrl, query, "Sends GetBadgesQuery")
+Rel(query, db, "Reads milestones and derived data", "EF Core")
+Rel(weighInHandler, evalHandler, "Sends EvaluateMilestonesCommand after a weigh-in change")
+Rel(evalHandler, catalog, "Evaluates rules with")
+Rel(evalHandler, entity, "Loads and awards")
+Rel(evalHandler, db, "Reads weigh-ins, goal, and streak; persists milestones", "EF Core")
+@enduml

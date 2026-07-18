@@ -1,0 +1,47 @@
+@startuml
+title UML sequence behaviour — Verify an email address
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle { BorderColor #344054 FontColor #101828 }
+skinparam package  { BorderColor #667085 FontColor #101828 BackgroundColor #F9FAFB }
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "VerifyEmailPage" as page
+  participant "AuthApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "AuthController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "VerifyEmailCommandHandler" as handler
+  participant "User" as entity
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+actor -> page : Open the verification link from the email
+page -> client : Build typed request from the token
+client -> controller : HTTPS POST /api/v1/auth/verify-email
+controller -> controller : Apply rate limit per L2-071
+controller -> handler : Send VerifyEmailCommand
+handler -> db : Load the token by its hash
+db --> handler : Token record or none
+alt Token valid and unexpired
+  handler -> entity : Mark verified per L2-003
+  entity --> handler : Verified account
+  handler -> db : Consume the token and save in one unit of work
+  db --> handler : Commit
+  handler --> controller : Verified result
+  controller --> client : 200 OK
+  client --> page : Verification result
+  page --> actor : Direct onward to sign in
+else Token expired or already used
+  handler --> controller : Invalid-token result
+  controller --> client : 400 ProblemDetails
+  client --> page : Verification failed
+  page --> actor : Offer to resend the verification email per L2-003
+end
+@enduml

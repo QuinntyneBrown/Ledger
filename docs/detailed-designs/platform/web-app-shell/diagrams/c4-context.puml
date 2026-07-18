@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Web app shell
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+System(ledger, "Ledger", "Responsive weight-tracking web application")
+
+Rel(member, ledger, "Uses via browser", "HTTPS")
+@enduml

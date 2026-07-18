@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Empty &amp; loading — Ledger states</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <link rel="stylesheet" href="../../../design-system/assets/docs.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+  <style>
+    .state-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:var(--space-5); align-items:start; }
+    .state-tile { border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; background:var(--surface-1); }
+    .state-tile-label { padding:var(--space-3) var(--space-4); border-bottom:1px solid var(--divider); font-family:var(--font-mono); font-size:var(--text-xs); color:var(--text-lo); }
+    .state-tile-body { padding:var(--space-4); min-height:220px; display:grid; place-items:center; }
+    .state-tile-body .au-empty { padding:var(--space-6) var(--space-4); }
+  </style>
+</head>
+<body class="gallery-body">
+  <div class="gallery-wrap">
+    <div class="doc-breadcrumb"><a href="../../index.html">Home</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> <a href="../index.html">Ledger</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Empty &amp; loading</div>
+    <div class="au-row-flex au-between au-wrap" style="gap:var(--space-4);margin-bottom:var(--space-7)">
+      <div><h1 class="doc-title" style="font-size:var(--text-3xl)">Empty &amp; loading</h1><p class="doc-lead">Every zero state is an invitation to act; every wait is a calm skeleton.</p></div>
+      <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+    </div>
+
+    <span class="au-eyebrow" style="margin-bottom:var(--space-4)">Empty states</span>
+    <div class="state-grid" style="margin-bottom:var(--space-8)">
+      <div class="state-tile"><div class="state-tile-label">dashboard · first run</div><div class="state-tile-body">
+        <div class="au-empty"><div class="au-empty-art"><svg class="au-icon"><use href="#i-scale"></use></svg></div><div class="au-empty-title">Log your first weight</div><div class="au-empty-text">Your dial and trend appear the moment you add an entry.</div><button class="au-btn au-btn--primary"><svg class="au-icon"><use href="#i-plus"></use></svg> Add weight</button></div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label">trends · not enough data</div><div class="state-tile-body">
+        <div class="au-empty"><div class="au-empty-art"><svg class="au-icon"><use href="#i-activity"></use></svg></div><div class="au-empty-title">Not enough data yet</div><div class="au-empty-text">Log a few more days to reveal your trend line.</div><button class="au-btn au-btn--tonal">Log today</button></div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label">history · no results</div><div class="state-tile-body">
+        <div class="au-empty"><div class="au-empty-art"><svg class="au-icon"><use href="#i-search"></use></svg></div><div class="au-empty-title">No entries in this range</div><div class="au-empty-text">Try a wider date range to see more.</div><button class="au-btn au-btn--outlined">Clear filter</button></div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label">milestones · none yet</div><div class="state-tile-body">
+        <div class="au-empty"><div class="au-empty-art"><svg class="au-icon"><use href="#i-trophy"></use></svg></div><div class="au-empty-title">Badges are waiting</div><div class="au-empty-text">Your first badge unlocks after one weigh-in.</div></div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label">goal · not set</div><div class="state-tile-body">
+        <div class="au-empty"><div class="au-empty-art"><svg class="au-icon"><use href="#i-target"></use></svg></div><div class="au-empty-title">Set a goal</div><div class="au-empty-text">A target turns numbers into progress.</div><button class="au-btn au-btn--primary">Set goal</button></div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label">all done · on track</div><div class="state-tile-body">
+        <div class="au-empty"><div class="au-empty-art" style="color:var(--good)"><svg class="au-icon"><use href="#i-check-circle"></use></svg></div><div class="au-empty-title">Logged for today</div><div class="au-empty-text">Nice. Come back tomorrow — same time keeps the streak alive.</div></div>
+      </div></div>
+    </div>
+
+    <span class="au-eyebrow" style="margin-bottom:var(--space-4)">Loading skeletons</span>
+    <div class="state-grid">
+      <div class="state-tile"><div class="state-tile-label">dashboard · loading</div><div class="state-tile-body" style="align-items:stretch">
+        <div class="au-stack au-stack-4" style="width:100%">
+          <div class="au-center" style="display:flex"><div class="au-skeleton au-skeleton--circle" style="width:140px;height:140px"></div></div>
+          <div class="au-grid au-grid-3"><div class="au-skeleton" style="height:56px"></div><div class="au-skeleton" style="height:56px"></div><div class="au-skeleton" style="height:56px"></div></div>
+          <div class="au-skeleton" style="height:80px"></div>
+        </div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label">history · loading</div><div class="state-tile-body" style="align-items:stretch">
+        <div class="au-stack au-stack-3" style="width:100%">
+          <div class="au-row-flex au-gap-3"><div class="au-skeleton" style="width:52px;height:14px"></div><div class="au-skeleton au-fill" style="height:14px"></div><div class="au-skeleton" style="width:44px;height:14px"></div></div>
+          <div class="au-row-flex au-gap-3"><div class="au-skeleton" style="width:52px;height:14px"></div><div class="au-skeleton au-fill" style="height:14px"></div><div class="au-skeleton" style="width:44px;height:14px"></div></div>
+          <div class="au-row-flex au-gap-3"><div class="au-skeleton" style="width:52px;height:14px"></div><div class="au-skeleton au-fill" style="height:14px"></div><div class="au-skeleton" style="width:44px;height:14px"></div></div>
+          <div class="au-row-flex au-gap-3"><div class="au-skeleton" style="width:52px;height:14px"></div><div class="au-skeleton au-fill" style="height:14px"></div><div class="au-skeleton" style="width:44px;height:14px"></div></div>
+        </div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label">inline spinner</div><div class="state-tile-body">
+        <div class="au-stack au-stack-4 au-center" style="display:flex"><div class="au-spinner au-spinner--lg"></div><span class="au-caption">Syncing your entries…</span></div>
+      </div></div>
+    </div>
+
+  </div>
+</body>
+</html>

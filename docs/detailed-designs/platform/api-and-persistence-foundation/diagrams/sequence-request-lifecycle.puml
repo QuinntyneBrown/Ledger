@@ -1,0 +1,64 @@
+@startuml
+title UML sequence behaviour — API and persistence foundation: request lifecycle
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "Feature page" as page
+  participant "Typed API client" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "Correlation middleware" as corr
+  participant "XxxController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "Validation behavior" as behavior
+  participant "XxxCommandHandler" as handler
+  participant "Domain entity" as entity
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+
+actor -> page : Perform action
+page -> client : Build typed request
+client -> corr : HTTPS request /api/v1/... (Bearer JWT)
+corr -> corr : Assign correlation id, begin structured log scope (L2-082)
+corr -> controller : Forward request
+controller -> controller : Authenticate JWT and authorize owner (L2-067)
+controller -> behavior : Send IRequest via IMediator
+behavior -> behavior : Validate request server-side (L2-088)
+alt Validation fails
+  behavior --> controller : Validation errors
+  controller --> client : 400 ProblemDetails with field errors (L2-088)
+  client --> page : Render field-level errors
+else Valid
+  behavior -> handler : Invoke handler
+  handler -> db : Load owner-scoped state (indexed query)
+  db --> handler : Current state
+  handler -> entity : Apply domain rule
+  entity --> handler : Result
+  handler -> db : Save changes in one unit of work
+  db --> handler : Commit result
+  handler --> controller : Typed result
+  controller --> client : 200/201 within latency target (L2-074)
+  client --> page : Present result
+end
+note over corr, controller
+  Unhandled failures are wrapped as 500 ProblemDetails,
+  logged with the correlation id, no stack trace (L2-082, L2-088).
+end note
+page --> actor : Present outcome
+@enduml

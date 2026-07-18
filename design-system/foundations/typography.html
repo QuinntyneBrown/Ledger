@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Typography — Aurora Design System</title>
+  <meta name="description" content="Aurora's data-first type system: a minor-third scale, system-font roles, and tabular mono numerals that give Ledger its identity.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+  <style>
+    /* page-scoped: live type-scale rows */
+    .type-row { display: flex; align-items: baseline; gap: var(--space-6); padding: var(--space-4) 0; border-bottom: 1px solid var(--divider); }
+    .type-row:last-child { border-bottom: none; }
+    .type-sample { flex: 1; min-width: 0; color: var(--text-hi); font-family: var(--font-display); font-weight: var(--weight-bold); letter-spacing: var(--tracking-tight); line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .type-meta { flex: none; text-align: right; font-family: var(--font-mono); font-size: var(--text-2xs); color: var(--text-lo); line-height: 1.5; width: 130px; }
+    .type-meta b { display: block; color: var(--text-mid); font-weight: var(--weight-semibold); font-size: var(--text-xs); }
+    .weight-row { font-family: var(--font-display); font-size: var(--text-2xl); letter-spacing: var(--tracking-tight); }
+  </style>
+</head>
+<body class="doc-body">
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation">
+      <svg class="au-icon"><use href="#i-menu"></use></svg>
+    </button>
+    <a class="doc-brand" href="../index.html">
+      <span class="doc-brandmark"></span>
+      <span class="doc-brand-name">Aurora<small>Design System</small></span>
+    </a>
+    <nav class="doc-header-nav">
+      <a href="getting-started.html" class="is-active">Foundations</a>
+      <a href="../components/button.html">Components</a>
+      <a href="../patterns/forms-validation.html">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <!-- ============ CANONICAL SIDEBAR ============ -->
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="color.html">Color</a>
+        <a class="doc-navlink is-active" href="typography.html">Typography</a>
+        <a class="doc-navlink" href="spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="elevation.html">Elevation</a>
+        <a class="doc-navlink" href="shape.html">Shape</a>
+        <a class="doc-navlink" href="iconography.html">Iconography</a>
+        <a class="doc-navlink" href="motion.html">Motion</a>
+        <a class="doc-navlink" href="accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="../components/button.html">Button</a>
+        <a class="doc-navlink" href="../components/text-field.html">Text field</a>
+        <a class="doc-navlink" href="../components/select.html">Select</a>
+        <a class="doc-navlink" href="../components/switch.html">Switch</a>
+        <a class="doc-navlink" href="../components/checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="../components/slider.html">Slider</a>
+        <a class="doc-navlink" href="../components/date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="../components/card.html">Card</a>
+        <a class="doc-navlink" href="../components/list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="../components/chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="../components/avatar.html">Avatar</a>
+        <a class="doc-navlink" href="../components/progress.html">Progress</a>
+        <a class="doc-navlink" href="../components/gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="../components/chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="../components/dialog.html">Dialog</a>
+        <a class="doc-navlink" href="../components/snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="../components/banner.html">Banner</a>
+        <a class="doc-navlink" href="../components/tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="../components/empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="../components/tabs.html">Tabs</a>
+        <a class="doc-navlink" href="../components/navigation.html">Navigation</a>
+        <a class="doc-navlink" href="../components/milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="../patterns/forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="../patterns/data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="../patterns/data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="../patterns/theming.html">Theming</a>
+        <a class="doc-navlink" href="../patterns/motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Foundations <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Typography</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-type"></use></svg> Foundations</span>
+          <h1 class="doc-title">Typography</h1>
+          <p class="doc-lead">A minor-third scale on system-font stacks, with a step-out at the top for the hero weight number. The quiet star is <strong style="color:var(--text-hi)">tabular mono</strong>: every digit the same width, so columns of numbers and dates align perfectly. That is the "ledger" in Ledger.</p>
+        </div>
+
+        <!-- Type scale -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">The type scale</h2>
+          <p class="doc-section-lead">Eleven steps on a 1.200 ratio (minor third) that break into a larger stride at the display end. Each token is a <code>rem</code> so it respects the reader's root size.</p>
+
+          <div class="doc-table-wrap" style="padding:0 var(--space-5)">
+            <div class="type-row"><span class="type-sample" style="font-size:var(--text-6xl)">74.9</span><span class="type-meta"><b>--text-6xl</b>5.5rem · 88px</span></div>
+            <div class="type-row"><span class="type-sample" style="font-size:var(--text-5xl)">Balance</span><span class="type-meta"><b>--text-5xl</b>4rem · 64px</span></div>
+            <div class="type-row"><span class="type-sample" style="font-size:var(--text-4xl)">Display</span><span class="type-meta"><b>--text-4xl</b>3rem · 48px</span></div>
+            <div class="type-row"><span class="type-sample" style="font-size:var(--text-3xl)">Page title</span><span class="type-meta"><b>--text-3xl</b>2.25rem · 36px</span></div>
+            <div class="type-row"><span class="type-sample" style="font-size:var(--text-2xl)">Section heading</span><span class="type-meta"><b>--text-2xl</b>1.75rem · 28px</span></div>
+            <div class="type-row"><span class="type-sample" style="font-size:var(--text-xl)">Card title</span><span class="type-meta"><b>--text-xl</b>1.375rem · 22px</span></div>
+            <div class="type-row"><span class="type-sample" style="font-size:var(--text-lg);font-weight:var(--weight-medium)">Lead body copy</span><span class="type-meta"><b>--text-lg</b>1.125rem · 18px</span></div>
+            <div class="type-row"><span class="type-sample" style="font-size:var(--text-base);font-family:var(--font-sans);font-weight:var(--weight-regular)">Body — the default reading size</span><span class="type-meta"><b>--text-base</b>1rem · 16px</span></div>
+            <div class="type-row"><span class="type-sample" style="font-size:var(--text-sm);font-family:var(--font-sans);font-weight:var(--weight-regular);color:var(--text-mid)">Secondary &amp; dense UI text</span><span class="type-meta"><b>--text-sm</b>0.875rem · 14px</span></div>
+            <div class="type-row"><span class="type-sample" style="font-size:var(--text-xs);font-family:var(--font-sans);font-weight:var(--weight-regular);color:var(--text-mid)">Caption &amp; meta</span><span class="type-meta"><b>--text-xs</b>0.75rem · 12px</span></div>
+            <div class="type-row"><span class="type-sample" style="font-size:var(--text-2xs);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:var(--tracking-wider);color:var(--text-lo)">MICRO LABEL</span><span class="type-meta"><b>--text-2xs</b>0.6875rem · 11px</span></div>
+          </div>
+        </section>
+
+        <!-- Font roles -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">Font roles</h2>
+          <p class="doc-section-lead">Three system stacks, zero network requests. Display and sans overlap on most platforms but split intent; mono is where the identity lives.</p>
+          <div class="au-grid au-grid-3" style="gap:var(--space-4)">
+            <div class="au-card">
+              <span class="au-eyebrow">Display</span>
+              <div style="font-family:var(--font-display);font-weight:var(--weight-heavy);font-size:var(--text-4xl);letter-spacing:var(--tracking-tighter);line-height:1;margin:var(--space-4) 0 var(--space-3)">Ag</div>
+              <p class="au-caption" style="line-height:var(--leading-relaxed)">Titles, hero weights, gauge values. Heavy and tight. <code>--font-display</code> — SF Pro Display, Segoe UI Variable.</p>
+            </div>
+            <div class="au-card">
+              <span class="au-eyebrow" style="color:var(--good-text)">Sans</span>
+              <div style="font-family:var(--font-sans);font-weight:var(--weight-medium);font-size:var(--text-4xl);line-height:1;margin:var(--space-4) 0 var(--space-3)">Ag</div>
+              <p class="au-caption" style="line-height:var(--leading-relaxed)">Body, labels, controls. Neutral and legible. <code>--font-sans</code> — system-ui, Segoe UI, Roboto.</p>
+            </div>
+            <div class="au-card">
+              <span class="au-eyebrow" style="color:var(--info-text)">Mono</span>
+              <div style="font-family:var(--font-mono);font-weight:var(--weight-semibold);font-size:var(--text-4xl);line-height:1;margin:var(--space-4) 0 var(--space-3);font-variant-numeric:tabular-nums">09</div>
+              <p class="au-caption" style="line-height:var(--leading-relaxed)">All numbers, dates, deltas, code. Tabular. <code>--font-mono</code> — SF Mono, Cascadia, JetBrains Mono.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Big numeral -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">The tabular numeral</h2>
+          <p class="doc-section-lead">Ledger's hero moment: the current weight, set in the display face at <code>--text-6xl</code> with tabular figures. Because every digit is one width, the number never shifts as it counts or updates.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">type/hero-numeral</span></div>
+            <div class="doc-canvas">
+              <div class="au-bignum-field">
+                <span class="au-bignum" style="width:auto">74.9</span>
+                <span class="au-bignum-unit">kg</span>
+              </div>
+            </div>
+          </div>
+          <div class="doc-prose">
+            <p>The <code>.au-numeral</code> utility and <code>.au-mono</code> both set <code>font-variant-numeric: tabular-nums</code>. Apply one wherever numbers stack — a table column, a delta, a running total — so digits align on their decimal.</p>
+          </div>
+
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">type/tabular-alignment</span></div>
+            <div class="doc-canvas doc-canvas--start" style="gap:var(--space-8)">
+              <div>
+                <div class="au-caption" style="margin-bottom:var(--space-2)">Tabular — aligns</div>
+                <div style="font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:var(--text-lg);line-height:1.5;text-align:right">1,240.0<br>98.5<br>7.25</div>
+              </div>
+              <div>
+                <div class="au-caption" style="margin-bottom:var(--space-2)">Proportional — drifts</div>
+                <div style="font-family:var(--font-sans);font-variant-numeric:proportional-nums;font-size:var(--text-lg);line-height:1.5;text-align:right;color:var(--text-mid)">1,240.0<br>98.5<br>7.25</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Weights -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">Weights</h2>
+          <p class="doc-section-lead">Five steps. Regular carries body; semibold does most of the emphasis; heavy is reserved for display numerals.</p>
+          <div class="doc-table-wrap" style="padding:0 var(--space-5)">
+            <div class="type-row"><span class="weight-row" style="font-weight:var(--weight-regular)">Aurora 400</span><span class="type-meta"><b>--weight-regular</b>400 · body</span></div>
+            <div class="type-row"><span class="weight-row" style="font-weight:var(--weight-medium)">Aurora 500</span><span class="type-meta"><b>--weight-medium</b>500 · labels</span></div>
+            <div class="type-row"><span class="weight-row" style="font-weight:var(--weight-semibold)">Aurora 600</span><span class="type-meta"><b>--weight-semibold</b>600 · emphasis</span></div>
+            <div class="type-row"><span class="weight-row" style="font-weight:var(--weight-bold)">Aurora 700</span><span class="type-meta"><b>--weight-bold</b>700 · headings</span></div>
+            <div class="type-row"><span class="weight-row" style="font-weight:var(--weight-heavy)">Aurora 800</span><span class="type-meta"><b>--weight-heavy</b>800 · display</span></div>
+          </div>
+        </section>
+
+        <!-- Line height & tracking -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">Line-height &amp; letter-spacing</h2>
+          <p class="doc-section-lead">Tighter tracking as type gets bigger; more leading as lines get longer.</p>
+          <div class="au-grid au-grid-2" style="gap:var(--space-4)">
+            <div class="doc-table-wrap">
+              <table class="doc-table">
+                <thead><tr><th>Leading</th><th>Value</th><th>Use</th></tr></thead>
+                <tbody>
+                  <tr><td><code>--leading-tight</code></td><td>1.1</td><td>Display numerals</td></tr>
+                  <tr><td><code>--leading-snug</code></td><td>1.28</td><td>Headings</td></tr>
+                  <tr><td><code>--leading-normal</code></td><td>1.5</td><td>UI &amp; dense text</td></tr>
+                  <tr><td><code>--leading-relaxed</code></td><td>1.65</td><td>Long-form body</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="doc-table-wrap">
+              <table class="doc-table">
+                <thead><tr><th>Tracking</th><th>Value</th><th>Use</th></tr></thead>
+                <tbody>
+                  <tr><td><code>--tracking-tighter</code></td><td>-0.03em</td><td>Hero display</td></tr>
+                  <tr><td><code>--tracking-tight</code></td><td>-0.015em</td><td>Titles</td></tr>
+                  <tr><td><code>--tracking-normal</code></td><td>0</td><td>Body</td></tr>
+                  <tr><td><code>--tracking-wide</code></td><td>0.02em</td><td>Small caps</td></tr>
+                  <tr><td><code>--tracking-wider</code></td><td>0.08em</td><td>Eyebrows / labels</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-info"></use></svg>
+            <div class="doc-callout-body">Utilities bundle the common recipes: <code>.au-display</code>, <code>.au-h1/2/3</code>, <code>.au-lead</code>, <code>.au-caption</code>, <code>.au-eyebrow</code> and <code>.au-mono</code>. Prefer them over hand-setting size + weight + tracking each time.</div>
+          </div>
+        </section>
+
+        <!-- Pager -->
+        <nav class="doc-pager">
+          <a href="color.html"><small>Previous</small><span>Color</span></a>
+          <a class="doc-pager-next" href="spacing.html"><small>Next</small><span>Spacing &amp; layout</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

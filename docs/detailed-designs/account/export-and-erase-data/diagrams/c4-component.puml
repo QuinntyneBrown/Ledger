@@ -1,0 +1,37 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Export and erase data
+
+System_Ext(email, "Email provider", "Sends verification, reset, and notification email via SMTP")
+
+Container_Boundary(web, "Ledger Web App") {
+  Component(page, "DataAndPrivacyPage", "Angular component", "Export, delete-all, and account-deletion actions")
+  Component(client, "AccountApi", "Angular HTTP service", "Typed client in ledger/api for account endpoints")
+}
+
+Container_Boundary(api, "Ledger API") {
+  Component(ctrl, "AccountController", "ASP.NET Core controller", "Exposes /api/v1/account data endpoints")
+  Component(exportHandler, "ExportDataQueryHandler", "MediatR handler", "Builds owner CSV with formula fields neutralized")
+  Component(deleteAllHandler, "DeleteAllDataCommandHandler", "MediatR handler", "Removes entries, goal, and milestones for the owner")
+  Component(deleteAccountHandler, "DeleteAccountCommandHandler", "MediatR handler", "Erases or anonymizes the account")
+  Component(audit, "AuditLogger", "Application service", "Writes security audit records per L2-072")
+  Component(user, "User", "Domain entity", "Holds personal data erased or anonymized on deletion")
+  ComponentDb(db, "Ledger Database", "SQL Server", "Persists owner data and audit records")
+}
+
+Rel(page, client, "Calls")
+Rel(client, ctrl, "Calls /api/v1/account", "JSON/HTTPS")
+Rel(ctrl, exportHandler, "Sends ExportDataQuery")
+Rel(ctrl, deleteAllHandler, "Sends DeleteAllDataCommand")
+Rel(ctrl, deleteAccountHandler, "Sends DeleteAccountCommand")
+Rel(exportHandler, db, "Reads owner entries", "EF Core")
+Rel(deleteAllHandler, db, "Deletes owner tracking data", "EF Core")
+Rel(deleteAccountHandler, user, "Erases or anonymizes")
+Rel(deleteAccountHandler, db, "Persists erasure", "EF Core")
+Rel(exportHandler, audit, "Records data export per L2-072")
+Rel(deleteAllHandler, audit, "Records delete-all per L2-072")
+Rel(deleteAccountHandler, audit, "Records account deletion per L2-072")
+Rel(audit, db, "Writes audit record", "EF Core")
+Rel(exportHandler, email, "Notifies when export ready per L2-052", "SMTP")
+@enduml

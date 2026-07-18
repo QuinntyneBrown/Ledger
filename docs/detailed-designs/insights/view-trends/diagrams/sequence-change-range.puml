@@ -1,0 +1,45 @@
+@startuml
+title UML sequence behaviour — Change the trend range
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle { BorderColor #344054 FontColor #101828 }
+skinparam package  { BorderColor #667085 FontColor #101828 BackgroundColor #F9FAFB }
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "TrendsPage" as page
+  participant "TrendsApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "TrendsController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "GetTrendsQueryHandler" as handler
+  participant "WeightAnalytics" as analytics
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+actor -> page : Select a range (1W, 1M, 3M, 6M, 1Y, All)
+page -> page : Update the selection and retain it for the session per L2-026
+alt Range already loaded this session
+  page -> client : Read the cached window
+  client --> page : Cached trends view per L2-076
+else Range not yet loaded
+  page -> client : Request the selected window
+  client -> controller : HTTPS GET /api/v1/trends?range={range}
+  controller -> controller : Authenticate and scope to the owner
+  controller -> handler : Send GetTrendsQuery(range)
+  handler -> db : Read owner-scoped weigh-ins for the window on the (userId, date) index per L2-076
+  db --> handler : Weigh-ins for the window
+  handler -> analytics : Compute the moving average, band, and summary figures
+  analytics --> handler : Computed series and figures
+  handler -> handler : Compose the accessible chart description per L2-080
+  handler --> controller : Trends view for the range
+  controller --> client : 200 OK
+  client --> page : Trends view
+end
+page --> actor : Re-render the chart, summary, and recent entries for the range per L2-025, L2-028, L2-029
+@enduml

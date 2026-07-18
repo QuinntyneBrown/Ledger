@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dialogs &amp; sheets — Ledger states</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <link rel="stylesheet" href="../../../design-system/assets/docs.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+  <style>
+    .state-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:var(--space-5); }
+    .state-tile { border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; background:var(--surface-1); }
+    .state-tile-label { padding:var(--space-3) var(--space-4); border-bottom:1px solid var(--divider); font-family:var(--font-mono); font-size:var(--text-xs); color:var(--text-lo); display:flex; justify-content:space-between; align-items:center; }
+    .state-tile-body { padding:var(--space-6); display:grid; place-items:center; background:radial-gradient(var(--grid-line) 1px,transparent 1px); background-size:20px 20px; }
+    .state-tile-body .au-dialog, .state-tile-body .au-sheet { position:static; width:100%; animation:none; box-shadow:var(--shadow-2); }
+  </style>
+</head>
+<body class="gallery-body">
+  <div class="gallery-wrap">
+
+    <div class="doc-breadcrumb"><a href="../../index.html">Home</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> <a href="../index.html">Ledger</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Dialogs</div>
+    <div class="au-row-flex au-between au-wrap" style="gap:var(--space-4);margin-bottom:var(--space-7)">
+      <div>
+        <h1 class="doc-title" style="font-size:var(--text-3xl)">Dialogs &amp; sheets</h1>
+        <p class="doc-lead">Every modal in Ledger. Try the live ones, or read them all below.</p>
+      </div>
+      <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+    </div>
+
+    <!-- LIVE TRIGGERS -->
+    <div class="au-card au-card--pad-lg" style="margin-bottom:var(--space-8)">
+      <span class="au-eyebrow">Live</span>
+      <p class="au-text-mid au-mt-2" style="font-size:var(--text-sm);margin-bottom:var(--space-4)">These open the real overlay with scrim, focus and Esc-to-close.</p>
+      <div class="au-row-flex au-gap-3 au-wrap">
+        <button class="au-btn au-btn--outlined" data-dialog-open="dlgConfirm">Confirm dialog</button>
+        <button class="au-btn au-btn--danger" data-dialog-open="dlgDelete">Destructive dialog</button>
+        <button class="au-btn au-btn--tonal" data-dialog-open="sheetWeigh">Bottom sheet</button>
+        <button class="au-btn au-btn--primary" data-dialog-open="dlgWin">Celebration</button>
+      </div>
+    </div>
+
+    <!-- STATIC CATALOG -->
+    <div class="state-grid">
+
+      <div class="state-tile"><div class="state-tile-label"><span>confirm · neutral</span><span class="au-tag">edit goal</span></div><div class="state-tile-body">
+        <div class="au-dialog au-dialog--sm">
+          <div class="au-dialog-icon"><svg class="au-icon"><use href="#i-target"></use></svg></div>
+          <div class="au-dialog-title">Change your goal?</div>
+          <div class="au-dialog-body">Updating your goal will recalculate your projected date and progress.</div>
+          <div class="au-dialog-actions"><button class="au-btn au-btn--outlined">Cancel</button><button class="au-btn au-btn--primary">Save goal</button></div>
+        </div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label"><span>destructive</span><span class="au-tag">delete entry</span></div><div class="state-tile-body">
+        <div class="au-dialog au-dialog--sm">
+          <div class="au-dialog-icon is-danger"><svg class="au-icon"><use href="#i-trash"></use></svg></div>
+          <div class="au-dialog-title">Delete this weigh-in?</div>
+          <div class="au-dialog-body">Wed, Jul 17 · 75.1 kg. This can’t be undone.</div>
+          <div class="au-dialog-actions"><button class="au-btn au-btn--outlined">Keep</button><button class="au-btn au-btn--danger-solid">Delete</button></div>
+        </div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label"><span>warning</span><span class="au-tag">overwrite</span></div><div class="state-tile-body">
+        <div class="au-dialog au-dialog--sm">
+          <div class="au-dialog-icon" style="background:var(--warn-subtle);color:var(--warn-text)"><svg class="au-icon"><use href="#i-alert-triangle"></use></svg></div>
+          <div class="au-dialog-title">Already logged today</div>
+          <div class="au-dialog-body">You logged 74.9 kg this morning. Replace it with the new value?</div>
+          <div class="au-dialog-actions"><button class="au-btn au-btn--outlined">Keep both</button><button class="au-btn au-btn--primary">Replace</button></div>
+        </div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label"><span>destructive · type-to-confirm</span><span class="au-tag">delete all</span></div><div class="state-tile-body">
+        <div class="au-dialog au-dialog--sm">
+          <div class="au-dialog-icon is-danger"><svg class="au-icon"><use href="#i-alert-triangle"></use></svg></div>
+          <div class="au-dialog-title">Delete all data?</div>
+          <div class="au-dialog-body">This erases every weigh-in and your goal. Type <strong style="color:var(--text-hi)">DELETE</strong> to confirm.</div>
+          <div class="au-field" style="margin-top:var(--space-4)"><div class="au-input-wrap"><input class="au-input" placeholder="DELETE"></div></div>
+          <div class="au-dialog-actions"><button class="au-btn au-btn--outlined">Cancel</button><button class="au-btn au-btn--danger-solid is-disabled">Delete everything</button></div>
+        </div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label"><span>sign out</span><span class="au-tag">account</span></div><div class="state-tile-body">
+        <div class="au-dialog au-dialog--sm">
+          <div class="au-dialog-icon"><svg class="au-icon"><use href="#i-logout"></use></svg></div>
+          <div class="au-dialog-title">Sign out?</div>
+          <div class="au-dialog-body">Your data is safe and will sync when you sign back in.</div>
+          <div class="au-dialog-actions"><button class="au-btn au-btn--outlined">Cancel</button><button class="au-btn au-btn--primary">Sign out</button></div>
+        </div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label"><span>time picker</span><span class="au-tag">reminder</span></div><div class="state-tile-body">
+        <div class="au-dialog au-dialog--sm">
+          <div class="au-dialog-title" style="margin-bottom:var(--space-4)">Reminder time</div>
+          <div class="au-row-flex au-center au-gap-2" style="font-family:var(--font-display);font-size:var(--text-4xl);font-variant-numeric:tabular-nums">
+            <span>08</span><span class="au-text-lo">:</span><span>00</span>
+            <div class="au-segmented" style="margin-left:var(--space-3)"><button class="is-active is-brand">AM</button><button>PM</button></div>
+          </div>
+          <div class="au-dialog-actions"><button class="au-btn au-btn--outlined">Cancel</button><button class="au-btn au-btn--primary">Set time</button></div>
+        </div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label"><span>discard</span><span class="au-tag">unsaved</span></div><div class="state-tile-body">
+        <div class="au-dialog au-dialog--sm">
+          <div class="au-dialog-icon"><svg class="au-icon"><use href="#i-undo"></use></svg></div>
+          <div class="au-dialog-title">Discard changes?</div>
+          <div class="au-dialog-body">You have unsaved edits to your goal.</div>
+          <div class="au-dialog-actions"><button class="au-btn au-btn--outlined">Keep editing</button><button class="au-btn au-btn--danger">Discard</button></div>
+        </div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label"><span>bottom sheet</span><span class="au-tag">quick weigh-in</span></div><div class="state-tile-body">
+        <div class="au-sheet" style="border-radius:var(--radius-xl)">
+          <div class="au-sheet-grip"></div>
+          <div class="au-eyebrow">Today · Wed, Jul 18</div>
+          <div class="weigh-stepper" style="margin:var(--space-5) 0">
+            <button class="weigh-stepper-btn"><svg class="au-icon"><use href="#i-minus"></use></svg></button>
+            <div class="au-bignum-field"><span class="au-bignum" style="width:auto">74.8</span><span class="au-bignum-unit">kg</span></div>
+            <button class="weigh-stepper-btn"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+          </div>
+          <button class="au-btn au-btn--primary au-btn--block"><svg class="au-icon"><use href="#i-check"></use></svg> Log weight</button>
+        </div>
+      </div></div>
+
+    </div>
+  </div>
+
+  <!-- LIVE OVERLAYS -->
+  <div class="au-scrim" id="dlgConfirm" hidden><div class="au-dialog au-dialog--sm" role="dialog" aria-modal="true">
+    <button class="au-icon-btn au-icon-btn--sm au-dialog-close" data-dialog-close aria-label="Close"><svg class="au-icon"><use href="#i-x"></use></svg></button>
+    <div class="au-dialog-icon"><svg class="au-icon"><use href="#i-target"></use></svg></div>
+    <div class="au-dialog-title">Change your goal?</div>
+    <div class="au-dialog-body">Updating your goal will recalculate your projected date and progress.</div>
+    <div class="au-dialog-actions"><button class="au-btn au-btn--outlined" data-dialog-close>Cancel</button><button class="au-btn au-btn--primary" data-dialog-close data-toast="Goal updated">Save goal</button></div>
+  </div></div>
+
+  <div class="au-scrim" id="dlgDelete" hidden><div class="au-dialog au-dialog--sm" role="dialog" aria-modal="true">
+    <div class="au-dialog-icon is-danger"><svg class="au-icon"><use href="#i-trash"></use></svg></div>
+    <div class="au-dialog-title">Delete this weigh-in?</div>
+    <div class="au-dialog-body">Wed, Jul 17 · 75.1 kg. This can’t be undone.</div>
+    <div class="au-dialog-actions"><button class="au-btn au-btn--outlined" data-dialog-close>Keep</button><button class="au-btn au-btn--danger-solid" data-dialog-close data-toast="Entry deleted" data-toast-type="info" data-toast-action="Undo">Delete</button></div>
+  </div></div>
+
+  <div class="au-sheet-scrim" id="sheetWeigh" hidden><div class="au-sheet" role="dialog" aria-modal="true">
+    <div class="au-sheet-grip"></div>
+    <div class="au-row-flex au-between"><div class="au-eyebrow">Today · Wed, Jul 18</div><button class="au-icon-btn au-icon-btn--sm" data-dialog-close aria-label="Close"><svg class="au-icon"><use href="#i-x"></use></svg></button></div>
+    <div class="weigh-stepper" style="margin:var(--space-6) 0">
+      <button class="weigh-stepper-btn"><svg class="au-icon"><use href="#i-minus"></use></svg></button>
+      <div class="au-bignum-field"><span class="au-bignum" style="width:auto">74.8</span><span class="au-bignum-unit">kg</span></div>
+      <button class="weigh-stepper-btn"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+    </div>
+    <button class="au-btn au-btn--primary au-btn--lg au-btn--block" data-dialog-close data-toast="Weight logged — 74.8 kg" data-toast-action="Undo"><svg class="au-icon"><use href="#i-check"></use></svg> Log weight</button>
+  </div></div>
+
+  <div class="au-scrim" id="dlgWin" hidden><div class="au-dialog" role="dialog" aria-modal="true" style="text-align:center">
+    <div class="au-medal" style="margin:0 auto var(--space-5)"><svg class="au-icon"><use href="#i-trophy"></use></svg></div>
+    <div class="au-dialog-title" style="font-size:var(--text-2xl)">You hit your goal! 🎉</div>
+    <div class="au-dialog-body">73.0 kg reached — that’s −7.0 kg in 12 weeks. Time to set your next one.</div>
+    <div class="au-dialog-actions"><button class="au-btn au-btn--outlined" data-dialog-close>Later</button><button class="au-btn au-btn--primary" data-dialog-close>Set new goal</button></div>
+  </div></div>
+
+</body>
+</html>

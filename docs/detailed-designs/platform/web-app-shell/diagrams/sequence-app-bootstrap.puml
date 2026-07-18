@@ -1,0 +1,52 @@
+@startuml
+title UML sequence behaviour — Web app shell: application bootstrap
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "AppShellComponent" as shell
+  participant "ThemeService" as theme
+  participant "UnitService" as unit
+  participant "AppRouter" as router
+  participant "AuthGuard" as guard
+  participant "AuthApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "AuthController" as controller
+end box
+
+actor -> shell : Open app URL
+shell -> theme : Apply stored theme before first paint (L2-063)
+theme --> shell : Aurora theme applied, reduced-motion honored (L2-066)
+shell -> unit : Apply stored weight unit (kg/lbs)
+unit --> shell : Unit applied
+shell -> router : Resolve initial route
+router -> guard : CanMatch protected route
+guard -> client : Request current session
+client -> controller : GET /api/v1/auth/session (Bearer JWT)
+controller --> client : 200 session or 401
+alt Session valid
+  client --> guard : Authenticated session state
+  guard --> router : Allow activation
+  router -> router : Lazy-load feature module (L2-075, L2-086)
+  router --> shell : Activate feature route
+  shell --> actor : Render feature within navigation frame
+else No valid session
+  client --> guard : 401, no session
+  guard --> router : Redirect to sign-in
+  router --> shell : Activate sign-in route
+  shell --> actor : Present sign-in
+end
+@enduml

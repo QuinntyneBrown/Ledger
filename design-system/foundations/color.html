@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Color — Aurora Design System</title>
+  <meta name="description" content="Aurora's palette: the ink spine, the gold brand accent, teal, violet, coral, amber and sky — plus the semantic tokens that drive both themes.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+</head>
+<body class="doc-body">
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation">
+      <svg class="au-icon"><use href="#i-menu"></use></svg>
+    </button>
+    <a class="doc-brand" href="../index.html">
+      <span class="doc-brandmark"></span>
+      <span class="doc-brand-name">Aurora<small>Design System</small></span>
+    </a>
+    <nav class="doc-header-nav">
+      <a href="getting-started.html" class="is-active">Foundations</a>
+      <a href="../components/button.html">Components</a>
+      <a href="../patterns/forms-validation.html">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <!-- ============ CANONICAL SIDEBAR ============ -->
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="getting-started.html">Getting started</a>
+        <a class="doc-navlink is-active" href="color.html">Color</a>
+        <a class="doc-navlink" href="typography.html">Typography</a>
+        <a class="doc-navlink" href="spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="elevation.html">Elevation</a>
+        <a class="doc-navlink" href="shape.html">Shape</a>
+        <a class="doc-navlink" href="iconography.html">Iconography</a>
+        <a class="doc-navlink" href="motion.html">Motion</a>
+        <a class="doc-navlink" href="accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="../components/button.html">Button</a>
+        <a class="doc-navlink" href="../components/text-field.html">Text field</a>
+        <a class="doc-navlink" href="../components/select.html">Select</a>
+        <a class="doc-navlink" href="../components/switch.html">Switch</a>
+        <a class="doc-navlink" href="../components/checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="../components/slider.html">Slider</a>
+        <a class="doc-navlink" href="../components/date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="../components/card.html">Card</a>
+        <a class="doc-navlink" href="../components/list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="../components/chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="../components/avatar.html">Avatar</a>
+        <a class="doc-navlink" href="../components/progress.html">Progress</a>
+        <a class="doc-navlink" href="../components/gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="../components/chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="../components/dialog.html">Dialog</a>
+        <a class="doc-navlink" href="../components/snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="../components/banner.html">Banner</a>
+        <a class="doc-navlink" href="../components/tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="../components/empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="../components/tabs.html">Tabs</a>
+        <a class="doc-navlink" href="../components/navigation.html">Navigation</a>
+        <a class="doc-navlink" href="../components/milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="../patterns/forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="../patterns/data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="../patterns/data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="../patterns/theming.html">Theming</a>
+        <a class="doc-navlink" href="../patterns/motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Foundations <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Color</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-palette"></use></svg> Foundations</span>
+          <h1 class="doc-title">Color</h1>
+          <p class="doc-lead">A cool near-black spine of <strong style="color:var(--text-hi)">ink</strong>, a single luminous <strong style="color:var(--brand-strong)">gold</strong> accent, and a small set of status hues. Colour in Aurora carries meaning — teal is progress, coral is danger — and the signature <strong style="color:var(--text-hi)">aurora gradient</strong> ties it all together.</p>
+        </div>
+
+        <!-- Ink spine -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">Ink — the spine</h2>
+          <p class="doc-section-lead">A 14-step cool near-black to near-white ramp. Never pure <code>#000</code>; the slight blue keeps large dark fields from feeling dead. Ink defines every surface, border and text colour through the semantic layer.</p>
+          <div class="doc-scale">
+            <div style="background:var(--ink-950)"><span style="color:var(--ink-200)">950</span></div>
+            <div style="background:var(--ink-900)"><span style="color:var(--ink-200)">900</span></div>
+            <div style="background:var(--ink-850)"><span style="color:var(--ink-200)">850</span></div>
+            <div style="background:var(--ink-800)"><span style="color:var(--ink-200)">800</span></div>
+            <div style="background:var(--ink-750)"><span style="color:var(--ink-200)">750</span></div>
+            <div style="background:var(--ink-700)"><span style="color:var(--ink-200)">700</span></div>
+            <div style="background:var(--ink-600)"><span style="color:var(--ink-100)">600</span></div>
+            <div style="background:var(--ink-500)"><span style="color:var(--ink-050)">500</span></div>
+            <div style="background:var(--ink-400)"><span style="color:var(--ink-950)">400</span></div>
+            <div style="background:var(--ink-300)"><span style="color:var(--ink-950)">300</span></div>
+            <div style="background:var(--ink-200)"><span style="color:var(--ink-950)">200</span></div>
+            <div style="background:var(--ink-100)"><span style="color:var(--ink-950)">100</span></div>
+            <div style="background:var(--ink-050)"><span style="color:var(--ink-950)">050</span></div>
+            <div style="background:var(--ink-000)"><span style="color:var(--ink-950)">000</span></div>
+          </div>
+        </section>
+
+        <!-- Accents -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">Brand &amp; status ramps</h2>
+          <p class="doc-section-lead">Six chromatic families. <strong style="color:var(--brand-strong)">Gold</strong> is the brand. <strong style="color:var(--good-text)">Teal</strong> means on-track (down is good in a weight app). <strong>Violet</strong> opens the aurora journey; <strong style="color:var(--bad-text)">coral</strong>, <strong style="color:var(--warn-text)">amber</strong> and <strong style="color:var(--info-text)">sky</strong> carry danger, warning and information.</p>
+
+          <div class="doc-subtitle">Gold <span class="au-tag" style="margin-left:var(--space-2)">brand</span></div>
+          <div class="doc-scale" style="margin-bottom:var(--space-6)">
+            <div style="background:var(--gold-100)"><span style="color:var(--ink-950)">100</span></div>
+            <div style="background:var(--gold-200)"><span style="color:var(--ink-950)">200</span></div>
+            <div style="background:var(--gold-300)"><span style="color:var(--ink-950)">300</span></div>
+            <div style="background:var(--gold-400)"><span style="color:var(--ink-950)">400</span></div>
+            <div style="background:var(--gold-500)"><span style="color:var(--ink-950)">500</span></div>
+            <div style="background:var(--gold-600)"><span style="color:var(--ink-000)">600</span></div>
+            <div style="background:var(--gold-700)"><span style="color:var(--ink-000)">700</span></div>
+          </div>
+
+          <div class="doc-subtitle">Teal <span class="au-tag" style="margin-left:var(--space-2)">good · on-track</span></div>
+          <div class="doc-scale" style="margin-bottom:var(--space-6)">
+            <div style="background:var(--teal-200)"><span style="color:var(--ink-950)">200</span></div>
+            <div style="background:var(--teal-300)"><span style="color:var(--ink-950)">300</span></div>
+            <div style="background:var(--teal-400)"><span style="color:var(--ink-950)">400</span></div>
+            <div style="background:var(--teal-500)"><span style="color:var(--ink-950)">500</span></div>
+            <div style="background:var(--teal-600)"><span style="color:var(--ink-000)">600</span></div>
+            <div style="background:var(--teal-700)"><span style="color:var(--ink-000)">700</span></div>
+          </div>
+
+          <div class="au-grid au-grid-2" style="gap:var(--space-6)">
+            <div>
+              <div class="doc-subtitle" style="margin-top:0">Violet <span class="au-tag" style="margin-left:var(--space-2)">aurora start</span></div>
+              <div class="doc-scale">
+                <div style="background:var(--violet-300)"><span style="color:var(--ink-950)">300</span></div>
+                <div style="background:var(--violet-400)"><span style="color:var(--ink-000)">400</span></div>
+                <div style="background:var(--violet-500)"><span style="color:var(--ink-000)">500</span></div>
+                <div style="background:var(--violet-600)"><span style="color:var(--ink-000)">600</span></div>
+              </div>
+            </div>
+            <div>
+              <div class="doc-subtitle" style="margin-top:0">Coral <span class="au-tag" style="margin-left:var(--space-2)">danger</span></div>
+              <div class="doc-scale">
+                <div style="background:var(--coral-300)"><span style="color:var(--ink-950)">300</span></div>
+                <div style="background:var(--coral-400)"><span style="color:var(--ink-950)">400</span></div>
+                <div style="background:var(--coral-500)"><span style="color:var(--ink-000)">500</span></div>
+                <div style="background:var(--coral-600)"><span style="color:var(--ink-000)">600</span></div>
+              </div>
+            </div>
+            <div>
+              <div class="doc-subtitle" style="margin-top:0">Amber <span class="au-tag" style="margin-left:var(--space-2)">warning</span></div>
+              <div class="doc-scale">
+                <div style="background:var(--amber-400)"><span style="color:var(--ink-950)">400</span></div>
+                <div style="background:var(--amber-500)"><span style="color:var(--ink-950)">500</span></div>
+                <div style="background:var(--amber-600)"><span style="color:var(--ink-000)">600</span></div>
+              </div>
+            </div>
+            <div>
+              <div class="doc-subtitle" style="margin-top:0">Sky <span class="au-tag" style="margin-left:var(--space-2)">info</span></div>
+              <div class="doc-scale">
+                <div style="background:var(--sky-400)"><span style="color:var(--ink-950)">400</span></div>
+                <div style="background:var(--sky-500)"><span style="color:var(--ink-000)">500</span></div>
+                <div style="background:var(--sky-600)"><span style="color:var(--ink-000)">600</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Key swatches -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">Signature swatches</h2>
+          <p class="doc-section-lead">The five colours you will reach for most, with their primitive values.</p>
+          <div class="doc-swatches">
+            <div class="doc-swatch"><div class="doc-swatch-chip" style="background:var(--gold-400)"></div><div class="doc-swatch-meta"><div class="doc-swatch-name">Brand gold</div><div class="doc-swatch-val">--gold-400 · #f9c349</div></div></div>
+            <div class="doc-swatch"><div class="doc-swatch-chip" style="background:var(--teal-400)"></div><div class="doc-swatch-meta"><div class="doc-swatch-name">Good teal</div><div class="doc-swatch-val">--teal-400 · #37e0c8</div></div></div>
+            <div class="doc-swatch"><div class="doc-swatch-chip" style="background:var(--violet-500)"></div><div class="doc-swatch-meta"><div class="doc-swatch-name">Aurora violet</div><div class="doc-swatch-val">--violet-500 · #7c5cff</div></div></div>
+            <div class="doc-swatch"><div class="doc-swatch-chip" style="background:var(--coral-500)"></div><div class="doc-swatch-meta"><div class="doc-swatch-name">Bad coral</div><div class="doc-swatch-val">--coral-500 · #ff5c5c</div></div></div>
+            <div class="doc-swatch"><div class="doc-swatch-chip" style="background:var(--ink-900)"></div><div class="doc-swatch-meta"><div class="doc-swatch-name">Canvas ink</div><div class="doc-swatch-val">--ink-900 · #0a0c12</div></div></div>
+          </div>
+        </section>
+
+        <!-- Semantic tokens -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">Semantic tokens</h2>
+          <p class="doc-section-lead">The layer components actually read. Each maps to a primitive per theme — flip the theme and the meaning holds while the value changes. Toggle the theme (top right) to watch these previews follow.</p>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th style="width:56px">Token</th><th>Variable</th><th>Role</th></tr></thead>
+              <tbody>
+                <tr><td><span style="display:inline-block;width:26px;height:26px;border-radius:var(--radius-xs);background:var(--canvas);border:1px solid var(--border-strong)"></span></td><td><code>--canvas</code></td><td>The page backdrop — deep ink in dark, off-white in light.</td></tr>
+                <tr><td><span style="display:inline-block;width:26px;height:26px;border-radius:var(--radius-xs);background:var(--surface-1);border:1px solid var(--border-strong)"></span></td><td><code>--surface-1</code></td><td>Default card / panel surface, one step above the canvas.</td></tr>
+                <tr><td><span style="display:inline-block;width:26px;height:26px;border-radius:var(--radius-xs);background:var(--surface-2);border:1px solid var(--border-strong)"></span></td><td><code>--surface-2</code></td><td>Raised controls: inputs, chips, hover fills.</td></tr>
+                <tr><td><span style="display:inline-block;width:26px;height:26px;border-radius:var(--radius-xs);background:var(--surface-3);border:1px solid var(--border-strong)"></span></td><td><code>--surface-3</code></td><td>Tracks and the highest inset surface.</td></tr>
+                <tr><td><span style="display:inline-block;width:26px;height:26px;border-radius:var(--radius-xs);background:var(--text-hi)"></span></td><td><code>--text-hi</code></td><td>Primary text — headings, values, anything that must read first.</td></tr>
+                <tr><td><span style="display:inline-block;width:26px;height:26px;border-radius:var(--radius-xs);background:var(--text-mid)"></span></td><td><code>--text-mid</code></td><td>Body copy and secondary labels.</td></tr>
+                <tr><td><span style="display:inline-block;width:26px;height:26px;border-radius:var(--radius-xs);background:var(--text-lo)"></span></td><td><code>--text-lo</code></td><td>Captions, meta, placeholders, disabled affordances.</td></tr>
+                <tr><td><span style="display:inline-block;width:26px;height:26px;border-radius:var(--radius-xs);background:var(--brand)"></span></td><td><code>--brand</code></td><td>The gold accent: primary actions, focus, active nav.</td></tr>
+                <tr><td><span style="display:inline-block;width:26px;height:26px;border-radius:var(--radius-xs);background:var(--good)"></span></td><td><code>--good</code></td><td>Positive / on-track — a loss toward goal, success.</td></tr>
+                <tr><td><span style="display:inline-block;width:26px;height:26px;border-radius:var(--radius-xs);background:var(--warn)"></span></td><td><code>--warn</code></td><td>Warning — a plateau, an approaching limit.</td></tr>
+                <tr><td><span style="display:inline-block;width:26px;height:26px;border-radius:var(--radius-xs);background:var(--bad)"></span></td><td><code>--bad</code></td><td>Danger / destructive / error — off-track, delete.</td></tr>
+                <tr><td><span style="display:inline-block;width:26px;height:26px;border-radius:var(--radius-xs);background:var(--info)"></span></td><td><code>--info</code></td><td>Neutral information — tips, non-urgent notices.</td></tr>
+                <tr><td><span style="display:inline-block;width:26px;height:26px;border-radius:var(--radius-xs);background:var(--surface-1);border:1px solid var(--border)"></span></td><td><code>--border</code></td><td>Hairline separators and card edges (a low-alpha white/ink).</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="doc-prose">
+            <p>Each status hue also ships a <code>--*-subtle</code> tint (for fills) and a <code>--*-text</code> variant tuned for legible text on the canvas. Reach for <code>--good-text</code> on a label, <code>--good-subtle</code> behind it.</p>
+          </div>
+        </section>
+
+        <!-- Aurora gradient -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">The aurora gradient</h2>
+          <p class="doc-section-lead">The system's namesake: a <strong>violet → teal → gold</strong> sweep. It fills the signature dial, brand marks and progress bars — the colour itself communicates a journey from just-started to nearly-there.</p>
+          <div style="height:96px;border-radius:var(--radius-lg);background:var(--aurora);box-shadow:var(--shadow-2);margin-bottom:var(--space-4)"></div>
+          <div class="doc-swatches">
+            <div class="doc-swatch"><div class="doc-swatch-chip" style="background:var(--aurora-start)"></div><div class="doc-swatch-meta"><div class="doc-swatch-name">Start</div><div class="doc-swatch-val">--aurora-start</div></div></div>
+            <div class="doc-swatch"><div class="doc-swatch-chip" style="background:var(--aurora-mid)"></div><div class="doc-swatch-meta"><div class="doc-swatch-name">Mid</div><div class="doc-swatch-val">--aurora-mid</div></div></div>
+            <div class="doc-swatch"><div class="doc-swatch-chip" style="background:var(--aurora-end)"></div><div class="doc-swatch-meta"><div class="doc-swatch-name">End</div><div class="doc-swatch-val">--aurora-end</div></div></div>
+            <div class="doc-swatch"><div class="doc-swatch-chip" style="background:var(--aurora-soft)"></div><div class="doc-swatch-meta"><div class="doc-swatch-name">Soft wash</div><div class="doc-swatch-val">--aurora-soft</div></div></div>
+          </div>
+        </section>
+
+        <!-- Light / dark -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">Two themes, one meaning</h2>
+          <p class="doc-section-lead">Ledger is dark-first; the docs default to what you are reading now. Both are the same semantic tokens with a different primitive mapping. Nothing in a component changes.</p>
+          <div class="au-grid au-grid-2" style="gap:var(--space-4)">
+            <div style="border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border)">
+              <div data-theme="dark" style="background:var(--canvas);padding:var(--space-6);display:flex;gap:var(--space-3);align-items:center">
+                <span class="au-chip au-chip--brand">Dark</span>
+                <span class="au-delta is-good"><svg class="au-icon" style="width:15px;height:15px"><use href="#i-trending-down"></use></svg> −0.4 kg</span>
+                <span class="au-btn au-btn--primary au-btn--sm">Save</span>
+              </div>
+            </div>
+            <div style="border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border)">
+              <div data-theme="light" style="background:var(--canvas);padding:var(--space-6);display:flex;gap:var(--space-3);align-items:center">
+                <span class="au-chip au-chip--brand">Light</span>
+                <span class="au-delta is-good"><svg class="au-icon" style="width:15px;height:15px"><use href="#i-trending-down"></use></svg> −0.4 kg</span>
+                <span class="au-btn au-btn--primary au-btn--sm">Save</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-shield"></use></svg>
+            <div class="doc-callout-body"><strong>Contrast &amp; AA.</strong> Text tokens are tuned to clear <strong>WCAG&nbsp;AA</strong> (4.5:1 for body, 3:1 for large text) on their intended surface in both themes. The gold accent uses dark text on top (<code>--text-on-gold</code>) rather than white, which would fail. Never signal with colour alone — pair every status hue with an icon or label. See <a href="accessibility.html">Accessibility</a>.</div>
+          </div>
+        </section>
+
+        <!-- Pager -->
+        <nav class="doc-pager">
+          <a href="getting-started.html"><small>Previous</small><span>Getting started</span></a>
+          <a class="doc-pager-next" href="typography.html"><small>Next</small><span>Typography</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

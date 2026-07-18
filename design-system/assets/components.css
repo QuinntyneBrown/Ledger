@@ -1,0 +1,831 @@
+/* ==========================================================================
+   AURORA — Component Library
+   Consumes tokens.css. Used by BOTH the Aurora docs and the Ledger app.
+   Namespace: .au-*  (component)  ·  modifiers are compound classes.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   BASE / RESET
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+/* [hidden] must always win, even over display:flex/grid component rules. */
+[hidden] { display: none !important; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--text-hi);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  font-variant-ligatures: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 { margin: 0; font-weight: var(--weight-semibold); line-height: var(--leading-snug); }
+p { margin: 0; }
+a { color: var(--brand); text-decoration: none; }
+a:hover { text-decoration: underline; }
+img, svg { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:target { scroll-margin-top: var(--space-9); }
+
+::selection { background: var(--brand-subtle); color: var(--text-hi); }
+
+/* Custom scrollbar (subtle, brand-agnostic) */
+* { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: var(--radius-pill); border: 3px solid transparent; background-clip: content-box; }
+*::-webkit-scrollbar-thumb:hover { background: var(--text-lo); background-clip: content-box; }
+
+/* --------------------------------------------------------------------------
+   FOCUS — one consistent, visible ring everywhere.
+   -------------------------------------------------------------------------- */
+:where(a, button, input, select, textarea, [tabindex], .au-focusable):focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+
+/* --------------------------------------------------------------------------
+   TYPOGRAPHY UTILITIES
+   -------------------------------------------------------------------------- */
+.au-eyebrow {
+  font: var(--weight-semibold) var(--text-xs) / 1 var(--font-mono);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--brand);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.au-display {
+  font-family: var(--font-display);
+  font-weight: var(--weight-heavy);
+  letter-spacing: var(--tracking-tighter);
+  line-height: var(--leading-tight);
+}
+.au-numeral { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+.au-mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.au-text-mid { color: var(--text-mid); }
+.au-text-lo { color: var(--text-lo); }
+.au-lead { font-size: var(--text-lg); color: var(--text-mid); line-height: var(--leading-relaxed); }
+.au-caption { font-size: var(--text-xs); color: var(--text-lo); }
+.au-h1 { font-size: var(--text-3xl); letter-spacing: var(--tracking-tight); }
+.au-h2 { font-size: var(--text-2xl); letter-spacing: var(--tracking-tight); }
+.au-h3 { font-size: var(--text-xl); }
+
+/* Delta text — colored by trend direction */
+.au-delta { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: var(--weight-semibold); display: inline-flex; align-items: center; gap: var(--space-1); }
+.au-delta.is-good { color: var(--good-text); }
+.au-delta.is-bad { color: var(--bad-text); }
+.au-delta.is-flat { color: var(--text-lo); }
+
+/* --------------------------------------------------------------------------
+   BUTTON
+   -------------------------------------------------------------------------- */
+.au-btn {
+  --_bg: var(--surface-2);
+  --_fg: var(--text-hi);
+  --_bd: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0 var(--space-5);
+  border: 1px solid var(--_bd);
+  border-radius: var(--radius-pill);
+  background: var(--_bg);
+  color: var(--_fg);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-normal);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: background var(--dur-fast) var(--ease-standard),
+    border-color var(--dur-fast) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-standard),
+    box-shadow var(--dur-fast) var(--ease-standard);
+}
+.au-btn:hover { transform: translateY(-1px); }
+.au-btn:active { transform: translateY(0) scale(0.985); }
+.au-btn .au-icon { width: 18px; height: 18px; }
+
+/* Primary — the gold brand button */
+.au-btn--primary {
+  --_bg: var(--brand);
+  --_fg: var(--text-on-gold);
+  box-shadow: var(--shadow-glow-brand);
+}
+.au-btn--primary:hover { --_bg: var(--brand-hover); }
+.au-btn--primary:active { --_bg: var(--brand-press); }
+
+/* Tonal — subtle brand tint */
+.au-btn--tonal { --_bg: var(--brand-subtle); --_fg: var(--brand-strong); }
+.au-btn--tonal:hover { --_bg: var(--brand-subtle-hover); }
+
+/* Outlined */
+.au-btn--outlined { --_bg: transparent; --_fg: var(--text-hi); --_bd: var(--border-strong); }
+.au-btn--outlined:hover { --_bg: var(--surface-2); }
+
+/* Text / ghost */
+.au-btn--text { --_bg: transparent; --_fg: var(--text-hi); min-height: 40px; padding: 0 var(--space-3); }
+.au-btn--text:hover { --_bg: var(--surface-2); }
+
+/* Destructive */
+.au-btn--danger { --_bg: var(--bad-subtle); --_fg: var(--bad-text); }
+.au-btn--danger:hover { --_bg: var(--bad); --_fg: var(--white); }
+.au-btn--danger-solid { --_bg: var(--bad); --_fg: var(--white); }
+
+/* Sizes */
+.au-btn--sm { min-height: 34px; padding: 0 var(--space-3); font-size: var(--text-xs); }
+.au-btn--lg { min-height: 52px; padding: 0 var(--space-7); font-size: var(--text-base); }
+.au-btn--block { display: flex; width: 100%; }
+
+.au-btn:disabled,
+.au-btn.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  transform: none;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+/* Loading */
+.au-btn.is-loading { color: transparent; pointer-events: none; position: relative; }
+.au-btn.is-loading::after {
+  content: "";
+  position: absolute;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  color: var(--_fg);
+  animation: au-spin 0.7s linear infinite;
+}
+
+/* Icon button */
+.au-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px; height: 44px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-circle);
+  background: transparent;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard);
+}
+.au-icon-btn:hover { background: var(--surface-2); color: var(--text-hi); }
+.au-icon-btn .au-icon { width: 22px; height: 22px; }
+.au-icon-btn--sm { width: 36px; height: 36px; }
+.au-icon-btn--sm .au-icon { width: 18px; height: 18px; }
+
+/* FAB — floating action button */
+.au-fab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: 60px;
+  min-width: 60px;
+  padding: 0 var(--space-6);
+  border: none;
+  border-radius: var(--radius-xl);
+  background: var(--brand);
+  color: var(--text-on-gold);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  box-shadow: var(--shadow-3), var(--shadow-glow-brand);
+  transition: transform var(--dur-fast) var(--ease-emphasized), box-shadow var(--dur-fast) var(--ease-standard);
+}
+.au-fab:hover { transform: translateY(-2px) scale(1.02); }
+.au-fab:active { transform: scale(0.97); }
+.au-fab .au-icon { width: 26px; height: 26px; }
+.au-fab--round { padding: 0; width: 60px; }
+
+/* --------------------------------------------------------------------------
+   FIELD (text input, textarea)
+   -------------------------------------------------------------------------- */
+.au-field { display: flex; flex-direction: column; gap: var(--space-2); }
+.au-label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--text-mid);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.au-label .au-req { color: var(--bad-text); }
+.au-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 52px;
+  padding: 0 var(--space-4);
+  background: var(--surface-2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--dur-fast) var(--ease-standard), box-shadow var(--dur-fast) var(--ease-standard), background var(--dur-fast) var(--ease-standard);
+}
+.au-input-wrap:hover { border-color: var(--border-strong); }
+.au-input-wrap:focus-within {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 4px var(--brand-ring);
+}
+.au-input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-hi);
+  font-size: var(--text-base);
+}
+.au-input::placeholder { color: var(--text-lo); }
+.au-input-affix { color: var(--text-lo); font-size: var(--text-sm); font-family: var(--font-mono); white-space: nowrap; }
+.au-input-wrap .au-icon { width: 20px; height: 20px; color: var(--text-lo); flex: none; }
+
+/* States */
+.au-field.is-error .au-input-wrap { border-color: var(--bad); background: var(--bad-subtle); }
+.au-field.is-error .au-input-wrap:focus-within { box-shadow: 0 0 0 4px var(--bad-subtle); }
+.au-field.is-success .au-input-wrap { border-color: var(--good); }
+.au-input-wrap.is-disabled,
+.au-field.is-disabled .au-input-wrap { opacity: 0.5; pointer-events: none; }
+
+.au-help { font-size: var(--text-xs); color: var(--text-lo); display: flex; align-items: center; gap: var(--space-1); }
+.au-help.is-error { color: var(--bad-text); }
+.au-help.is-error .au-icon { width: 14px; height: 14px; }
+
+textarea.au-input { height: auto; min-height: 96px; padding: var(--space-3) 0; resize: vertical; line-height: var(--leading-normal); }
+
+/* Big numeric entry (weigh-in) */
+.au-bignum-field {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: var(--space-2);
+}
+.au-bignum {
+  font-family: var(--font-display);
+  font-weight: var(--weight-heavy);
+  font-size: var(--text-6xl);
+  letter-spacing: var(--tracking-tighter);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--text-hi);
+  background: none;
+  border: none;
+  outline: none;
+  text-align: right;
+  width: 3.4ch;
+}
+.au-bignum-unit { font-family: var(--font-mono); font-size: var(--text-2xl); color: var(--text-lo); font-weight: var(--weight-semibold); }
+
+/* --------------------------------------------------------------------------
+   SELECT
+   -------------------------------------------------------------------------- */
+.au-select-wrap { position: relative; display: flex; align-items: center; }
+.au-select {
+  appearance: none;
+  width: 100%;
+  min-height: 52px;
+  padding: 0 var(--space-8) 0 var(--space-4);
+  background: var(--surface-2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-hi);
+  font-size: var(--text-base);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-standard), box-shadow var(--dur-fast) var(--ease-standard);
+}
+.au-select:hover { border-color: var(--border-strong); }
+.au-select:focus-visible { border-color: var(--brand); box-shadow: 0 0 0 4px var(--brand-ring); outline: none; }
+.au-select-wrap .au-select-caret { position: absolute; right: var(--space-4); width: 18px; height: 18px; color: var(--text-lo); pointer-events: none; }
+
+/* --------------------------------------------------------------------------
+   SEGMENTED CONTROL
+   -------------------------------------------------------------------------- */
+.au-segmented {
+  display: inline-flex;
+  padding: 4px;
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-pill);
+  gap: 2px;
+}
+.au-segmented button {
+  border: none;
+  background: transparent;
+  color: var(--text-mid);
+  padding: var(--space-2) var(--space-4);
+  min-height: 36px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-standard), background var(--dur-fast) var(--ease-standard);
+}
+.au-segmented button:hover { color: var(--text-hi); }
+.au-segmented button.is-active { background: var(--surface-2); color: var(--text-hi); box-shadow: var(--shadow-1); }
+.au-segmented button.is-active.is-brand { background: var(--brand); color: var(--text-on-gold); }
+
+/* --------------------------------------------------------------------------
+   SWITCH
+   -------------------------------------------------------------------------- */
+.au-switch { position: relative; display: inline-flex; width: 52px; height: 32px; flex: none; }
+.au-switch input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.au-switch .au-switch-track {
+  position: absolute;
+  inset: 0;
+  background: var(--surface-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  transition: background var(--dur-base) var(--ease-standard), border-color var(--dur-base) var(--ease-standard);
+}
+.au-switch .au-switch-thumb {
+  position: absolute;
+  top: 4px; left: 4px;
+  width: 24px; height: 24px;
+  background: var(--text-mid);
+  border-radius: 50%;
+  transition: transform var(--dur-base) var(--ease-emphasized), background var(--dur-base) var(--ease-standard);
+}
+.au-switch input:checked ~ .au-switch-track { background: var(--brand); border-color: transparent; }
+.au-switch input:checked ~ .au-switch-thumb { transform: translateX(20px); background: var(--text-on-gold); }
+.au-switch input:focus-visible ~ .au-switch-track { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+.au-switch input:disabled ~ .au-switch-track { opacity: 0.5; }
+
+/* --------------------------------------------------------------------------
+   CHECKBOX / RADIO
+   -------------------------------------------------------------------------- */
+.au-check { display: inline-flex; align-items: center; gap: var(--space-3); cursor: pointer; font-size: var(--text-sm); }
+.au-check input { position: absolute; opacity: 0; width: 0; height: 0; }
+.au-check .au-box {
+  width: 22px; height: 22px; flex: none;
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-xs);
+  display: grid; place-items: center;
+  transition: background var(--dur-fast) var(--ease-standard), border-color var(--dur-fast) var(--ease-standard);
+}
+.au-check .au-box .au-icon { width: 16px; height: 16px; color: var(--text-on-gold); opacity: 0; transform: scale(0.6); transition: opacity var(--dur-fast), transform var(--dur-fast) var(--ease-emphasized); }
+.au-check input:checked ~ .au-box { background: var(--brand); border-color: var(--brand); }
+.au-check input:checked ~ .au-box .au-icon { opacity: 1; transform: scale(1); }
+.au-check input:focus-visible ~ .au-box { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+.au-check--radio .au-box { border-radius: 50%; }
+.au-check--radio .au-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--brand); opacity: 0; transform: scale(0.4); transition: opacity var(--dur-fast), transform var(--dur-fast) var(--ease-emphasized); }
+.au-check--radio input:checked ~ .au-box { border-color: var(--brand); background: transparent; }
+.au-check--radio input:checked ~ .au-box .au-dot { opacity: 1; transform: scale(1); }
+
+/* --------------------------------------------------------------------------
+   SLIDER
+   -------------------------------------------------------------------------- */
+.au-slider { width: 100%; height: 44px; display: flex; align-items: center; }
+.au-slider input[type="range"] {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 6px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--brand) 0 var(--_pct, 50%), var(--surface-3) var(--_pct, 50%) 100%);
+  outline: none;
+}
+.au-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--brand);
+  border: 3px solid var(--canvas);
+  box-shadow: var(--shadow-2), 0 0 0 1px var(--brand);
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-emphasized);
+}
+.au-slider input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+.au-slider input[type="range"]::-moz-range-thumb {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--brand); border: 3px solid var(--canvas);
+  box-shadow: var(--shadow-2); cursor: pointer;
+}
+
+/* --------------------------------------------------------------------------
+   CHIP / BADGE / TAG
+   -------------------------------------------------------------------------- */
+.au-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 32px;
+  padding: 0 var(--space-3);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--text-mid);
+  white-space: nowrap;
+}
+.au-chip .au-icon { width: 15px; height: 15px; }
+.au-chip--brand { background: var(--brand-subtle); border-color: transparent; color: var(--brand-strong); }
+.au-chip--good { background: var(--good-subtle); border-color: transparent; color: var(--good-text); }
+.au-chip--warn { background: var(--warn-subtle); border-color: transparent; color: var(--warn-text); }
+.au-chip--bad { background: var(--bad-subtle); border-color: transparent; color: var(--bad-text); }
+.au-chip--interactive { cursor: pointer; transition: background var(--dur-fast), border-color var(--dur-fast); }
+.au-chip--interactive:hover { border-color: var(--border-strong); background: var(--surface-3); }
+.au-chip.is-active { background: var(--brand); color: var(--text-on-gold); border-color: transparent; }
+
+.au-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 20px; height: 20px; padding: 0 6px;
+  background: var(--bad); color: var(--white);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-2xs); font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+.au-badge--dot { min-width: 10px; width: 10px; height: 10px; padding: 0; }
+.au-tag {
+  display: inline-flex; align-items: center; gap: var(--space-1);
+  padding: 2px var(--space-2); border-radius: var(--radius-xs);
+  font-family: var(--font-mono); font-size: var(--text-2xs); text-transform: uppercase;
+  letter-spacing: var(--tracking-wide); font-weight: var(--weight-semibold);
+  background: var(--surface-3); color: var(--text-mid);
+}
+
+/* --------------------------------------------------------------------------
+   CARD
+   -------------------------------------------------------------------------- */
+.au-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-1), var(--highlight-top);
+}
+.au-card--glass {
+  background: var(--surface-glass);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
+  border-color: var(--border-strong);
+}
+.au-card--raised { box-shadow: var(--shadow-3), var(--highlight-top); }
+.au-card--pad-lg { padding: var(--space-8); }
+.au-card--pad-sm { padding: var(--space-4); }
+.au-card--flush { padding: 0; overflow: hidden; }
+.au-card--interactive { cursor: pointer; transition: transform var(--dur-base) var(--ease-emphasized), box-shadow var(--dur-base) var(--ease-standard), border-color var(--dur-base); }
+.au-card--interactive:hover { transform: translateY(-3px); box-shadow: var(--shadow-3), var(--highlight-top); border-color: var(--border-strong); }
+.au-card-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); margin-bottom: var(--space-4); }
+.au-card-title { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--text-mid); display: flex; align-items: center; gap: var(--space-2); }
+
+/* Stat card */
+.au-stat { display: flex; flex-direction: column; gap: var(--space-2); }
+.au-stat-label { font-size: var(--text-xs); color: var(--text-lo); text-transform: uppercase; letter-spacing: var(--tracking-wide); font-family: var(--font-mono); }
+.au-stat-value { font-family: var(--font-display); font-weight: var(--weight-bold); font-size: var(--text-3xl); letter-spacing: var(--tracking-tight); font-variant-numeric: tabular-nums; line-height: 1; }
+.au-stat-value small { font-size: var(--text-lg); color: var(--text-lo); font-weight: var(--weight-medium); }
+
+/* --------------------------------------------------------------------------
+   DIALOG / BOTTOM SHEET / SCRIM
+   -------------------------------------------------------------------------- */
+.au-scrim {
+  position: fixed; inset: 0; z-index: var(--z-overlay);
+  background: var(--scrim);
+  -webkit-backdrop-filter: blur(var(--blur-scrim));
+  backdrop-filter: blur(var(--blur-scrim));
+  display: grid; place-items: center; padding: var(--space-4);
+  animation: au-fade-in var(--dur-base) var(--ease-standard);
+}
+.au-dialog {
+  position: relative; z-index: var(--z-modal);
+  width: min(440px, 100%);
+  background: var(--surface-1);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-4);
+  padding: var(--space-7);
+  animation: au-pop-in var(--dur-slow) var(--ease-emphasized);
+}
+.au-dialog--sm { width: min(360px, 100%); }
+.au-dialog--lg { width: min(600px, 100%); }
+.au-dialog-icon {
+  width: 52px; height: 52px; border-radius: var(--radius-md);
+  display: grid; place-items: center; margin-bottom: var(--space-5);
+  background: var(--brand-subtle); color: var(--brand-strong);
+}
+.au-dialog-icon.is-danger { background: var(--bad-subtle); color: var(--bad-text); }
+.au-dialog-icon.is-good { background: var(--good-subtle); color: var(--good-text); }
+.au-dialog-icon .au-icon { width: 26px; height: 26px; }
+.au-dialog-title { font-size: var(--text-xl); font-weight: var(--weight-bold); margin-bottom: var(--space-2); }
+.au-dialog-body { color: var(--text-mid); line-height: var(--leading-relaxed); }
+.au-dialog-actions { display: flex; gap: var(--space-3); margin-top: var(--space-7); }
+.au-dialog-actions .au-btn { flex: 1; }
+.au-dialog-close { position: absolute; top: var(--space-4); right: var(--space-4); }
+
+/* Bottom sheet (mobile weigh-in) */
+.au-sheet-scrim { position: fixed; inset: 0; z-index: var(--z-overlay); background: var(--scrim); display: flex; align-items: flex-end; justify-content: center; animation: au-fade-in var(--dur-base); }
+.au-sheet {
+  width: min(var(--app-max), 100%);
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+  padding: var(--space-6) var(--space-6) var(--space-8);
+  box-shadow: var(--shadow-4);
+  animation: au-slide-up var(--dur-slow) var(--ease-emphasized);
+}
+.au-sheet-grip { width: 40px; height: 4px; border-radius: var(--radius-pill); background: var(--border-strong); margin: 0 auto var(--space-6); }
+
+/* --------------------------------------------------------------------------
+   TOAST / SNACKBAR
+   -------------------------------------------------------------------------- */
+.au-toast-region { position: fixed; left: 50%; bottom: calc(var(--space-6) + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: var(--z-toast); display: flex; flex-direction: column; gap: var(--space-2); width: min(420px, calc(100% - var(--space-8))); }
+.au-toast {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--surface-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-3);
+  animation: au-slide-up var(--dur-slow) var(--ease-emphasized);
+}
+.au-toast .au-toast-icon { width: 22px; height: 22px; flex: none; }
+.au-toast-msg { flex: 1; font-size: var(--text-sm); color: var(--text-hi); }
+.au-toast-action { color: var(--brand); font-weight: var(--weight-semibold); font-size: var(--text-sm); background: none; border: none; cursor: pointer; padding: var(--space-1) var(--space-2); }
+.au-toast--success .au-toast-icon { color: var(--good); }
+.au-toast--error .au-toast-icon { color: var(--bad); }
+.au-toast--info .au-toast-icon { color: var(--info); }
+
+/* --------------------------------------------------------------------------
+   BANNER / ALERT
+   -------------------------------------------------------------------------- */
+.au-banner {
+  display: flex; align-items: flex-start; gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  font-size: var(--text-sm);
+}
+.au-banner .au-icon { width: 20px; height: 20px; flex: none; margin-top: 1px; }
+.au-banner-body { flex: 1; }
+.au-banner-title { font-weight: var(--weight-semibold); color: var(--text-hi); margin-bottom: 2px; }
+.au-banner-text { color: var(--text-mid); }
+.au-banner--info { background: var(--info-subtle); border-color: transparent; }
+.au-banner--info .au-icon { color: var(--info); }
+.au-banner--good { background: var(--good-subtle); border-color: transparent; }
+.au-banner--good .au-icon { color: var(--good); }
+.au-banner--warn { background: var(--warn-subtle); border-color: transparent; }
+.au-banner--warn .au-icon { color: var(--warn); }
+.au-banner--bad { background: var(--bad-subtle); border-color: transparent; }
+.au-banner--bad .au-icon { color: var(--bad); }
+
+/* --------------------------------------------------------------------------
+   TABS
+   -------------------------------------------------------------------------- */
+.au-tabs { display: flex; gap: var(--space-1); border-bottom: 1px solid var(--divider); }
+.au-tab {
+  position: relative; border: none; background: none; cursor: pointer;
+  padding: var(--space-3) var(--space-4);
+  color: var(--text-mid); font-size: var(--text-sm); font-weight: var(--weight-medium);
+  transition: color var(--dur-fast);
+}
+.au-tab:hover { color: var(--text-hi); }
+.au-tab.is-active { color: var(--text-hi); }
+.au-tab.is-active::after {
+  content: ""; position: absolute; left: var(--space-4); right: var(--space-4); bottom: -1px; height: 2px;
+  background: var(--brand); border-radius: var(--radius-pill);
+}
+.au-tabpanel[hidden] { display: none; }
+
+/* --------------------------------------------------------------------------
+   NAVIGATION — top bar, bottom nav, side rail
+   -------------------------------------------------------------------------- */
+.au-topbar {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+  height: 60px; padding: 0 var(--space-4);
+  background: var(--surface-glass);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: var(--z-nav);
+}
+.au-topbar-title { font-size: var(--text-base); font-weight: var(--weight-semibold); }
+
+.au-bottomnav {
+  display: flex; align-items: stretch; justify-content: space-around;
+  height: calc(64px + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  background: var(--surface-glass);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
+  border-top: 1px solid var(--border);
+}
+.au-navitem {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  border: none; background: none; cursor: pointer;
+  color: var(--text-lo); font-size: var(--text-2xs); font-weight: var(--weight-medium);
+  text-decoration: none; transition: color var(--dur-fast);
+}
+.au-navitem .au-icon { width: 24px; height: 24px; }
+.au-navitem:hover { color: var(--text-mid); text-decoration: none; }
+.au-navitem.is-active { color: var(--brand); }
+
+.au-siderail {
+  display: flex; flex-direction: column; gap: var(--space-1);
+  width: 240px; padding: var(--space-4);
+  border-right: 1px solid var(--border);
+  background: var(--surface-1);
+}
+.au-railitem {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-3) var(--space-4); border-radius: var(--radius-md);
+  color: var(--text-mid); font-size: var(--text-sm); font-weight: var(--weight-medium);
+  text-decoration: none; cursor: pointer; transition: background var(--dur-fast), color var(--dur-fast);
+}
+.au-railitem .au-icon { width: 20px; height: 20px; }
+.au-railitem:hover { background: var(--surface-2); color: var(--text-hi); text-decoration: none; }
+.au-railitem.is-active { background: var(--brand-subtle); color: var(--brand-strong); }
+
+/* --------------------------------------------------------------------------
+   LIST / LEDGER ROWS / TABLE
+   -------------------------------------------------------------------------- */
+.au-list { display: flex; flex-direction: column; }
+.au-row {
+  display: flex; align-items: center; gap: var(--space-4);
+  padding: var(--space-4) var(--space-2);
+  border-bottom: 1px solid var(--divider);
+}
+.au-row:last-child { border-bottom: none; }
+.au-row--interactive { cursor: pointer; border-radius: var(--radius-sm); transition: background var(--dur-fast); }
+.au-row--interactive:hover { background: var(--surface-2); }
+.au-row-date { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--text-lo); width: 6.5ch; flex: none; font-variant-numeric: tabular-nums; }
+.au-row-main { flex: 1; min-width: 0; }
+.au-row-primary { font-weight: var(--weight-medium); font-variant-numeric: tabular-nums; }
+.au-row-secondary { font-size: var(--text-xs); color: var(--text-lo); }
+.au-row-value { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: var(--weight-semibold); }
+
+.au-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+.au-table th { text-align: left; font-family: var(--font-mono); font-size: var(--text-2xs); text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--text-lo); font-weight: var(--weight-semibold); padding: var(--space-3); border-bottom: 1px solid var(--border); }
+.au-table td { padding: var(--space-3); border-bottom: 1px solid var(--divider); font-variant-numeric: tabular-nums; }
+.au-table tr:last-child td { border-bottom: none; }
+.au-table--zebra tbody tr:nth-child(even) { background: var(--surface-sunken); }
+
+/* --------------------------------------------------------------------------
+   PROGRESS — linear, circular spinner, skeleton
+   -------------------------------------------------------------------------- */
+.au-progress { height: 8px; background: var(--surface-3); border-radius: var(--radius-pill); overflow: hidden; }
+.au-progress-bar { height: 100%; background: var(--aurora); border-radius: var(--radius-pill); transition: width var(--dur-slow) var(--ease-standard); }
+.au-progress--brand .au-progress-bar { background: var(--brand); }
+
+.au-spinner { width: 24px; height: 24px; border-radius: 50%; border: 2.5px solid var(--surface-3); border-top-color: var(--brand); animation: au-spin 0.7s linear infinite; }
+.au-spinner--lg { width: 44px; height: 44px; border-width: 4px; }
+
+.au-skeleton { position: relative; overflow: hidden; background: var(--surface-2); border-radius: var(--radius-sm); }
+.au-skeleton::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, var(--border), transparent); transform: translateX(-100%); animation: au-shimmer 1.4s infinite; }
+.au-skeleton--text { height: 0.8em; margin: 0.25em 0; }
+.au-skeleton--circle { border-radius: 50%; }
+
+/* --------------------------------------------------------------------------
+   GAUGE / DIAL — the signature control. SVG-driven.
+   -------------------------------------------------------------------------- */
+.au-gauge { position: relative; display: inline-grid; place-items: center; --_val: 0; }
+.au-gauge svg { display: block; transform: rotate(-90deg); overflow: visible; }
+.au-gauge .au-gauge-track { fill: none; stroke: var(--surface-3); }
+.au-gauge .au-gauge-arc {
+  fill: none;
+  stroke: url(#auroraGrad);
+  stroke-linecap: round;
+  transition: stroke-dashoffset var(--dur-dial) var(--ease-emphasized);
+  filter: drop-shadow(0 0 8px rgba(249, 195, 73, 0.35));
+}
+.au-gauge-center { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 2px; }
+.au-gauge-value { font-family: var(--font-display); font-weight: var(--weight-heavy); font-size: var(--text-5xl); letter-spacing: var(--tracking-tighter); font-variant-numeric: tabular-nums; line-height: 1; }
+.au-gauge-unit { font-family: var(--font-mono); color: var(--text-lo); font-size: var(--text-sm); }
+.au-gauge-caption { font-size: var(--text-xs); color: var(--text-mid); margin-top: var(--space-1); }
+
+/* Small radial (progress ring) */
+.au-ring { --_pct: 0; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center;
+  background: conic-gradient(var(--brand) calc(var(--_pct) * 1%), var(--surface-3) 0); }
+.au-ring::before { content: ""; position: absolute; width: 44px; height: 44px; border-radius: 50%; background: var(--surface-1); }
+.au-ring span { position: relative; font-size: var(--text-xs); font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; }
+
+/* --------------------------------------------------------------------------
+   CHART — inline SVG trend styling helpers
+   -------------------------------------------------------------------------- */
+.au-chart { width: 100%; }
+.au-chart svg { width: 100%; height: auto; overflow: visible; display: block; }
+.au-chart .au-chart-grid line { stroke: var(--viz-grid); stroke-width: 1; }
+.au-chart .au-chart-axis { fill: var(--text-lo); font-family: var(--font-mono); font-size: 10px; }
+.au-chart .au-chart-band { fill: var(--viz-band); }
+.au-chart .au-chart-goal { stroke: var(--brand); stroke-width: 1.5; stroke-dasharray: 4 4; fill: none; }
+.au-chart .au-chart-line { fill: none; stroke: var(--viz-2); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.au-chart .au-chart-line--ma { stroke: var(--viz-1); stroke-width: 2; stroke-dasharray: none; opacity: 0.9; }
+.au-chart .au-chart-area { fill: url(#auChartArea); opacity: 0.5; }
+.au-chart .au-chart-dot { fill: var(--viz-2); stroke: var(--canvas); stroke-width: 2; }
+.au-chart .au-chart-dot--hi { fill: var(--brand); }
+.au-chart-draw { stroke-dasharray: var(--_len, 1000); stroke-dashoffset: var(--_len, 1000); animation: au-draw var(--dur-slower) var(--ease-standard) forwards; }
+
+/* Sparkline */
+.au-sparkline { width: 100%; height: 40px; }
+.au-sparkline path { fill: none; stroke: var(--good); stroke-width: 2; stroke-linecap: round; }
+
+/* --------------------------------------------------------------------------
+   AVATAR
+   -------------------------------------------------------------------------- */
+.au-avatar { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--aurora-soft); color: var(--text-hi); font-weight: var(--weight-bold); font-size: var(--text-sm); overflow: hidden; border: 1px solid var(--border); }
+.au-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.au-avatar--sm { width: 32px; height: 32px; font-size: var(--text-xs); }
+.au-avatar--lg { width: 72px; height: 72px; font-size: var(--text-xl); }
+
+/* --------------------------------------------------------------------------
+   TOOLTIP
+   -------------------------------------------------------------------------- */
+.au-tooltip { position: relative; display: inline-flex; }
+.au-tooltip-bubble {
+  position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  background: var(--ink-700); color: var(--ink-000);
+  padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm);
+  font-size: var(--text-xs); white-space: nowrap; box-shadow: var(--shadow-2);
+  opacity: 0; pointer-events: none; transition: opacity var(--dur-fast); z-index: var(--z-tooltip);
+}
+:root[data-theme="light"] .au-tooltip-bubble { background: var(--ink-800); color: var(--ink-000); }
+.au-tooltip:hover .au-tooltip-bubble, .au-tooltip:focus-within .au-tooltip-bubble { opacity: 1; }
+
+/* --------------------------------------------------------------------------
+   EMPTY STATE
+   -------------------------------------------------------------------------- */
+.au-empty { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--space-4); padding: var(--space-9) var(--space-6); }
+.au-empty-art { width: 88px; height: 88px; border-radius: var(--radius-xl); display: grid; place-items: center; background: var(--aurora-soft); color: var(--brand-strong); }
+.au-empty-art .au-icon { width: 40px; height: 40px; }
+.au-empty-title { font-size: var(--text-xl); font-weight: var(--weight-bold); }
+.au-empty-text { color: var(--text-mid); max-width: 32ch; }
+
+/* --------------------------------------------------------------------------
+   MILESTONE BADGE
+   -------------------------------------------------------------------------- */
+.au-badge-tile { position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--space-3); padding: var(--space-5); border-radius: var(--radius-lg); background: var(--surface-1); border: 1px solid var(--border); text-align: center; }
+.au-medal { width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle at 30% 25%, var(--gold-200), var(--gold-500) 70%, var(--gold-700)); color: var(--text-on-gold); box-shadow: var(--shadow-2), var(--shadow-glow-brand); }
+.au-medal .au-icon { width: 34px; height: 34px; }
+.au-medal--good { background: radial-gradient(circle at 30% 25%, var(--teal-200), var(--teal-500) 70%, var(--teal-700)); color: var(--text-on-teal); }
+.au-medal--violet { background: radial-gradient(circle at 30% 25%, var(--violet-300), var(--violet-500) 70%, var(--violet-600)); color: var(--white); }
+.au-badge-tile.is-locked { opacity: 0.55; filter: grayscale(0.8); }
+.au-badge-tile.is-locked .au-medal { background: var(--surface-3); color: var(--text-lo); box-shadow: none; }
+.au-badge-name { font-weight: var(--weight-semibold); font-size: var(--text-sm); }
+.au-badge-desc { font-size: var(--text-xs); color: var(--text-lo); }
+
+/* --------------------------------------------------------------------------
+   LEDGER LINE — recurring luminous rule motif (brand device)
+   -------------------------------------------------------------------------- */
+.au-ledger-line { height: 1px; border: none; background: linear-gradient(90deg, transparent, var(--brand), transparent); opacity: 0.6; margin: var(--space-6) 0; }
+.au-hairline { height: 1px; border: none; background: var(--divider); margin: var(--space-5) 0; }
+
+/* --------------------------------------------------------------------------
+   ICON helper
+   -------------------------------------------------------------------------- */
+.au-icon { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.au-icon--fill { fill: currentColor; stroke: none; }
+
+/* --------------------------------------------------------------------------
+   LAYOUT UTILITIES (small, purposeful set)
+   -------------------------------------------------------------------------- */
+.au-stack { display: flex; flex-direction: column; }
+.au-stack-2 { gap: var(--space-2); } .au-stack-3 { gap: var(--space-3); }
+.au-stack-4 { gap: var(--space-4); } .au-stack-6 { gap: var(--space-6); }
+.au-row-flex { display: flex; align-items: center; }
+.au-row-flex.au-gap-2 { gap: var(--space-2); } .au-row-flex.au-gap-3 { gap: var(--space-3); } .au-row-flex.au-gap-4 { gap: var(--space-4); }
+.au-between { justify-content: space-between; }
+.au-center { align-items: center; justify-content: center; }
+.au-wrap { flex-wrap: wrap; }
+.au-grid { display: grid; gap: var(--space-4); }
+.au-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.au-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.au-fill { flex: 1; }
+.au-mt-2 { margin-top: var(--space-2); } .au-mt-4 { margin-top: var(--space-4); } .au-mt-6 { margin-top: var(--space-6); }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* --------------------------------------------------------------------------
+   KEYFRAMES
+   -------------------------------------------------------------------------- */
+@keyframes au-spin { to { transform: rotate(360deg); } }
+@keyframes au-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes au-pop-in { from { opacity: 0; transform: translateY(8px) scale(0.96); } to { opacity: 1; transform: none; } }
+@keyframes au-slide-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@keyframes au-shimmer { to { transform: translateX(100%); } }
+@keyframes au-draw { to { stroke-dashoffset: 0; } }
+@keyframes au-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes au-count { from { opacity: 0.4; } to { opacity: 1; } }
+
+.au-rise { animation: au-rise var(--dur-slow) var(--ease-emphasized) backwards; }
+.au-rise-1 { animation-delay: 60ms; } .au-rise-2 { animation-delay: 120ms; }
+.au-rise-3 { animation-delay: 180ms; } .au-rise-4 { animation-delay: 240ms; }
+.au-rise-5 { animation-delay: 300ms; } .au-rise-6 { animation-delay: 360ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .au-rise, .au-toast, .au-dialog, .au-sheet, .au-scrim, .au-chart-draw { animation: none !important; }
+  .au-gauge .au-gauge-arc { transition: none !important; }
+}

@@ -1,0 +1,75 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Register an account
+
+class RegisterCommand {
+  +string FullName
+  +string Email
+  +string Password
+  +bool TermsAccepted
+}
+
+class RegisterCommandValidator {
+  +Validate(command: RegisterCommand): ValidationResult
+}
+
+class RegisterCommandHandler {
+  +Handle(command: RegisterCommand): Task<Result<Guid>>
+}
+
+class VerifyEmailCommand {
+  +string Token
+}
+
+class VerifyEmailCommandHandler {
+  +Handle(command: VerifyEmailCommand): Task<Result>
+}
+
+class User {
+  +Guid Id
+  +string Name
+  +string Email
+  +string PasswordHash
+  +int HeightCm
+  +DateTime MemberSince
+  +bool EmailVerified
+  +MarkEmailVerified(): void
+}
+
+class EmailVerificationToken {
+  +Guid Id
+  +Guid UserId
+  +string TokenHash
+  +DateTime ExpiresAt
+  +DateTime ConsumedAt
+  +bool IsUsable(now: DateTime): bool
+}
+
+interface IPasswordHasher {
+  +Hash(password: string): string
+}
+
+interface IEmailSender {
+  +SendVerification(email: string, token: string): Task
+}
+
+RegisterCommandHandler ..> RegisterCommand : handles
+RegisterCommandHandler ..> RegisterCommandValidator : validates with
+RegisterCommandHandler ..> IPasswordHasher : hashes password
+RegisterCommandHandler --> User : creates
+RegisterCommandHandler --> EmailVerificationToken : issues
+RegisterCommandHandler ..> IEmailSender : sends verification
+VerifyEmailCommandHandler ..> VerifyEmailCommand : handles
+VerifyEmailCommandHandler --> EmailVerificationToken : loads and consumes
+VerifyEmailCommandHandler --> User : marks verified
+User "1" --> "*" EmailVerificationToken : owns
+@enduml

@@ -1,0 +1,128 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Complete onboarding
+
+enum WeightUnit {
+  Kg
+  Lbs
+}
+
+enum OnboardingStep {
+  Unit
+  CurrentWeight
+  GoalWeight
+  TargetDate
+}
+
+class OnboardingWizard <<Angular component>> {
+  +currentStep: OnboardingStep
+  +unit: WeightUnit
+  +currentWeight: number
+  +goalWeight: number
+  +targetDate: string
+  +next(): void
+  +back(): void
+  +finish(): void
+}
+
+class OnboardingGuard <<Angular route guard>> {
+  +canActivate(): Observable<boolean | UrlTree>
+}
+
+class OnboardingApi <<Angular HTTP service>> {
+  +getStatus(): Observable<OnboardingStatus>
+  +saveProgress(draft: OnboardingDraft): Observable<void>
+  +complete(command: CompleteOnboardingCommand): Observable<CompleteOnboardingResult>
+}
+
+class GetOnboardingStatusQuery <<MediatR query>> {
+}
+
+class GetOnboardingStatusQueryHandler <<MediatR handler>> {
+  +Handle(query: GetOnboardingStatusQuery): Task<OnboardingStatus>
+}
+
+class OnboardingStatus <<DTO>> {
+  +HasGoal: bool
+  +LastCompletedStep: int
+  +Unit: WeightUnit?
+  +CurrentWeightKg: decimal?
+  +GoalWeightKg: decimal?
+  +TargetDate: DateOnly?
+}
+
+class CompleteOnboardingCommand <<MediatR command>> {
+  +Unit: WeightUnit
+  +CurrentWeightKg: decimal
+  +GoalWeightKg: decimal
+  +TargetDate: DateOnly
+}
+
+class CompleteOnboardingCommandHandler <<MediatR handler>> {
+  +Handle(command: CompleteOnboardingCommand): Task<Result<Guid>>
+}
+
+class Goal <<entity>> {
+  +Id: Guid
+  +UserId: Guid
+  +StartWeightKg: decimal
+  +GoalWeightKg: decimal
+  +TargetDate: DateOnly
+  +CreatedAt: DateTime
+  +{static} CreateBaseline(userId: Guid, startWeightKg: decimal, goalWeightKg: decimal, targetDate: DateOnly, now: DateTime): Goal
+}
+
+class WeighIn <<entity>> {
+  +Id: Guid
+  +UserId: Guid
+  +Date: DateOnly
+  +WeightKg: decimal
+  +CreatedAt: DateTime
+}
+
+class OnboardingDraft <<entity>> {
+  +UserId: Guid
+  +Unit: WeightUnit
+  +CurrentWeightKg: decimal?
+  +GoalWeightKg: decimal?
+  +TargetDate: DateOnly?
+  +LastCompletedStep: int
+  +UpdatedAt: DateTime
+}
+
+class Preferences <<entity>> {
+  +UserId: Guid
+  +Unit: WeightUnit
+}
+
+OnboardingWizard --> OnboardingStep : currentStep
+OnboardingWizard ..> OnboardingApi : calls
+OnboardingGuard ..> OnboardingApi : calls
+OnboardingApi ..> CompleteOnboardingCommand : posts
+OnboardingApi ..> OnboardingStatus : receives
+
+GetOnboardingStatusQueryHandler ..> GetOnboardingStatusQuery : handles
+GetOnboardingStatusQueryHandler --> OnboardingStatus : returns
+GetOnboardingStatusQueryHandler ..> Goal : reads
+GetOnboardingStatusQueryHandler ..> OnboardingDraft : reads
+
+CompleteOnboardingCommandHandler ..> CompleteOnboardingCommand : handles
+CompleteOnboardingCommandHandler --> Goal : creates baseline
+CompleteOnboardingCommandHandler --> WeighIn : seeds today
+CompleteOnboardingCommandHandler --> Preferences : sets unit
+CompleteOnboardingCommandHandler ..> OnboardingDraft : clears
+
+Preferences --> WeightUnit : has
+OnboardingDraft --> WeightUnit : has
+CompleteOnboardingCommand --> WeightUnit : has
+OnboardingStatus --> WeightUnit : has
+@enduml

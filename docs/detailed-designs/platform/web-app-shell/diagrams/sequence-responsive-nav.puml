@@ -1,0 +1,40 @@
+@startuml
+title UML sequence behaviour — Web app shell: responsive navigation
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "AppShellComponent" as shell
+  participant "BreakpointObserver" as bp
+  participant "NavigationComponent" as nav
+end box
+
+actor -> shell : Initial render or viewport resize
+shell -> bp : Observe viewport width
+bp --> shell : Active breakpoint
+shell -> nav : Render navigation for breakpoint (L2-064)
+alt Width XS (< 576px)
+  nav -> nav : Select bottom tab bar mode
+  nav --> actor : Bottom tab bar, targets >= 44x44px
+else Width MD+ (>= 768px)
+  nav -> nav : Select side navigation mode
+  nav --> actor : Persistent side navigation rail, no horizontal page scroll
+end
+actor -> shell : Resize across breakpoint
+shell -> bp : Observe new width
+bp --> shell : Updated breakpoint
+shell -> nav : Reflow navigation without losing state (L2-064)
+nav --> actor : Navigation mode switched, scroll position retained
+@enduml

@@ -1,0 +1,26 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Track goal progress
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+Container_Boundary(web, "Ledger Web App") {
+  Component(page, "GoalPage", "Angular component", "Renders the dial, chips, progress bar, and pace line")
+  Component(client, "GoalsApi", "Angular HTTP service", "Typed client in ledger/api")
+}
+Container_Boundary(api, "Ledger API") {
+  Component(ctrl, "GoalsController", "ASP.NET Core controller", "Exposes /api/v1/goals/progress endpoint")
+  Component(handler, "GetGoalProgressQueryHandler", "MediatR handler", "Computes progress and pace")
+  Component(entity, "Goal", "Domain entity", "Computes percent complete, remaining, and reached")
+  Component(smoother, "TrendSmoother", "Domain service", "Derives a smoothed weekly rate from recent entries")
+  ComponentDb(db, "Ledger Database", "SQL Server", "Persists goals and weigh-ins")
+}
+
+Rel(member, page, "Reads goal progress using", "HTTPS")
+Rel(page, client, "Calls")
+Rel(client, ctrl, "Sends request", "JSON/HTTPS")
+Rel(ctrl, handler, "Sends GetGoalProgressQuery")
+Rel(handler, entity, "Reads and computes progress")
+Rel(handler, smoother, "Derives weekly rate with")
+Rel(handler, db, "Reads goal and weigh-ins", "EF Core")
+@enduml

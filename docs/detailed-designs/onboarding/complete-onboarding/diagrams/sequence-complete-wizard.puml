@@ -1,0 +1,59 @@
+@startuml
+title UML sequence behaviour — Complete onboarding: four-step wizard commits the baseline
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "OnboardingWizard" as wizard
+  participant "OnboardingApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "OnboardingController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "CompleteOnboardingCommandHandler" as handler
+  participant "Preferences" as prefs
+  participant "Goal" as goal
+  participant "WeighIn" as weighin
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+
+actor -> wizard : Select unit (step 1/4)
+actor -> wizard : Enter current weight, stepping 0.1 (step 2/4)
+actor -> wizard : Enter goal weight; block goal equal to current per L2-010 (step 3/4)
+actor -> wizard : Pick a target date after today per L2-010 (step 4/4)
+actor -> wizard : Finish
+wizard -> client : Build typed completion request
+client -> controller : HTTPS POST /api/v1/onboarding/complete
+controller -> controller : Authenticate and scope to owner per L2-067
+controller -> handler : Send CompleteOnboardingCommand
+handler -> handler : Validate bounds and goal differs from current per L2-015 and L2-010
+handler -> db : Load Preferences (owner-scoped)
+db --> handler : Preferences
+handler -> prefs : Set Unit per L2-045
+prefs --> handler : Updated
+handler -> goal : Create baseline (StartWeightKg, GoalWeightKg, TargetDate) per L2-011
+goal --> handler : Goal
+handler -> weighin : Seed today's entry from the current weight per L2-011
+weighin --> handler : WeighIn
+handler -> db : Save Goal, WeighIn, Preferences and clear draft in one unit of work
+db --> handler : Commit
+handler --> controller : GoalId
+controller --> client : 201 Created or ProblemDetails
+client --> wizard : Completion result
+wizard --> actor : Route to dashboard; progress 0% and start equals current per L2-011
+@enduml

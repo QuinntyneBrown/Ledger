@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Motion — Aurora Design System</title>
+  <meta name="description" content="Aurora's motion language: duration and easing tokens, live interaction demos, and the reduced-motion contract that collapses every animation to a hair.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+  <style>
+    /* page-scoped: easing curve plots + live bars */
+    .ease-card { border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-4); background: var(--surface-1); }
+    .ease-plot { width: 100%; height: auto; display: block; margin-bottom: var(--space-3); }
+    .ease-plot .ref { stroke: var(--border-strong); stroke-width: 1.5; stroke-dasharray: 3 3; fill: none; }
+    .ease-plot .curve { stroke: var(--brand); stroke-width: 3; fill: none; stroke-linecap: round; }
+    .ease-name { font-weight: var(--weight-semibold); font-size: var(--text-sm); }
+    .ease-val { font-family: var(--font-mono); font-size: 10px; color: var(--text-lo); }
+    .dur-bar-track { flex: 1; height: 10px; border-radius: var(--radius-pill); background: var(--surface-3); overflow: hidden; }
+    .dur-bar-fill { height: 100%; width: 100%; background: var(--aurora); border-radius: var(--radius-pill); transform-origin: left; animation: dur-sweep 2.6s var(--ease-in-out) infinite; }
+    @keyframes dur-sweep { 0%,15% { transform: scaleX(0); } 55%,100% { transform: scaleX(1); } }
+    @media (prefers-reduced-motion: reduce) { .dur-bar-fill { animation: none; transform: scaleX(1); } }
+  </style>
+</head>
+<body class="doc-body">
+
+  <!-- Shared gradient for the live gauge demo -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="auroraGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="var(--aurora-start)"></stop>
+        <stop offset="52%" stop-color="var(--aurora-mid)"></stop>
+        <stop offset="100%" stop-color="var(--aurora-end)"></stop>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation">
+      <svg class="au-icon"><use href="#i-menu"></use></svg>
+    </button>
+    <a class="doc-brand" href="../index.html">
+      <span class="doc-brandmark"></span>
+      <span class="doc-brand-name">Aurora<small>Design System</small></span>
+    </a>
+    <nav class="doc-header-nav">
+      <a href="getting-started.html" class="is-active">Foundations</a>
+      <a href="../components/button.html">Components</a>
+      <a href="../patterns/forms-validation.html">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <!-- ============ CANONICAL SIDEBAR ============ -->
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="color.html">Color</a>
+        <a class="doc-navlink" href="typography.html">Typography</a>
+        <a class="doc-navlink" href="spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="elevation.html">Elevation</a>
+        <a class="doc-navlink" href="shape.html">Shape</a>
+        <a class="doc-navlink" href="iconography.html">Iconography</a>
+        <a class="doc-navlink is-active" href="motion.html">Motion</a>
+        <a class="doc-navlink" href="accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="../components/button.html">Button</a>
+        <a class="doc-navlink" href="../components/text-field.html">Text field</a>
+        <a class="doc-navlink" href="../components/select.html">Select</a>
+        <a class="doc-navlink" href="../components/switch.html">Switch</a>
+        <a class="doc-navlink" href="../components/checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="../components/slider.html">Slider</a>
+        <a class="doc-navlink" href="../components/date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="../components/card.html">Card</a>
+        <a class="doc-navlink" href="../components/list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="../components/chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="../components/avatar.html">Avatar</a>
+        <a class="doc-navlink" href="../components/progress.html">Progress</a>
+        <a class="doc-navlink" href="../components/gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="../components/chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="../components/dialog.html">Dialog</a>
+        <a class="doc-navlink" href="../components/snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="../components/banner.html">Banner</a>
+        <a class="doc-navlink" href="../components/tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="../components/empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="../components/tabs.html">Tabs</a>
+        <a class="doc-navlink" href="../components/navigation.html">Navigation</a>
+        <a class="doc-navlink" href="../components/milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="../patterns/forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="../patterns/data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="../patterns/data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="../patterns/theming.html">Theming</a>
+        <a class="doc-navlink" href="../patterns/motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Foundations <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Motion</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-zap"></use></svg> Foundations</span>
+          <h1 class="doc-title">Motion</h1>
+          <p class="doc-lead">Motion in Aurora is <strong style="color:var(--text-hi)">quiet and confirming</strong>, never decorative. A press dips, a card lifts, the dial sweeps once to settle. Timing comes from six duration tokens and five easings — and every one of them collapses to a hair when the reader asks for less.</p>
+        </div>
+
+        <!-- Durations -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">Durations</h2>
+          <p class="doc-section-lead">Shorter for small, local changes; longer for larger travel. The named steps keep timing consistent so the whole product feels like one hand moved it.</p>
+          <div class="au-stack au-stack-4" style="margin-bottom:var(--space-6)">
+            <div class="au-row-flex au-gap-4"><span style="width:150px;flex:none;font-family:var(--font-mono);font-size:var(--text-xs)">--dur-instant</span><span style="width:56px;flex:none;font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-lo)">80ms</span><div class="dur-bar-track"><div class="dur-bar-fill" style="animation-duration:2s"></div></div></div>
+            <div class="au-row-flex au-gap-4"><span style="width:150px;flex:none;font-family:var(--font-mono);font-size:var(--text-xs)">--dur-fast</span><span style="width:56px;flex:none;font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-lo)">140ms</span><div class="dur-bar-track"><div class="dur-bar-fill" style="animation-duration:2.2s"></div></div></div>
+            <div class="au-row-flex au-gap-4"><span style="width:150px;flex:none;font-family:var(--font-mono);font-size:var(--text-xs)">--dur-base</span><span style="width:56px;flex:none;font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-lo)">220ms</span><div class="dur-bar-track"><div class="dur-bar-fill" style="animation-duration:2.6s"></div></div></div>
+            <div class="au-row-flex au-gap-4"><span style="width:150px;flex:none;font-family:var(--font-mono);font-size:var(--text-xs)">--dur-slow</span><span style="width:56px;flex:none;font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-lo)">360ms</span><div class="dur-bar-track"><div class="dur-bar-fill" style="animation-duration:3s"></div></div></div>
+            <div class="au-row-flex au-gap-4"><span style="width:150px;flex:none;font-family:var(--font-mono);font-size:var(--text-xs)">--dur-slower</span><span style="width:56px;flex:none;font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-lo)">560ms</span><div class="dur-bar-track"><div class="dur-bar-fill" style="animation-duration:3.4s"></div></div></div>
+            <div class="au-row-flex au-gap-4"><span style="width:150px;flex:none;font-family:var(--font-mono);font-size:var(--text-xs)">--dur-dial</span><span style="width:56px;flex:none;font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-lo)">1100ms</span><div class="dur-bar-track"><div class="dur-bar-fill" style="animation-duration:4s"></div></div></div>
+          </div>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Token</th><th>Time</th><th>For</th></tr></thead>
+              <tbody>
+                <tr><td><code>--dur-instant</code></td><td>80ms</td><td>Colour &amp; opacity flips — hover tints, focus rings.</td></tr>
+                <tr><td><code>--dur-fast</code></td><td>140ms</td><td>Button presses, small state toggles, chip selection.</td></tr>
+                <tr><td><code>--dur-base</code></td><td>220ms</td><td>The default: switches, tab underlines, scrims.</td></tr>
+                <tr><td><code>--dur-slow</code></td><td>360ms</td><td>Dialogs and toasts entering, card lifts.</td></tr>
+                <tr><td><code>--dur-slower</code></td><td>560ms</td><td>Sheets sliding up, the chart drawing in.</td></tr>
+                <tr><td><code>--dur-dial</code></td><td>1100ms</td><td>The signature gauge sweep — one deliberate arrival.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Easings -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">Easing</h2>
+          <p class="doc-section-lead">The curve is the character. <strong>Standard</strong> handles most UI; <strong>emphasized</strong> gives reveals a springy, best-in-class settle; the directional pair covers enters and exits.</p>
+          <div class="au-grid au-grid-3" style="gap:var(--space-4)">
+            <div class="ease-card">
+              <svg class="ease-plot" viewBox="0 0 100 100" aria-hidden="true"><line class="ref" x1="0" y1="100" x2="100" y2="0"></line><path class="curve" d="M0 100 C 20 100 0 0 100 0"></path></svg>
+              <div class="ease-name">Standard</div>
+              <div class="ease-val">cubic-bezier(.2, 0, 0, 1)</div>
+              <p class="au-caption au-mt-2" style="line-height:var(--leading-relaxed)">The default. Quick out, gentle in. Most transitions.</p>
+            </div>
+            <div class="ease-card">
+              <svg class="ease-plot" viewBox="0 0 100 100" aria-hidden="true"><line class="ref" x1="0" y1="100" x2="100" y2="0"></line><path class="curve" d="M0 100 C 16 0 30 0 100 0"></path></svg>
+              <div class="ease-name">Emphasized</div>
+              <div class="ease-val">cubic-bezier(.16, 1, .3, 1)</div>
+              <p class="au-caption au-mt-2" style="line-height:var(--leading-relaxed)">Springy settle for reveals — the dial, sheets, pops.</p>
+            </div>
+            <div class="ease-card">
+              <svg class="ease-plot" viewBox="0 0 100 100" aria-hidden="true"><line class="ref" x1="0" y1="100" x2="100" y2="0"></line><path class="curve" d="M0 100 C 0 100 20 0 100 0"></path></svg>
+              <div class="ease-name">Out</div>
+              <div class="ease-val">cubic-bezier(0, 0, .2, 1)</div>
+              <p class="au-caption au-mt-2" style="line-height:var(--leading-relaxed)">Decelerate. Elements entering the screen.</p>
+            </div>
+            <div class="ease-card">
+              <svg class="ease-plot" viewBox="0 0 100 100" aria-hidden="true"><line class="ref" x1="0" y1="100" x2="100" y2="0"></line><path class="curve" d="M0 100 C 40 100 100 0 100 0"></path></svg>
+              <div class="ease-name">In</div>
+              <div class="ease-val">cubic-bezier(.4, 0, 1, 1)</div>
+              <p class="au-caption au-mt-2" style="line-height:var(--leading-relaxed)">Accelerate. Elements leaving the screen.</p>
+            </div>
+            <div class="ease-card">
+              <svg class="ease-plot" viewBox="0 0 100 100" aria-hidden="true"><line class="ref" x1="0" y1="100" x2="100" y2="0"></line><path class="curve" d="M0 100 C 40 100 20 0 100 0"></path></svg>
+              <div class="ease-name">In-out</div>
+              <div class="ease-val">cubic-bezier(.4, 0, .2, 1)</div>
+              <p class="au-caption au-mt-2" style="line-height:var(--leading-relaxed)">Symmetric. Movement that starts and ends on screen.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Live interactions -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">Live interactions</h2>
+          <p class="doc-section-lead">Hover and press these. Each is built from the tokens above — no bespoke timing, just the shared language.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">motion/press &amp; lift</span></div>
+            <div class="doc-canvas" style="gap:var(--space-8)">
+              <button class="au-btn au-btn--primary">Press me</button>
+              <div class="au-card au-card--interactive" style="width:180px"><div class="au-row-flex au-gap-3"><svg class="au-icon" style="color:var(--brand)"><use href="#i-trending-down"></use></svg><div><div class="au-caption">Hover to lift</div><strong style="font-family:var(--font-mono)">−0.4 kg</strong></div></div></div>
+              <div class="au-gauge" data-value="68" data-sweep="360" style="width:110px;height:110px">
+                <svg viewBox="0 0 120 120" width="110" height="110"><circle class="au-gauge-track" cx="60" cy="60" r="52" stroke-width="11"></circle><circle class="au-gauge-arc" cx="60" cy="60" r="52" stroke-width="11"></circle></svg>
+                <div class="au-gauge-center"><div class="au-gauge-value" style="font-size:var(--text-lg)"><span data-countup="68" data-decimals="0" data-suffix="%">0%</span></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="doc-prose">
+            <p>Presses use <code>transform: translateY</code> + <code>scale</code> at <code>--dur-fast</code>; the card lift rides <code>--dur-base</code> on <code>--ease-emphasized</code>; the gauge sweeps once over <code>--dur-dial</code> and the number counts up in step.</p>
+          </div>
+        </section>
+
+        <!-- Reduced motion -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">The reduced-motion contract</h2>
+          <p class="doc-section-lead">Motion is an enhancement, never a requirement. When the reader has <code>prefers-reduced-motion: reduce</code> set, Aurora redefines every duration token to <strong>1ms</strong> — animations resolve instantly to their final state, and nothing is lost.</p>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code><span class="tok-prop">@media</span> (prefers-reduced-motion: reduce) {
+  <span class="tok-prop">:root</span> {
+    <span class="tok-prop">--dur-instant</span>: <span class="tok-str">1ms</span>; <span class="tok-prop">--dur-fast</span>: <span class="tok-str">1ms</span>; <span class="tok-prop">--dur-base</span>: <span class="tok-str">1ms</span>;
+    <span class="tok-prop">--dur-slow</span>: <span class="tok-str">1ms</span>; <span class="tok-prop">--dur-slower</span>: <span class="tok-str">1ms</span>; <span class="tok-prop">--dur-dial</span>: <span class="tok-str">1ms</span>;
+  }
+}</code></pre>
+          </div>
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-shield"></use></svg>
+            <div class="doc-callout-body">Because components read the tokens rather than hardcoding times, this single block disables motion everywhere at once. The runtime also skips the gauge sweep and count-up JS when reduced motion is requested. The <code>?static=1</code> flag on any page freezes animation the same way for screenshots.</div>
+          </div>
+        </section>
+
+        <!-- Pager -->
+        <nav class="doc-pager">
+          <a href="iconography.html"><small>Previous</small><span>Iconography</span></a>
+          <a class="doc-pager-next" href="accessibility.html"><small>Next</small><span>Accessibility</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

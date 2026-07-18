@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Complete onboarding
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+System_Boundary(ledger, "Ledger") {
+  Container(web, "Ledger Web App", "Angular 21 SPA", "Hosts the onboarding wizard and the onboarding route guard")
+  Container(api, "Ledger API", "ASP.NET Core, MediatR", "CQRS application and domain logic; hosts the SignalR hub")
+  ContainerDb(db, "Ledger Database", "SQL Server", "Members, goals, weigh-ins, onboarding drafts, preferences")
+}
+Rel(member, web, "Completes the onboarding wizard in", "HTTPS")
+Rel(web, api, "Reads onboarding status and submits completion via", "JSON/HTTPS")
+Rel(api, db, "Reads and writes goals, weigh-ins, drafts, and preferences", "EF Core")
+@enduml

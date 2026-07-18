@@ -1,0 +1,62 @@
+@startuml
+title UML sequence behaviour — Track streaks: recompute the streak on log or edit
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "LogWeighInPage" as page
+  participant "WeighInsApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "WeighInsController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "LogWeighInCommandHandler" as weighInHandler
+  participant "RecomputeStreakCommandHandler" as handler
+  participant "StreakCalculator" as calc
+  participant "Streak" as entity
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+
+actor -> page : Log or edit a weigh-in
+page -> client : Build typed request
+client -> controller : HTTPS request POST or PUT /api/v1/weigh-ins
+controller -> controller : Authenticate and authorize owner
+controller -> weighInHandler : Send LogWeighInCommand
+weighInHandler -> db : Upsert or update the entry per L2-016 and L2-018
+db --> weighInHandler : Commit
+weighInHandler -> handler : Send RecomputeStreakCommand on log or edit
+handler -> db : Load owner weigh-in dates by userId and date
+db --> handler : Weigh-in dates
+handler -> calc : Compute over consecutive local days per L2-035
+note right of calc
+  Current counts unbroken days ending today,
+  or yesterday if today is not yet logged.
+  A missed day resets current; day boundaries
+  respect the member's local calendar day (L2-035).
+end note
+calc --> handler : StreakResult with current and longest
+handler -> entity : Apply result; retain longest as the maximum per L2-035
+entity --> handler : Updated streak
+handler -> db : Save streak in one unit of work
+db --> handler : Commit
+handler --> weighInHandler : Updated streak
+weighInHandler --> controller : Typed result
+controller --> client : HTTP response or ProblemDetails
+client --> page : Result with current and longest streak
+page --> actor : Present the updated streak and flame indicator per L2-035
+@enduml

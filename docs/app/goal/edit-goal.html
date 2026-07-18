@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Edit goal — Ledger</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+</head>
+<body class="app-body">
+
+  <div class="app-frame">
+    <div class="app-statusbar">
+      <span>9:41</span>
+      <span class="app-statusbar-right">
+        <svg class="au-icon" style="width:15px"><use href="#i-activity"></use></svg>
+        <svg class="au-icon" style="width:15px"><use href="#i-droplet"></use></svg>
+        <span class="au-mono" style="font-size:11px">100%</span>
+      </span>
+    </div>
+
+    <div class="app-screen">
+      <div class="app-header">
+        <a class="au-icon-btn" href="goal.html" aria-label="Back to goal"><svg class="au-icon"><use href="#i-arrow-left"></use></svg></a>
+        <div class="app-header-title" style="font-size:var(--text-base)">Edit goal</div>
+        <span style="width:44px"></span>
+      </div>
+
+      <div class="app-scroll">
+        <div class="au-eyebrow au-mt-2">Refine your plan</div>
+        <p class="au-text-mid au-mt-2" style="font-size:var(--text-sm)">Changes here reshape your dial, pace and projected date.</p>
+
+        <!-- units -->
+        <div class="au-field au-mt-6">
+          <label class="au-label">Units</label>
+          <div class="au-segmented" role="group" aria-label="Weight units">
+            <button class="is-active is-brand" aria-pressed="true">Kilograms</button>
+            <button aria-pressed="false">Pounds</button>
+          </div>
+        </div>
+
+        <!-- starting weight -->
+        <div class="au-field au-mt-6">
+          <label class="au-label" for="start"><svg class="au-icon" style="width:16px;height:16px"><use href="#i-flag"></use></svg> Starting weight</label>
+          <div class="au-input-wrap">
+            <input class="au-input au-mono" id="start" value="80.0" inputmode="decimal">
+            <span class="au-input-affix">kg</span>
+          </div>
+        </div>
+
+        <!-- goal weight — VALIDATION ERROR (goal == start) -->
+        <div class="au-field is-error au-mt-6">
+          <label class="au-label" for="goal"><svg class="au-icon" style="width:16px;height:16px"><use href="#i-target"></use></svg> Goal weight</label>
+          <div class="au-input-wrap">
+            <input class="au-input au-mono" id="goal" value="80.0" inputmode="decimal" aria-invalid="true" aria-describedby="goalErr">
+            <span class="au-input-affix">kg</span>
+          </div>
+          <p class="au-help is-error" id="goalErr"><svg class="au-icon"><use href="#i-alert-circle"></use></svg> Your goal can't equal your start weight — enter a number below 80.0 kg.</p>
+        </div>
+
+        <!-- target date -->
+        <div class="au-field au-mt-6">
+          <label class="au-label" for="date"><svg class="au-icon" style="width:16px;height:16px"><use href="#i-calendar"></use></svg> Target date</label>
+          <div class="au-input-wrap">
+            <input class="au-input au-mono" id="date" value="Aug 10 2026" readonly>
+            <svg class="au-icon"><use href="#i-chevron-down"></use></svg>
+          </div>
+        </div>
+
+        <!-- projected / suggested pace preview -->
+        <div class="au-card au-mt-6" style="background:var(--brand-subtle);border-color:transparent">
+          <div class="au-row-flex au-between">
+            <div>
+              <div class="au-eyebrow" style="color:var(--brand-strong)">Suggested pace</div>
+              <div class="au-mono" style="font-size:var(--text-3xl);font-weight:var(--weight-bold);color:var(--text-hi);letter-spacing:var(--tracking-tight);margin-top:4px">−0.5<span style="font-size:var(--text-sm);color:var(--text-lo)"> kg / wk</span></div>
+            </div>
+            <svg class="au-icon" style="width:34px;height:34px;color:var(--brand-strong)"><use href="#i-trending-down"></use></svg>
+          </div>
+          <p class="au-caption au-mt-2">Aim for about 1% of body weight a week. At this pace a 73.0 kg goal lands around <strong style="color:var(--text-mid)">Oct 6 2026</strong>.</p>
+        </div>
+
+        <!-- unrealistic rate warning -->
+        <div class="au-banner au-banner--warn au-mt-4">
+          <svg class="au-icon"><use href="#i-alert-triangle"></use></svg>
+          <div class="au-banner-body">
+            <div class="au-banner-title">That target date is aggressive</div>
+            <div class="au-banner-text">Reaching goal by Aug 10 would need over <strong>1.1 kg / week</strong> — faster than the recommended ~0.7 kg. Pick a later date for a pace you can hold.</div>
+          </div>
+        </div>
+
+        <!-- actions -->
+        <button class="au-btn au-btn--primary au-btn--lg au-btn--block au-mt-6" data-dialog-open="confirmGoal">
+          <svg class="au-icon"><use href="#i-check"></use></svg> Save goal
+        </button>
+        <a class="au-btn au-btn--text au-btn--block" href="goal.html" style="margin-top:var(--space-2)">Cancel</a>
+        <div style="height:var(--space-4)"></div>
+      </div>
+    </div>
+
+    <nav class="au-bottomnav app-bottomnav">
+      <a class="app-rail-brand" href="../dashboard/dashboard.html"><span class="app-rail-mark"></span>Ledger</a>
+      <a class="au-navitem" href="../dashboard/dashboard.html"><svg class="au-icon"><use href="#i-home"></use></svg>Home</a>
+      <a class="au-navitem" href="../trends/trends.html"><svg class="au-icon"><use href="#i-activity"></use></svg>Trends</a>
+      <button class="app-navfab" data-dialog-open="quickWeigh" aria-label="Log weight"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      <a class="au-navitem" href="../milestones/milestones.html"><svg class="au-icon"><use href="#i-trophy"></use></svg>Badges</a>
+      <a class="au-navitem" href="../settings/account.html"><svg class="au-icon"><use href="#i-user"></use></svg>Profile</a>
+    </nav>
+  </div>
+
+  <!-- CONFIRM GOAL CHANGE DIALOG -->
+  <div class="au-scrim" id="confirmGoal" hidden>
+    <div class="au-dialog au-dialog--sm" role="dialog" aria-modal="true" aria-labelledby="goalDlgTitle">
+      <div class="au-dialog-icon"><svg class="au-icon"><use href="#i-target"></use></svg></div>
+      <div class="au-dialog-title" id="goalDlgTitle">Change your goal?</div>
+      <p class="au-dialog-body">Changing your goal will reset your projections and pace history for this target. Your logged weights stay intact.</p>
+      <div class="au-dialog-actions">
+        <button class="au-btn au-btn--outlined" data-dialog-close>Cancel</button>
+        <button class="au-btn au-btn--primary" data-dialog-close data-toast="Goal updated" data-toast-type="success">Save changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK WEIGH-IN SHEET -->
+  <div class="au-sheet-scrim" id="quickWeigh" hidden>
+    <div class="au-sheet" role="dialog" aria-modal="true" aria-label="Log today's weight">
+      <div class="au-sheet-grip"></div>
+      <div class="au-row-flex au-between" style="margin-bottom:var(--space-2)">
+        <div><div class="au-eyebrow">Today</div><div style="font-family:var(--font-mono);color:var(--text-lo);font-size:var(--text-sm)">Wed, Jul 18</div></div>
+        <button class="au-icon-btn" data-dialog-close aria-label="Close"><svg class="au-icon"><use href="#i-x"></use></svg></button>
+      </div>
+      <div class="weigh-stepper" style="margin:var(--space-6) 0">
+        <button class="weigh-stepper-btn" aria-label="Decrease"><svg class="au-icon"><use href="#i-minus"></use></svg></button>
+        <div class="au-bignum-field">
+          <span class="au-bignum" style="width:auto">74.9</span>
+          <span class="au-bignum-unit">kg</span>
+        </div>
+        <button class="weigh-stepper-btn" aria-label="Increase"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      </div>
+      <button class="au-btn au-btn--primary au-btn--lg au-btn--block" data-dialog-close data-toast="Weight logged — 74.9 kg" data-toast-action="Undo">
+        <svg class="au-icon"><use href="#i-check"></use></svg> Log weight
+      </button>
+    </div>
+  </div>
+
+</body>
+</html>

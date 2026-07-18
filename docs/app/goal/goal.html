@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your goal — Ledger</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+</head>
+<body class="app-body">
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="auroraGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="var(--aurora-start)"></stop>
+        <stop offset="52%" stop-color="var(--aurora-mid)"></stop>
+        <stop offset="100%" stop-color="var(--aurora-end)"></stop>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <div class="app-frame">
+    <div class="app-statusbar">
+      <span>9:41</span>
+      <span class="app-statusbar-right">
+        <svg class="au-icon" style="width:15px"><use href="#i-activity"></use></svg>
+        <svg class="au-icon" style="width:15px"><use href="#i-droplet"></use></svg>
+        <span class="au-mono" style="font-size:11px">100%</span>
+      </span>
+    </div>
+
+    <div class="app-screen">
+      <div class="app-header">
+        <a class="au-icon-btn" href="../dashboard/dashboard.html" aria-label="Back to dashboard"><svg class="au-icon"><use href="#i-arrow-left"></use></svg></a>
+        <div class="app-header-title" style="font-size:var(--text-base)">Your goal</div>
+        <a class="au-icon-btn" href="edit-goal.html" aria-label="Edit goal"><svg class="au-icon"><use href="#i-edit"></use></svg></a>
+      </div>
+
+      <div class="app-scroll">
+        <!-- DIAL: % to goal -->
+        <section class="dash-hero au-rise au-rise-1" style="padding-top:var(--space-2);padding-bottom:0">
+          <div class="au-gauge" data-value="73" data-sweep="360" style="width:200px;height:200px" role="img" aria-label="73 percent of the way to your goal">
+            <svg viewBox="0 0 120 120" width="200" height="200">
+              <circle class="au-gauge-track" cx="60" cy="60" r="52" stroke-width="9"></circle>
+              <circle class="au-gauge-arc" cx="60" cy="60" r="52" stroke-width="9"></circle>
+            </svg>
+            <div class="au-gauge-center">
+              <div class="au-gauge-caption" style="margin:0 0 2px">COMPLETE</div>
+              <div class="au-gauge-value" style="font-size:var(--text-5xl)"><span data-countup="73" data-decimals="0" data-suffix="%">0%</span></div>
+              <div class="au-gauge-unit">1.9 kg to go</div>
+            </div>
+          </div>
+          <div class="dash-hero-meta">
+            <span class="au-chip"><svg class="au-icon"><use href="#i-flag"></use></svg> Start 80.0</span>
+            <span class="au-chip"><svg class="au-icon"><use href="#i-scale"></use></svg> Now 74.9</span>
+            <span class="au-chip au-chip--brand"><svg class="au-icon"><use href="#i-target"></use></svg> Goal 73.0</span>
+          </div>
+        </section>
+
+        <!-- PROGRESS TRACK -->
+        <div class="au-card au-rise au-rise-2" style="margin-top:var(--space-5)">
+          <div class="au-card-head" style="margin-bottom:var(--space-3)">
+            <div class="au-card-title"><svg class="au-icon" style="width:16px;height:16px"><use href="#i-activity"></use></svg> Progress</div>
+            <span class="au-chip au-chip--good au-chip--interactive">On track</span>
+          </div>
+          <div class="au-row-flex au-between" style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-lo);margin-bottom:var(--space-2)">
+            <span>80.0 kg</span><span>73.0 kg</span>
+          </div>
+          <div class="au-progress" style="height:10px"><div class="au-progress-bar" style="width:73%"></div></div>
+          <p class="au-caption au-mt-2" style="text-align:center">You're <strong style="color:var(--good-text)">74.9 kg</strong> — 73% of the way down</p>
+        </div>
+
+        <!-- STATS -->
+        <div class="dash-stats au-rise au-rise-3" style="margin-top:var(--space-4)">
+          <div class="au-card dash-ministat au-card--pad-sm">
+            <span class="au-stat-label">Target</span>
+            <span class="au-stat-value au-mono" style="font-size:var(--text-lg)">Sep 2</span>
+            <span class="au-caption">2026</span>
+          </div>
+          <div class="au-card dash-ministat au-card--pad-sm">
+            <span class="au-stat-label">Rate</span>
+            <span class="au-stat-value au-delta is-good" style="font-size:var(--text-lg)">−0.3</span>
+            <span class="au-caption">kg / week</span>
+          </div>
+          <div class="au-card dash-ministat au-card--pad-sm">
+            <span class="au-stat-label">Left</span>
+            <span class="au-stat-value" style="font-size:var(--text-lg)">1.9</span>
+            <span class="au-caption">kg</span>
+          </div>
+        </div>
+
+        <!-- PACE BANNER -->
+        <div class="au-banner au-banner--good au-rise au-rise-4" style="margin-top:var(--space-5)">
+          <svg class="au-icon"><use href="#i-trending-down"></use></svg>
+          <div class="au-banner-body">
+            <div class="au-banner-title">Ahead of schedule</div>
+            <div class="au-banner-text">At your current pace you'll reach 73.0 kg about 5 days early. Steady wins.</div>
+          </div>
+        </div>
+
+        <a class="au-btn au-btn--tonal au-btn--lg au-btn--block au-rise au-rise-5" href="edit-goal.html" style="margin-top:var(--space-5)">
+          <svg class="au-icon"><use href="#i-edit"></use></svg> Edit goal
+        </a>
+        <div style="height:var(--space-2)"></div>
+      </div>
+    </div>
+
+    <nav class="au-bottomnav app-bottomnav">
+      <a class="app-rail-brand" href="../dashboard/dashboard.html"><span class="app-rail-mark"></span>Ledger</a>
+      <a class="au-navitem" href="../dashboard/dashboard.html"><svg class="au-icon"><use href="#i-home"></use></svg>Home</a>
+      <a class="au-navitem" href="../trends/trends.html"><svg class="au-icon"><use href="#i-activity"></use></svg>Trends</a>
+      <button class="app-navfab" data-dialog-open="quickWeigh" aria-label="Log weight"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      <a class="au-navitem" href="../milestones/milestones.html"><svg class="au-icon"><use href="#i-trophy"></use></svg>Badges</a>
+      <a class="au-navitem" href="../settings/account.html"><svg class="au-icon"><use href="#i-user"></use></svg>Profile</a>
+    </nav>
+  </div>
+
+  <!-- QUICK WEIGH-IN SHEET -->
+  <div class="au-sheet-scrim" id="quickWeigh" hidden>
+    <div class="au-sheet" role="dialog" aria-modal="true" aria-label="Log today's weight">
+      <div class="au-sheet-grip"></div>
+      <div class="au-row-flex au-between" style="margin-bottom:var(--space-2)">
+        <div><div class="au-eyebrow">Today</div><div style="font-family:var(--font-mono);color:var(--text-lo);font-size:var(--text-sm)">Wed, Jul 18</div></div>
+        <button class="au-icon-btn" data-dialog-close aria-label="Close"><svg class="au-icon"><use href="#i-x"></use></svg></button>
+      </div>
+      <div class="weigh-stepper" style="margin:var(--space-6) 0">
+        <button class="weigh-stepper-btn" aria-label="Decrease"><svg class="au-icon"><use href="#i-minus"></use></svg></button>
+        <div class="au-bignum-field">
+          <span class="au-bignum" style="width:auto">74.9</span>
+          <span class="au-bignum-unit">kg</span>
+        </div>
+        <button class="weigh-stepper-btn" aria-label="Increase"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      </div>
+      <button class="au-btn au-btn--primary au-btn--lg au-btn--block" data-dialog-close data-toast="Weight logged — 74.9 kg" data-toast-action="Undo">
+        <svg class="au-icon"><use href="#i-check"></use></svg> Log weight
+      </button>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Check your inbox — Ledger</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+  <style>
+    a.au-btn { text-decoration: none; }
+    a.au-btn:hover { text-decoration: none; }
+    .verify-empty { padding: var(--space-6) var(--space-2) var(--space-2); }
+    .verify-empty .au-empty-text strong { color: var(--text-hi); font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+    .verify-resend { background: none; border: none; color: var(--brand); font-weight: var(--weight-semibold); font-size: var(--text-sm); cursor: pointer; padding: var(--space-2); }
+  </style>
+</head>
+<body class="auth-body">
+
+  <div class="auth-card au-card au-card--pad-lg au-rise au-rise-1">
+    <div class="au-empty verify-empty">
+      <div class="au-empty-art">
+        <svg class="au-icon"><use href="#i-mail"></use></svg>
+      </div>
+      <div class="au-empty-title">Check your inbox</div>
+      <p class="au-empty-text">We sent a verification link to <strong>alex@email.com</strong>. Open it to activate your account — the link is good for 24 hours.</p>
+
+      <a class="au-btn au-btn--primary au-btn--lg au-btn--block au-mt-4" href="#" data-toast="Opening your mail app…" data-toast-type="info">
+        <svg class="au-icon"><use href="#i-external-link"></use></svg> Open mail app
+      </a>
+
+      <button type="button" class="verify-resend" data-toast="Verification email resent" data-toast-type="success">
+        Didn’t get it? Resend email
+      </button>
+    </div>
+
+    <hr class="au-hairline" style="margin:var(--space-2) 0 var(--space-4)">
+    <p class="auth-alt" style="margin-top:0">
+      Wrong address? <a href="sign-up.html">Use a different email</a>
+    </p>
+  </div>
+
+</body>
+</html>

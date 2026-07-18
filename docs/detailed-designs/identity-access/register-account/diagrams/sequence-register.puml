@@ -1,0 +1,54 @@
+@startuml
+title UML sequence behaviour — Register an account
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle { BorderColor #344054 FontColor #101828 }
+skinparam package  { BorderColor #667085 FontColor #101828 BackgroundColor #F9FAFB }
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "RegisterPage" as page
+  participant "AuthApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "AuthController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "RegisterCommandHandler" as handler
+  participant "User" as entity
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+  participant "Email provider" as email
+end box
+actor -> page : Complete the sign-up form and accept terms
+page -> page : Enforce password policy and terms per L2-002 and L2-001
+page -> client : Build typed request
+client -> controller : HTTPS POST /api/v1/auth/register
+controller -> controller : Apply rate limit per L2-071
+controller -> controller : Validate input server-side per L2-068
+controller -> handler : Send RegisterCommand
+handler -> db : Query for the email
+db --> handler : Existing account or none
+alt Email already in use
+  handler --> controller : Conflict result
+  controller --> client : 409 ProblemDetails "That email is already in use"
+  client --> page : Field-level error with sign-in link per L2-001
+  page --> actor : Present the email-in-use error
+else Email available
+  handler -> handler : Hash the password per L2-002
+  handler -> entity : Create in the unverified state
+  entity --> handler : New account
+  handler -> handler : Issue a single-use token (<= 24h) per L2-003
+  handler -> db : Save account and token in one unit of work
+  db --> handler : Commit
+  handler -> email : Send the verification email
+  email --> handler : Accepted for delivery
+  handler --> controller : Created result with no password material
+  controller --> client : 201 Created
+  client --> page : Registration result
+  page --> actor : Confirm sign-up and prompt to verify email
+end
+@enduml

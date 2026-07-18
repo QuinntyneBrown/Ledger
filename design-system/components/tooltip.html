@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tooltip — Aurora Design System</title>
+  <meta name="description" content="A small, CSS-only label that appears on hover or keyboard focus to name an icon-only control or add a brief hint. No JavaScript required.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+</head>
+<body class="doc-body">
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation">
+      <svg class="au-icon"><use href="#i-menu"></use></svg>
+    </button>
+    <a class="doc-brand" href="../index.html">
+      <span class="doc-brandmark"></span>
+      <span class="doc-brand-name">Aurora<small>Design System</small></span>
+    </a>
+    <nav class="doc-header-nav">
+      <a href="../foundations/getting-started.html">Foundations</a>
+      <a href="button.html" class="is-active">Components</a>
+      <a href="../patterns/forms-validation.html">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <!-- ============ CANONICAL SIDEBAR (shared across all DS pages) ============ -->
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="../foundations/getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="../foundations/color.html">Color</a>
+        <a class="doc-navlink" href="../foundations/typography.html">Typography</a>
+        <a class="doc-navlink" href="../foundations/spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="../foundations/elevation.html">Elevation</a>
+        <a class="doc-navlink" href="../foundations/shape.html">Shape</a>
+        <a class="doc-navlink" href="../foundations/iconography.html">Iconography</a>
+        <a class="doc-navlink" href="../foundations/motion.html">Motion</a>
+        <a class="doc-navlink" href="../foundations/accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="button.html">Button</a>
+        <a class="doc-navlink" href="text-field.html">Text field</a>
+        <a class="doc-navlink" href="select.html">Select</a>
+        <a class="doc-navlink" href="switch.html">Switch</a>
+        <a class="doc-navlink" href="checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="slider.html">Slider</a>
+        <a class="doc-navlink" href="date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="card.html">Card</a>
+        <a class="doc-navlink" href="list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="avatar.html">Avatar</a>
+        <a class="doc-navlink" href="progress.html">Progress</a>
+        <a class="doc-navlink" href="gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="dialog.html">Dialog</a>
+        <a class="doc-navlink" href="snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="banner.html">Banner</a>
+        <a class="doc-navlink is-active" href="tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="tabs.html">Tabs</a>
+        <a class="doc-navlink" href="navigation.html">Navigation</a>
+        <a class="doc-navlink" href="milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="../patterns/forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="../patterns/data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="../patterns/data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="../patterns/theming.html">Theming</a>
+        <a class="doc-navlink" href="../patterns/motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Components <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Tooltip</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-info"></use></svg> Feedback &amp; nav</span>
+          <h1 class="doc-title">Tooltip</h1>
+          <p class="doc-lead">A small label that surfaces on hover or keyboard focus to name an icon-only control or add a brief hint. It is <strong style="color:var(--text-hi)">CSS-only</strong> — no JavaScript, no positioning library — so it costs nothing and works everywhere.</p>
+        </div>
+
+        <div class="doc-tabbar" data-tabs>
+          <button class="doc-tab is-active" data-tab="overview">Overview</button>
+          <button class="doc-tab" data-tab="examples">Examples</button>
+          <button class="doc-tab" data-tab="api">Tokens &amp; API</button>
+        </div>
+
+        <!-- ===== OVERVIEW ===== -->
+        <section data-tabpanel="overview">
+          <div class="doc-canvas" style="border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:var(--space-7);padding:var(--space-11) var(--space-9) var(--space-9)">
+            <span class="au-tooltip">
+              <span class="au-tooltip-bubble" style="opacity:1">Log a weigh-in</span>
+              <button class="au-icon-btn" aria-label="Log a weigh-in" style="background:var(--surface-2)"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+            </span>
+          </div>
+
+          <div class="doc-prose">
+            <h2 class="doc-section-title">When to use it</h2>
+            <p>A tooltip clarifies — it never carries essential information, because it is invisible on touch and to some assistive tech. Reach for it to name an icon-only button or to explain a terse label.</p>
+            <ul>
+              <li>Use it to <strong>name icon-only controls</strong> and to expand a cramped abbreviation.</li>
+              <li>Keep the text to <strong>a few words</strong>; a tooltip is a whisper, not a paragraph.</li>
+              <li><strong>Never</strong> put an action, link, or the only copy of critical information inside a tooltip.</li>
+              <li>The trigger still needs its own <code>aria-label</code> — the bubble is a visual echo, not the accessible name.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Anatomy</h2>
+          <div class="doc-anatomy" style="padding-top:var(--space-11)">
+            <span class="au-tooltip">
+              <span class="au-tooltip-bubble" style="opacity:1">Body-fat %</span>
+              <button class="au-icon-btn" aria-label="Body-fat percentage" style="background:var(--surface-2)"><svg class="au-icon"><use href="#i-droplet"></use></svg></button>
+            </span>
+            <span class="doc-anatomy-marker" style="top:14%;left:50%">1</span>
+            <span class="doc-anatomy-marker" style="bottom:26%;left:50%">2</span>
+          </div>
+          <div class="doc-legend">
+            <ul>
+              <li><span class="doc-legend-num">1</span> <strong style="color:var(--text-hi)">Bubble</strong> — the floating label, positioned above the trigger with a small gap.</li>
+              <li><span class="doc-legend-num">2</span> <strong style="color:var(--text-hi)">Trigger</strong> — any focusable control wrapped by <code>.au-tooltip</code>.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Do &amp; don’t</h2>
+          <div class="doc-dodont">
+            <div class="doc-guide doc-guide--do">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-check"></use></svg> Do</div>
+              <div class="doc-guide-body" style="padding-top:var(--space-8)">
+                <span class="au-tooltip">
+                  <span class="au-tooltip-bubble" style="opacity:1">Share</span>
+                  <button class="au-icon-btn" aria-label="Share" style="background:var(--surface-2)"><svg class="au-icon"><use href="#i-share"></use></svg></button>
+                </span>
+              </div>
+              <div class="doc-guide-note">Name a single icon control in one or two words.</div>
+            </div>
+            <div class="doc-guide doc-guide--dont">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-x"></use></svg> Don’t</div>
+              <div class="doc-guide-body" style="padding-top:var(--space-8)">
+                <span class="au-tooltip">
+                  <span class="au-tooltip-bubble" style="opacity:1;white-space:normal;width:150px">Tap here then confirm to permanently delete…</span>
+                  <button class="au-icon-btn" aria-label="Delete" style="background:var(--surface-2)"><svg class="au-icon"><use href="#i-trash"></use></svg></button>
+                </span>
+              </div>
+              <div class="doc-guide-note">Don’t hide instructions or actions in a tooltip.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== EXAMPLES ===== -->
+        <section data-tabpanel="examples" hidden>
+          <div class="doc-callout" style="margin-top:0">
+            <svg class="au-icon"><use href="#i-info"></use></svg>
+            <div class="doc-callout-body">These tooltips appear on <strong>hover or keyboard focus</strong>. In this static capture the first row is pinned open so you can see the bubble; the rest reveal on interaction.</div>
+          </div>
+
+          <!-- Pinned preview -->
+          <h2 class="doc-section-title">On an icon button</h2>
+          <p class="doc-section-lead">Wrap any focusable control in <code class="doc-td-name">.au-tooltip</code> and add a <code class="doc-td-name">.au-tooltip-bubble</code> sibling.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">tooltip/icon-buttons</span>
+              <div class="doc-example-tools"><button class="au-icon-btn au-icon-btn--sm" data-theme-toggle aria-label="Toggle theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button></div>
+            </div>
+            <div class="doc-canvas" style="gap:var(--space-7);padding-top:var(--space-11)">
+              <span class="au-tooltip">
+                <span class="au-tooltip-bubble" style="opacity:1">Edit entry</span>
+                <button class="au-icon-btn" aria-label="Edit entry" style="background:var(--surface-2)"><svg class="au-icon"><use href="#i-edit"></use></svg></button>
+              </span>
+              <span class="au-tooltip">
+                <span class="au-tooltip-bubble">Undo</span>
+                <button class="au-icon-btn" aria-label="Undo" style="background:var(--surface-2)"><svg class="au-icon"><use href="#i-undo"></use></svg></button>
+              </span>
+              <span class="au-tooltip">
+                <span class="au-tooltip-bubble">Settings</span>
+                <button class="au-icon-btn" aria-label="Settings" style="background:var(--surface-2)"><svg class="au-icon"><use href="#i-settings"></use></svg></button>
+              </span>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;span class="au-tooltip"&gt;
+  &lt;span class="au-tooltip-bubble"&gt;Edit entry&lt;/span&gt;
+  &lt;button class="au-icon-btn" aria-label="Edit entry"&gt;
+    &lt;svg class="au-icon"&gt;&lt;use href="#i-edit"/&gt;&lt;/svg&gt;
+  &lt;/button&gt;
+&lt;/span&gt;</code></pre>
+          </div>
+
+          <!-- On text -->
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">On a hint control</h2>
+          <p class="doc-section-lead">A tooltip can also explain a label — here an info icon beside a metric. Hover or tab to it.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">tooltip/hint</span></div>
+            <div class="doc-canvas" style="padding-top:var(--space-11)">
+              <div class="au-row-flex au-gap-2">
+                <span class="au-stat-label" style="text-transform:none;letter-spacing:0;font-family:var(--font-sans)">Trend weight</span>
+                <span class="au-tooltip">
+                  <span class="au-tooltip-bubble">A 7-day moving average</span>
+                  <button class="au-icon-btn au-icon-btn--sm" aria-label="What is trend weight?"><svg class="au-icon"><use href="#i-info"></use></svg></button>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;span class="au-tooltip"&gt;
+  &lt;span class="au-tooltip-bubble"&gt;A 7-day moving average&lt;/span&gt;
+  &lt;button class="au-icon-btn au-icon-btn--sm"
+          aria-label="What is trend weight?"&gt;
+    &lt;svg class="au-icon"&gt;&lt;use href="#i-info"/&gt;&lt;/svg&gt;
+  &lt;/button&gt;
+&lt;/span&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- ===== API ===== -->
+        <section data-tabpanel="api" hidden>
+          <h2 class="doc-section-title">Classes</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Class</th><th>Element</th><th>Role</th></tr></thead>
+              <tbody>
+                <tr><td><code>.au-tooltip</code></td><td>span</td><td>Positioning wrapper around the trigger; reveals the bubble on <code>:hover</code> and <code>:focus-within</code>.</td></tr>
+                <tr><td><code>.au-tooltip-bubble</code></td><td>span</td><td>The floating label. Positioned above the trigger, hidden until the wrapper is hovered or focused.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-8)">Behaviour</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Trait</th><th>Detail</th></tr></thead>
+              <tbody>
+                <tr><td class="doc-td-name">Trigger</td><td>Hover or keyboard focus on any focusable child (<code>:focus-within</code>).</td></tr>
+                <tr><td class="doc-td-name">Dependencies</td><td>None — pure CSS. <code>aurora.js</code> is not required for tooltips.</td></tr>
+                <tr><td class="doc-td-name">Pointer</td><td>The bubble is <code>pointer-events:none</code>, so it never blocks a click.</td></tr>
+                <tr><td class="doc-td-name">Default text</td><td>Single line (<code>white-space:nowrap</code>); override for a short wrapped hint.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-8)">Tokens consumed</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Token</th><th>Applied to</th></tr></thead>
+              <tbody>
+                <tr><td><code>--ink-700 / --ink-800</code></td><td>Bubble background (per theme).</td></tr>
+                <tr><td><code>--ink-000</code></td><td>Bubble text.</td></tr>
+                <tr><td><code>--shadow-2</code></td><td>Bubble elevation.</td></tr>
+                <tr><td><code>--z-tooltip</code></td><td>Stacking above overlays.</td></tr>
+                <tr><td><code>--dur-fast</code></td><td>Fade-in timing.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-info"></use></svg>
+            <div class="doc-callout-body"><strong>Accessibility.</strong> A tooltip is a visual aid only — it does not appear on touch and may be missed by assistive tech, so the trigger must carry its own <code>aria-label</code> (or visible text). Because it opens on <code>:focus-within</code>, keyboard users get the same hint. Never place the sole copy of essential information, or any interactive element, inside the bubble.</div>
+          </div>
+        </section>
+
+        <!-- Pager -->
+        <nav class="doc-pager">
+          <a href="banner.html"><small>Previous</small><span>Banner</span></a>
+          <a class="doc-pager-next" href="empty-state.html"><small>Next</small><span>Empty state</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

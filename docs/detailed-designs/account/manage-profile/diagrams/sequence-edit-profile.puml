@@ -1,0 +1,59 @@
+@startuml
+title UML sequence behaviour — Manage profile: edit profile fields
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "ProfilePage" as page
+  participant "AccountApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "ProfileController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "UpdateProfileCommandHandler" as handler
+  participant "User" as entity
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+  participant "Email provider" as email
+end box
+
+actor -> page : Edit name, email, or height and save
+page -> page : Validate height in range 50-272 cm per L2-043
+page -> client : Build typed request
+client -> controller : HTTPS PUT /api/v1/profile
+controller -> controller : Authenticate and resolve owner per L2-067
+controller -> handler : Send UpdateProfileCommand
+handler -> db : Load owner User
+db --> handler : User
+handler -> entity : Apply name and height changes
+entity --> handler : Updated state
+alt email changed
+  handler -> entity : Set email and mark EmailVerified = false per L2-043
+  entity --> handler : Unverified email pending
+  handler -> db : Save changes in one unit of work
+  db --> handler : Commit
+  handler -> email : Send verification email with single-use token per L2-003
+  email --> handler : Accepted for delivery
+else email unchanged
+  handler -> db : Save changes in one unit of work
+  db --> handler : Commit
+end
+handler --> controller : Typed result
+controller --> client : 200 OK or ProblemDetails
+client --> page : Updated profile
+page --> actor : Show saved profile; pending-verification badge if email changed
+@enduml

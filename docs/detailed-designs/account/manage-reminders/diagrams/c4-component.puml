@@ -1,0 +1,30 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Manage reminders
+
+System_Ext(push, "Web Push service", "Delivers browser push reminders")
+
+Container_Boundary(web, "Ledger Web App") {
+  Component(page, "RemindersPage", "Angular component", "Toggles reminders and sets time and quiet hours")
+  Component(client, "AccountApi", "Angular HTTP service", "Typed client in ledger/api for account endpoints")
+}
+
+Container_Boundary(api, "Ledger API") {
+  Component(ctrl, "RemindersController", "ASP.NET Core controller", "Exposes /api/v1/reminders endpoint")
+  Component(schedHandler, "ScheduleReminderCommandHandler", "MediatR handler", "Persists reminder toggle and time")
+  Component(job, "ReminderSchedulerJob", "Hosted background service", "Fires at each member's local reminder time")
+  Component(deliverHandler, "DeliverReminderCommandHandler", "MediatR handler", "Applies quiet-hours and already-logged suppression")
+  Component(prefs, "Preferences", "Domain entity", "Holds ReminderEnabled, ReminderTime, and quiet hours")
+  ComponentDb(db, "Ledger Database", "SQL Server", "Persists Preferences and weigh-ins")
+}
+
+Rel(page, client, "Calls")
+Rel(client, ctrl, "Calls /api/v1/reminders", "JSON/HTTPS")
+Rel(ctrl, schedHandler, "Sends ScheduleReminderCommand")
+Rel(schedHandler, prefs, "Loads and mutates reminder settings")
+Rel(schedHandler, db, "Persists", "EF Core")
+Rel(job, deliverHandler, "Sends DeliverReminderCommand at due time")
+Rel(deliverHandler, db, "Reads Preferences and today's WeighIn", "EF Core")
+Rel(deliverHandler, push, "Delivers reminder when not suppressed per L2-050 and L2-051", "Web Push")
+@enduml

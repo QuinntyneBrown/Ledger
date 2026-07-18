@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trends — Ledger</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+  <style>
+    /* Horizontally scrollable range selector inside the narrow phone frame */
+    .trend-rangebar { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin: var(--space-4) calc(-1 * var(--space-1)) var(--space-3); padding: 0 var(--space-1); }
+    .trend-rangebar::-webkit-scrollbar { display: none; }
+    .trend-rangebar .au-segmented { min-width: 100%; }
+    .trend-rangebar .au-segmented button { flex: 1; white-space: nowrap; }
+    .trend-statgrid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+    .trend-stat .au-stat-value { font-size: var(--text-2xl); }
+    .trend-mile-label { font-family: var(--font-mono); font-size: 15px; font-weight: 600; }
+  </style>
+</head>
+<body class="app-body">
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="auChartArea" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="var(--viz-2)" stop-opacity="0.35"></stop>
+        <stop offset="100%" stop-color="var(--viz-2)" stop-opacity="0"></stop>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <div class="app-frame">
+    <!-- status bar -->
+    <div class="app-statusbar">
+      <span>9:41</span>
+      <span class="app-statusbar-right">
+        <svg class="au-icon" style="width:15px"><use href="#i-activity"></use></svg>
+        <svg class="au-icon" style="width:15px"><use href="#i-droplet"></use></svg>
+        <span class="au-mono" style="font-size:11px">100%</span>
+      </span>
+    </div>
+
+    <div class="app-screen">
+      <!-- header -->
+      <div class="app-header">
+        <div>
+          <div class="app-header-sub">Analytics</div>
+          <div class="app-header-title">Trends</div>
+        </div>
+        <a class="au-icon-btn" href="log-history.html" aria-label="View history"><svg class="au-icon"><use href="#i-list"></use></svg></a>
+      </div>
+
+      <div class="app-scroll">
+        <!-- TREND CHART CARD -->
+        <section class="au-card trend-chartcard au-rise au-rise-1">
+          <div class="au-row-flex au-between" style="margin-bottom:var(--space-1)">
+            <div class="au-stat">
+              <span class="au-stat-label">Current</span>
+              <span class="au-stat-value" style="font-size:var(--text-3xl)">74.9<small>kg</small></span>
+            </div>
+            <span class="au-chip au-chip--good"><svg class="au-icon"><use href="#i-trending-down"></use></svg> −3.5 kg</span>
+          </div>
+
+          <!-- range selector -->
+          <div class="trend-rangebar">
+            <div class="au-segmented" role="tablist" aria-label="Time range">
+              <button type="button">1W</button>
+              <button type="button">1M</button>
+              <button type="button" class="is-active" aria-selected="true">3M</button>
+              <button type="button">6M</button>
+              <button type="button">1Y</button>
+              <button type="button">All</button>
+            </div>
+          </div>
+
+          <!-- chart -->
+          <div class="au-chart">
+            <svg viewBox="0 0 640 240" preserveAspectRatio="none" role="img" aria-label="Weight trending down from 78.4 to 74.9 kilograms over 90 days, goal 73.0">
+              <g class="au-chart-grid">
+                <line x1="40" y1="20" x2="620" y2="20"></line>
+                <line x1="40" y1="70" x2="620" y2="70"></line>
+                <line x1="40" y1="120" x2="620" y2="120"></line>
+                <line x1="40" y1="170" x2="620" y2="170"></line>
+                <line x1="40" y1="220" x2="620" y2="220"></line>
+              </g>
+              <!-- MA range band -->
+              <path class="au-chart-band" d="M40,24 L216,40 L392,72 L612,112 L612,150 L392,108 L216,78 L40,58 Z"></path>
+              <!-- goal line 73.0 -->
+              <line class="au-chart-goal" x1="40" y1="196" x2="620" y2="196"></line>
+              <!-- gradient area -->
+              <path class="au-chart-area" d="M40,37 L84,46 L128,31 L172,51 L216,63 L260,57 L304,77 L348,89 L392,83 L436,103 L480,114 L524,123 L568,117 L612,137 L612,220 L40,220 Z"></path>
+              <!-- 7-day average -->
+              <path class="au-chart-line au-chart-line--ma" d="M40,42 L128,44 L216,55 L304,68 L392,86 L480,104 L568,120 L612,130"></path>
+              <!-- daily trend -->
+              <path class="au-chart-line au-chart-draw" d="M40,37 L84,46 L128,31 L172,51 L216,63 L260,57 L304,77 L348,89 L392,83 L436,103 L480,114 L524,123 L568,117 L612,137"></path>
+              <!-- milestone annotations -->
+              <g>
+                <line x1="216" y1="63" x2="216" y2="26" stroke="var(--brand)" stroke-width="1" stroke-dasharray="3 3" opacity="0.45"></line>
+                <circle cx="216" cy="63" r="4.5" class="au-chart-dot au-chart-dot--hi"></circle>
+                <text x="216" y="20" text-anchor="middle" class="trend-mile-label" fill="var(--brand)">−1kg</text>
+              </g>
+              <g>
+                <line x1="436" y1="103" x2="436" y2="26" stroke="var(--brand)" stroke-width="1" stroke-dasharray="3 3" opacity="0.45"></line>
+                <circle cx="436" cy="103" r="4.5" class="au-chart-dot au-chart-dot--hi"></circle>
+                <text x="436" y="20" text-anchor="middle" class="trend-mile-label" fill="var(--brand)">−2.5kg</text>
+              </g>
+              <!-- goal label -->
+              <text x="612" y="192" text-anchor="end" class="trend-mile-label" fill="var(--text-lo)" style="font-size:13px">Goal 73.0</text>
+              <!-- last point -->
+              <circle cx="612" cy="137" r="5" class="au-chart-dot"></circle>
+            </svg>
+          </div>
+
+          <!-- legend -->
+          <div class="trend-legend">
+            <span><i style="background:var(--viz-2)"></i> Daily</span>
+            <span><i style="background:var(--viz-1)"></i> 7-day avg</span>
+            <span><i style="background:var(--viz-band)"></i> Range</span>
+            <span><i style="background:var(--brand);height:2px"></i> Goal</span>
+          </div>
+        </section>
+
+        <!-- STAT CARDS -->
+        <div class="trend-statgrid au-rise au-rise-2" style="margin-top:var(--space-4)">
+          <div class="au-card au-card--pad-sm trend-stat">
+            <span class="au-stat-label">Rate / week</span>
+            <span class="au-stat-value au-delta is-good">−0.3<small style="font-size:var(--text-sm)">kg</small></span>
+          </div>
+          <div class="au-card au-card--pad-sm trend-stat">
+            <span class="au-stat-label">Total lost</span>
+            <span class="au-stat-value au-delta is-good">−3.5<small style="font-size:var(--text-sm)">kg</small></span>
+          </div>
+          <div class="au-card au-card--pad-sm trend-stat">
+            <span class="au-stat-label">Best week</span>
+            <span class="au-stat-value au-delta is-good">−0.9<small style="font-size:var(--text-sm)">kg</small></span>
+          </div>
+          <div class="au-card au-card--pad-sm trend-stat">
+            <span class="au-stat-label">BMI</span>
+            <span class="au-stat-value">23.1</span>
+          </div>
+        </div>
+
+        <!-- RECENT ENTRIES PREVIEW -->
+        <div class="app-section-title"><h2>Recent entries</h2><a href="log-history.html">View all</a></div>
+        <div class="au-card au-card--pad-sm au-rise au-rise-3">
+          <div class="au-list">
+            <a class="au-row au-row--interactive" href="log-history.html">
+              <span class="au-row-date">Jul 18</span>
+              <div class="au-row-main"><span class="au-row-primary">74.9 kg</span></div>
+              <span class="au-delta is-good" style="font-size:var(--text-xs)">−0.1</span>
+              <svg class="au-icon au-text-lo" style="width:16px"><use href="#i-chevron-right"></use></svg>
+            </a>
+            <a class="au-row au-row--interactive" href="log-history.html">
+              <span class="au-row-date">Jul 17</span>
+              <div class="au-row-main"><span class="au-row-primary">75.0 kg</span></div>
+              <span class="au-delta is-good" style="font-size:var(--text-xs)">−0.2</span>
+              <svg class="au-icon au-text-lo" style="width:16px"><use href="#i-chevron-right"></use></svg>
+            </a>
+            <a class="au-row au-row--interactive" href="log-history.html">
+              <span class="au-row-date">Jul 16</span>
+              <div class="au-row-main"><span class="au-row-primary">75.2 kg</span></div>
+              <span class="au-delta is-flat" style="font-size:var(--text-xs)">0.0</span>
+              <svg class="au-icon au-text-lo" style="width:16px"><use href="#i-chevron-right"></use></svg>
+            </a>
+          </div>
+        </div>
+
+        <div style="height:var(--space-4)"></div>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav class="au-bottomnav app-bottomnav">
+      <a class="app-rail-brand" href="../dashboard/dashboard.html"><span class="app-rail-mark"></span>Ledger</a>
+      <a class="au-navitem" href="../dashboard/dashboard.html"><svg class="au-icon"><use href="#i-home"></use></svg>Home</a>
+      <a class="au-navitem is-active" href="trends.html"><svg class="au-icon"><use href="#i-activity"></use></svg>Trends</a>
+      <button class="app-navfab" data-dialog-open="quickWeigh" aria-label="Log weight"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      <a class="au-navitem" href="../milestones/milestones.html"><svg class="au-icon"><use href="#i-trophy"></use></svg>Badges</a>
+      <a class="au-navitem" href="../settings/account.html"><svg class="au-icon"><use href="#i-user"></use></svg>Profile</a>
+    </nav>
+  </div>
+
+  <!-- QUICK WEIGH-IN SHEET -->
+  <div class="au-sheet-scrim" id="quickWeigh" hidden>
+    <div class="au-sheet" role="dialog" aria-modal="true" aria-label="Log today's weight">
+      <div class="au-sheet-grip"></div>
+      <div class="au-row-flex au-between" style="margin-bottom:var(--space-2)">
+        <div><div class="au-eyebrow">Today</div><div style="font-family:var(--font-mono);color:var(--text-lo);font-size:var(--text-sm)">Wed, Jul 18</div></div>
+        <button class="au-icon-btn" data-dialog-close aria-label="Close"><svg class="au-icon"><use href="#i-x"></use></svg></button>
+      </div>
+      <div class="weigh-stepper" style="margin:var(--space-6) 0">
+        <button class="weigh-stepper-btn" aria-label="Decrease"><svg class="au-icon"><use href="#i-minus"></use></svg></button>
+        <div class="au-bignum-field">
+          <span class="au-bignum" style="width:auto">74.8</span>
+          <span class="au-bignum-unit">kg</span>
+        </div>
+        <button class="weigh-stepper-btn" aria-label="Increase"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      </div>
+      <button class="au-btn au-btn--primary au-btn--lg au-btn--block" data-dialog-close data-toast="Weight logged — 74.8 kg" data-toast-action="Undo">
+        <svg class="au-icon"><use href="#i-check"></use></svg> Log weight
+      </button>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Welcome — Ledger</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+</head>
+<body class="app-body">
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="auroraGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="var(--aurora-start)"></stop>
+        <stop offset="52%" stop-color="var(--aurora-mid)"></stop>
+        <stop offset="100%" stop-color="var(--aurora-end)"></stop>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <div class="app-frame">
+    <!-- status bar -->
+    <div class="app-statusbar">
+      <span>9:41</span>
+      <span class="app-statusbar-right">
+        <svg class="au-icon" style="width:15px"><use href="#i-activity"></use></svg>
+        <svg class="au-icon" style="width:15px"><use href="#i-droplet"></use></svg>
+        <span class="au-mono" style="font-size:11px">100%</span>
+      </span>
+    </div>
+
+    <div class="app-screen">
+      <div style="min-height:100%;display:flex;flex-direction:column;padding:var(--space-5) var(--space-6) var(--space-8)">
+
+        <!-- wordmark -->
+        <div class="au-row-flex au-gap-3 au-center au-rise au-rise-1" style="justify-content:center;margin-top:var(--space-4)">
+          <span class="auth-mark" style="width:34px;height:34px;border-radius:10px"></span>
+          <span class="au-display" style="font-size:var(--text-xl)">Ledger</span>
+        </div>
+
+        <!-- decorative hero dial -->
+        <div class="au-fill" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-7)">
+          <div class="au-gauge au-rise au-rise-2" data-value="72" data-sweep="360" style="width:216px;height:216px" role="img" aria-label="Ledger">
+            <svg viewBox="0 0 120 120" width="216" height="216">
+              <circle class="au-gauge-track" cx="60" cy="60" r="52" stroke-width="7"></circle>
+              <circle class="au-gauge-arc" cx="60" cy="60" r="52" stroke-width="7"></circle>
+            </svg>
+            <div class="au-gauge-center">
+              <span class="auth-mark" style="width:72px;height:72px;border-radius:var(--radius-xl)"></span>
+            </div>
+          </div>
+
+          <div style="text-align:center;max-width:30ch" class="au-rise au-rise-3">
+            <div class="au-eyebrow" style="justify-content:center;margin-bottom:var(--space-4)"><svg class="au-icon"><use href="#i-sparkles"></use></svg> Your private weight ledger</div>
+            <h1 class="au-display" style="font-size:var(--text-4xl);line-height:var(--leading-tight)">Weight,<br>kept honestly.</h1>
+            <p class="au-lead au-mt-4" style="font-size:var(--text-base)">Log in seconds, watch the trend settle, and reach your goal — one honest entry at a time.</p>
+          </div>
+        </div>
+
+        <!-- actions -->
+        <div class="au-stack au-stack-4 au-rise au-rise-4">
+          <a class="au-btn au-btn--primary au-btn--lg au-btn--block" href="wizard.html">
+            Get started <svg class="au-icon"><use href="#i-arrow-right"></use></svg>
+          </a>
+          <p class="auth-alt" style="margin-top:0">Already have an account? <a href="../auth/login.html">Sign in</a></p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

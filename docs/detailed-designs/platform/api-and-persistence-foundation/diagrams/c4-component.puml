@@ -1,0 +1,26 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — API and persistence foundation
+
+Container_Boundary(api, "Ledger API") {
+  Component(corr, "Correlation middleware", "ASP.NET Core middleware", "Assigns correlation id and opens structured log scope (L2-082)")
+  Component(problem, "Error-handling middleware", "ASP.NET Core middleware", "Maps failures to ProblemDetails, no stack trace (L2-088)")
+  Component(ctrl, "XxxController", "ASP.NET Core controller", "Thin controller under /api/v1; authenticates and authorizes (L2-085)")
+  Component(behavior, "Validation behavior", "MediatR pipeline behavior", "Validates each request before handling (L2-088)")
+  Component(handler, "XxxCommandHandler", "MediatR handler", "Applies the use case in the Application layer (L2-085)")
+  Component(entity, "WeighIn", "Domain entity", "Owner-scoped state and domain rules")
+  Component(ctx, "LedgerDbContext", "EF Core DbContext", "Persists in one unit of work (L2-089)")
+  Component(health, "Health checks", "ASP.NET Core HealthChecks", "Liveness and readiness for DB and backplane (L2-083)")
+  ComponentDb(db, "Ledger Database", "SQL Server", "Users, goals, weigh-ins, milestones; index on WeighIn(userId, date)")
+}
+
+Rel(corr, ctrl, "Forwards request with correlation id")
+Rel(problem, ctrl, "Wraps failures from")
+Rel(ctrl, behavior, "Sends IRequest via IMediator")
+Rel(behavior, handler, "Invokes after validation passes")
+Rel(handler, entity, "Loads and applies domain rule on")
+Rel(handler, ctx, "Persists in one unit of work", "EF Core")
+Rel(ctx, db, "Reads and writes", "TDS")
+Rel(health, db, "Checks connectivity of")
+@enduml

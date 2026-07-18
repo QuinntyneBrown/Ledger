@@ -1,0 +1,20 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Configure preferences
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+
+System_Boundary(ledger, "Ledger") {
+  Container(web, "Ledger Web App", "Angular 21 SPA", "Member-facing responsive web app")
+  Container(api, "Ledger API", "ASP.NET Core, MediatR", "CQRS application and domain logic; hosts the SignalR hub")
+  Container(hub, "Realtime Hub", "ASP.NET Core SignalR", "Pushes changes to a member's other sessions")
+  ContainerDb(db, "Ledger Database", "SQL Server", "Members, goals, weigh-ins, milestones")
+}
+
+Rel(member, web, "Sets preferences", "HTTPS")
+Rel(web, api, "Calls preference endpoint", "JSON/HTTPS")
+Rel(api, db, "Reads and writes Preferences", "EF Core")
+Rel(api, hub, "Publishes preferences-changed event")
+Rel(hub, web, "Pushes preference update to the member's other sessions", "WebSocket")
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Track streaks
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+System(ledger, "Ledger", "Weight tracking web application")
+
+Rel(member, ledger, "Builds a logging streak and reviews it in", "HTTPS")
+@enduml

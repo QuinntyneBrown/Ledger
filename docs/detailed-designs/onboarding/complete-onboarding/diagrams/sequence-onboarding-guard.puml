@@ -1,0 +1,62 @@
+@startuml
+title UML sequence behaviour — Complete onboarding: guard redirect and resume
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "onboardingGuard" as guard
+  participant "OnboardingApi" as client
+  participant "OnboardingWizard" as wizard
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "OnboardingController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "GetOnboardingStatusQueryHandler" as handler
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+
+actor -> guard : Navigate to a main app route
+guard -> client : Request onboarding status
+client -> controller : HTTPS GET /api/v1/onboarding/status
+controller -> controller : Authenticate and scope to owner per L2-067
+controller -> handler : Send GetOnboardingStatusQuery
+handler -> db : Load Goal and OnboardingDraft for the owner
+db --> handler : Goal (or none) and draft (or none)
+handler --> controller : OnboardingStatus
+controller --> client : 200 OK status
+client --> guard : hasGoal and lastCompletedStep
+
+alt No goal and no saved draft per L2-012
+  guard --> actor : Redirect into onboarding
+  actor -> wizard : Open the wizard at step 1/4
+else No goal with a saved draft per L2-012
+  guard --> actor : Redirect into onboarding
+  actor -> wizard : Open the wizard
+  wizard -> client : Request onboarding status
+  client -> controller : HTTPS GET /api/v1/onboarding/status
+  controller -> handler : Send GetOnboardingStatusQuery
+  handler -> db : Load OnboardingDraft for the owner
+  db --> handler : Saved draft
+  handler --> controller : OnboardingStatus
+  controller --> client : 200 OK status
+  client --> wizard : Saved entries and lastCompletedStep
+  wizard --> actor : Resume at the last incomplete step with prior entries preserved
+else Goal established per L2-012
+  guard --> actor : Allow the route; opening onboarding redirects to the dashboard
+end
+@enduml

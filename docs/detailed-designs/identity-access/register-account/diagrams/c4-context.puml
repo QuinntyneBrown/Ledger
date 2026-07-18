@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Register an account
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+System(app, "Ledger", "Responsive weight-tracking web application")
+System_Ext(email, "Email provider", "Sends verification, reset, and notification email via SMTP")
+
+Rel(member, app, "Registers and verifies an account using", "HTTPS")
+Rel(app, email, "Sends the verification email via", "SMTP")
+@enduml

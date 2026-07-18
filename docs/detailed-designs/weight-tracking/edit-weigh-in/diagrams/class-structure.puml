@@ -1,0 +1,70 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Edit or delete a weigh-in
+
+class WeighInsController {
+  +Edit(id: Guid, command: EditWeighInCommand): Task<IActionResult>
+  +Delete(id: Guid): Task<IActionResult>
+}
+
+class EditWeighInCommand {
+  +Guid WeighInId
+  +Guid UserId
+  +decimal WeightKg
+  +string Note
+}
+
+class DeleteWeighInCommand {
+  +Guid WeighInId
+  +Guid UserId
+}
+
+class EditWeighInCommandHandler {
+  +Handle(command: EditWeighInCommand): Task<WeighInDto>
+}
+note bottom of EditWeighInCommandHandler
+  Returns 403/404 when the entry owner != UserId per L2-067
+end note
+
+class DeleteWeighInCommandHandler {
+  +Handle(command: DeleteWeighInCommand): Task<Unit>
+}
+note bottom of DeleteWeighInCommandHandler
+  Returns 403/404 when the entry owner != UserId per L2-067
+end note
+
+class WeighIn {
+  +Guid Id
+  +Guid UserId
+  +DateOnly Date
+  +decimal WeightKg
+  +string Note
+  +DateTime CreatedAt
+  +DateTime UpdatedAt
+  +UpdateWeight(weightKg: decimal, note: string): void
+}
+
+class EditWeighInSheet <<Angular>> {
+  +save(weightKg: decimal, note: string): void
+  +delete(): void
+  +undo(): void
+}
+
+WeighInsController ..> EditWeighInCommand : sends
+WeighInsController ..> DeleteWeighInCommand : sends
+EditWeighInCommandHandler ..> EditWeighInCommand : handles
+DeleteWeighInCommandHandler ..> DeleteWeighInCommand : handles
+EditWeighInCommandHandler --> WeighIn : loads / updates
+DeleteWeighInCommandHandler --> WeighIn : loads / removes
+EditWeighInSheet ..> EditWeighInCommand : builds
+EditWeighInSheet ..> DeleteWeighInCommand : builds
+@enduml

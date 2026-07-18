@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Manage reminders
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+System(ledger, "Ledger", "Weight-tracking web application")
+System_Ext(push, "Web Push service", "Delivers browser push reminders")
+
+Rel(member, ledger, "Enables reminders and sets time and quiet hours", "HTTPS")
+Rel(ledger, push, "Sends due reminders when not suppressed per L2-049", "Web Push")
+Rel(push, member, "Shows reminder notification", "Web Push")
+@enduml

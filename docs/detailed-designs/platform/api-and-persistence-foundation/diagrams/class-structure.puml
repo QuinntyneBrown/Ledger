@@ -1,0 +1,117 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — API and persistence foundation
+
+package "Ledger.Api" {
+  class WeighInsController {
+    +Log(request: LogWeighInRequest): Task<IActionResult>
+  }
+  class ProblemDetails {
+    +string Type
+    +string Title
+    +int Status
+    +string Detail
+    +string Instance
+    +string TraceId
+    +Dictionary<string, string[]> Errors
+  }
+}
+
+package "Ledger.Application" {
+  interface "IRequest<TResponse>" as IRequest {
+  }
+  interface "IRequestHandler<TRequest, TResponse>" as IRequestHandler {
+    +Handle(request: TRequest, ct: CancellationToken): Task<TResponse>
+  }
+  class LogWeighInCommand {
+    +Guid UserId
+    +DateOnly Date
+    +decimal WeightKg
+    +string Note
+  }
+  class LogWeighInCommandHandler {
+    +Handle(command: LogWeighInCommand, ct: CancellationToken): Task<WeighInResult>
+  }
+  class WeighInResult {
+    +Guid Id
+    +decimal WeightKg
+  }
+}
+
+package "Ledger.Domain" {
+  class User {
+    +Guid Id
+    +string Name
+    +string Email
+    +string PasswordHash
+    +double HeightCm
+    +DateTime MemberSince
+    +bool EmailVerified
+  }
+  class Preferences {
+    +Unit Unit
+    +Theme Theme
+    +DayOfWeek WeekStartsOn
+    +bool ReminderEnabled
+    +TimeOnly ReminderTime
+  }
+  class Goal {
+    +decimal StartWeightKg
+    +decimal GoalWeightKg
+    +DateOnly TargetDate
+    +DateTime CreatedAt
+  }
+  class WeighIn {
+    +Guid Id
+    +Guid UserId
+    +DateOnly Date
+    +decimal WeightKg
+    +string Note
+    +DateTime CreatedAt
+    +DateTime UpdatedAt
+  }
+  class Milestone {
+    +MilestoneType Type
+    +DateTime EarnedAt
+  }
+  class Streak {
+    +int Current
+    +int Longest
+  }
+}
+
+package "Ledger.Infrastructure" {
+  class LedgerDbContext {
+    +DbSet<User> Users
+    +DbSet<Preferences> Preferences
+    +DbSet<Goal> Goals
+    +DbSet<WeighIn> WeighIns
+    +DbSet<Milestone> Milestones
+    +SaveChangesAsync(ct: CancellationToken): Task<int>
+  }
+}
+
+LogWeighInCommand ..|> IRequest
+LogWeighInCommandHandler ..|> IRequestHandler
+LogWeighInCommandHandler ..> LogWeighInCommand : handles
+LogWeighInCommandHandler --> WeighInResult : returns
+WeighInsController ..> LogWeighInCommand : sends via IMediator
+WeighInsController ..> ProblemDetails : returns on failure
+LogWeighInCommandHandler --> LedgerDbContext : persists through
+LedgerDbContext --> WeighIn : maps
+LedgerDbContext --> User : maps
+User "1" *--> "*" WeighIn : owns
+User "1" *--> "1" Preferences : owns
+User "1" *--> "*" Goal : owns
+User "1" o--> "*" Milestone : earns
+User "1" *--> "1" Streak : tracks
+@enduml

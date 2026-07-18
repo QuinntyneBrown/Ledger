@@ -1,0 +1,111 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Real-time sync across devices
+
+enum ChangeKind {
+  Created
+  Updated
+  Deleted
+}
+
+enum SyncEntityType {
+  WeighIn
+  Goal
+}
+
+class WeighInChangedEvent {
+  +Guid UserId
+  +Guid WeighInId
+  +DateOnly Date
+  +ChangeKind Change
+  +decimal WeightKg
+  +DateTime ServerTimestampUtc
+}
+
+class GoalChangedEvent {
+  +Guid UserId
+  +Guid GoalId
+  +ChangeKind Change
+  +DateTime ServerTimestampUtc
+}
+
+class SyncChange {
+  +Guid Id
+  +Guid UserId
+  +SyncEntityType EntityType
+  +Guid EntityId
+  +ChangeKind Change
+  +DateTime ServerTimestampUtc
+}
+
+interface IRealtimeNotifier {
+  +NotifyWeighInChanged(e: WeighInChangedEvent): Task
+  +NotifyGoalChanged(e: GoalChangedEvent): Task
+}
+
+class SignalRRealtimeNotifier {
+  +NotifyWeighInChanged(e: WeighInChangedEvent): Task
+  +NotifyGoalChanged(e: GoalChangedEvent): Task
+}
+
+class LedgerHub {
+  +OnConnectedAsync(): Task
+  +OnDisconnectedAsync(error: Exception): Task
+  -GroupName(userId: Guid): string
+}
+
+class WeighInChangedNotificationHandler {
+  +Handle(e: WeighInChangedEvent, ct: CancellationToken): Task
+}
+
+class GoalChangedNotificationHandler {
+  +Handle(e: GoalChangedEvent, ct: CancellationToken): Task
+}
+
+class GetChangesSinceQuery {
+  +Guid UserId
+  +DateTime Since
+}
+
+class GetChangesSinceQueryHandler {
+  +Handle(query: GetChangesSinceQuery, ct: CancellationToken): Task<IReadOnlyList<SyncChange>>
+}
+
+class RealtimeService {
+  -watermark: Date
+  +weighInChanged$: Observable<WeighInChangedEvent>
+  +goalChanged$: Observable<GoalChangedEvent>
+  +start(): Promise<void>
+  +stop(): Promise<void>
+  -onReconnected(): void
+}
+
+class SyncApi {
+  +getChangesSince(since: Date): Observable<SyncChange[]>
+}
+
+WeighInChangedNotificationHandler ..> WeighInChangedEvent : handles
+WeighInChangedNotificationHandler ..> IRealtimeNotifier : pushes through
+GoalChangedNotificationHandler ..> GoalChangedEvent : handles
+GoalChangedNotificationHandler ..> IRealtimeNotifier : pushes through
+SignalRRealtimeNotifier ..|> IRealtimeNotifier
+SignalRRealtimeNotifier ..> LedgerHub : sends through IHubContext
+GetChangesSinceQueryHandler ..> GetChangesSinceQuery : handles
+GetChangesSinceQueryHandler --> SyncChange : reads
+WeighInChangedEvent --> ChangeKind : has
+GoalChangedEvent --> ChangeKind : has
+SyncChange --> ChangeKind : has
+SyncChange --> SyncEntityType : has
+RealtimeService ..> LedgerHub : subscribes over SignalR
+RealtimeService ..> SyncApi : reconciles through
+SyncApi ..> SyncChange : returns
+@enduml

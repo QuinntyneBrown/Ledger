@@ -1,0 +1,61 @@
+@startuml
+title UML sequence behaviour — Track goal progress: project pace and schedule status
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "GoalPage" as page
+  participant "GoalsApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "GoalsController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "GetGoalProgressQueryHandler" as handler
+  participant "TrendSmoother" as smoother
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+
+actor -> page : Open goal screen pace section
+page -> client : Build typed request
+client -> controller : HTTPS GET /api/v1/goals/progress
+controller -> controller : Authenticate and scope to owner
+controller -> handler : Send GetGoalProgressQuery
+handler -> db : Load owner weigh-ins over recent window
+db --> handler : Recent entries and target date
+alt fewer than 2 entries or span under 7 days per L2-023
+  handler --> controller : Progress with HasSufficientData false
+  controller --> client : 200 without projection
+  client --> page : No pace available
+  page --> actor : Show "Keep logging to see your pace"
+else at least 2 entries spanning 7 days or more
+  handler -> smoother : WeeklyRateKg(entries) over a recent window of <TO SUPPLY> days, smoothed per L2-023
+  smoother --> handler : Smoothed weekly rate
+  alt no movement or movement away from goal per L2-023
+    handler --> controller : Honest status, no projected date
+    controller --> client : 200 without projection
+    client --> page : Trend stalled or reversing
+    page --> actor : Report trend honestly, no impossible date
+  else trend moves toward goal
+    handler -> handler : Project completion date; compare to target within a <TO SUPPLY>-day tolerance for Ahead / On track / Behind per L2-023
+    handler --> controller : PaceProjection with date, status, and day delta
+    controller --> client : 200 with projection
+    client --> page : Projection and schedule status
+    page --> actor : Show projected date and status with days delta
+  end
+end
+@enduml

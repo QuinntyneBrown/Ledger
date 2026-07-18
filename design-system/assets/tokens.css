@@ -1,0 +1,385 @@
+/* ==========================================================================
+   AURORA — Design Tokens
+   The single source of truth for the Ledger product family.
+   Every color, type, space, elevation, motion and shape value lives here.
+   Dark is the default theme (Ledger is dark-first); light is an override.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. PRIMITIVES  — raw values, never referenced directly by components.
+   -------------------------------------------------------------------------- */
+:root {
+  /* Ink — the cool near-black spine of the brand (not pure #000) */
+  --ink-950: #070910;
+  --ink-900: #0a0c12;
+  --ink-850: #0e1119;
+  --ink-800: #12151f;
+  --ink-750: #171b26;
+  --ink-700: #1d2230;
+  --ink-600: #262c3d;
+  --ink-500: #33394d;
+  --ink-400: #4a5169;
+  --ink-300: #6b7385;
+  --ink-200: #9aa2b6;
+  --ink-100: #c3c9d8;
+  --ink-050: #e7eaf2;
+  --ink-000: #f6f8fc;
+
+  /* Gold — the signature brand accent ("gold, best in class") */
+  --gold-100: #fff2cf;
+  --gold-200: #ffe29a;
+  --gold-300: #ffd66b;
+  --gold-400: #f9c349;
+  --gold-500: #f5a524;
+  --gold-600: #d9860f;
+  --gold-700: #a9640a;
+
+  /* Teal — "on track / progress is good" (down is good in a weight app) */
+  --teal-200: #9cf3e6;
+  --teal-300: #5fe6d0;
+  --teal-400: #37e0c8;
+  --teal-500: #14c2ab;
+  --teal-600: #0d9d8c;
+  --teal-700: #0a7568;
+
+  /* Violet — the cool start of the aurora journey */
+  --violet-300: #b3a3ff;
+  --violet-400: #8f7bff;
+  --violet-500: #7c5cff;
+  --violet-600: #6440e6;
+
+  /* Coral — destructive / off-track / error */
+  --coral-300: #ff9d9d;
+  --coral-400: #ff7a7a;
+  --coral-500: #ff5c5c;
+  --coral-600: #e23d3d;
+
+  /* Amber — warning (distinct from brand gold: more orange) */
+  --amber-400: #ffb54a;
+  --amber-500: #ff9d2e;
+  --amber-600: #e07d10;
+
+  /* Sky — informational */
+  --sky-400: #5aa9ff;
+  --sky-500: #3d8bff;
+  --sky-600: #2b6fe0;
+
+  /* Fixed white/black for alpha compositing */
+  --white: #ffffff;
+  --black: #000000;
+
+  /* ----------------------------------------------------------------------
+     TYPOGRAPHY primitives
+     Self-contained: system stacks only (no web-font network requests).
+     Mono carries the "ledger" identity — tabular data & timestamps.
+     ---------------------------------------------------------------------- */
+  --font-display: "SF Pro Display", "Segoe UI Variable Display", "Segoe UI",
+    system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  --font-mono: "SF Mono", "Cascadia Code", "JetBrains Mono", "Roboto Mono",
+    ui-monospace, "DejaVu Sans Mono", Consolas, "Liberation Mono", monospace;
+
+  /* Type scale — 1.200 (minor third) with a display step-out at the top */
+  --text-2xs: 0.6875rem;  /* 11px — micro labels, tabular captions        */
+  --text-xs: 0.75rem;     /* 12px — captions, meta                         */
+  --text-sm: 0.875rem;    /* 14px — secondary body, dense UI              */
+  --text-base: 1rem;      /* 16px — body                                  */
+  --text-lg: 1.125rem;    /* 18px — lead body                             */
+  --text-xl: 1.375rem;    /* 22px — card titles                           */
+  --text-2xl: 1.75rem;    /* 28px — section headings                      */
+  --text-3xl: 2.25rem;    /* 36px — page titles                           */
+  --text-4xl: 3rem;       /* 48px — display                               */
+  --text-5xl: 4rem;       /* 64px — hero display                          */
+  --text-6xl: 5.5rem;     /* 88px — the big weight number                 */
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-heavy: 800;
+
+  --leading-tight: 1.1;
+  --leading-snug: 1.28;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.65;
+
+  --tracking-tighter: -0.03em;
+  --tracking-tight: -0.015em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+  --tracking-wider: 0.08em;   /* eyebrows / all-caps labels */
+
+  /* ----------------------------------------------------------------------
+     SPACING — 4px base rhythm
+     ---------------------------------------------------------------------- */
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4  */
+  --space-2: 0.5rem;    /* 8  */
+  --space-3: 0.75rem;   /* 12 */
+  --space-4: 1rem;      /* 16 */
+  --space-5: 1.25rem;   /* 20 */
+  --space-6: 1.5rem;    /* 24 */
+  --space-7: 2rem;      /* 32 */
+  --space-8: 2.5rem;    /* 40 */
+  --space-9: 3rem;      /* 48 */
+  --space-10: 4rem;     /* 64 */
+  --space-11: 5rem;     /* 80 */
+  --space-12: 6rem;     /* 96 */
+
+  /* ----------------------------------------------------------------------
+     SHAPE — radius scale
+     ---------------------------------------------------------------------- */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-2xl: 30px;
+  --radius-pill: 999px;
+  --radius-circle: 50%;
+
+  /* ----------------------------------------------------------------------
+     MOTION — durations & easings
+     ---------------------------------------------------------------------- */
+  --dur-instant: 80ms;
+  --dur-fast: 140ms;
+  --dur-base: 220ms;
+  --dur-slow: 360ms;
+  --dur-slower: 560ms;
+  --dur-dial: 1100ms;   /* the hero dial sweep */
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);   /* springy, for reveals */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ----------------------------------------------------------------------
+     Z-INDEX
+     ---------------------------------------------------------------------- */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 100;
+  --z-nav: 200;
+  --z-overlay: 900;
+  --z-modal: 1000;
+  --z-toast: 1100;
+  --z-tooltip: 1200;
+
+  /* Layout maxima */
+  --container-max: 1280px;
+  --reading-max: 68ch;
+  --app-max: 460px;         /* mobile-first app frame */
+}
+
+/* --------------------------------------------------------------------------
+   2. SEMANTIC TOKENS — DARK (default)
+   Components reference ONLY these, never primitives above.
+   -------------------------------------------------------------------------- */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --canvas: var(--ink-900);
+  --canvas-inset: var(--ink-950);
+  --surface-1: var(--ink-800);
+  --surface-2: var(--ink-750);
+  --surface-3: var(--ink-700);
+  --surface-raised: var(--ink-750);
+  --surface-sunken: var(--ink-850);
+  --surface-glass: rgba(23, 27, 38, 0.72);
+  --scrim: rgba(5, 6, 10, 0.66);
+
+  /* Borders & lines */
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --border-faint: rgba(255, 255, 255, 0.05);
+  --divider: rgba(255, 255, 255, 0.07);
+
+  /* Text */
+  --text-hi: #f4f6fb;
+  --text-mid: #a9b1c6;
+  --text-lo: #737b90;
+  --text-disabled: #4d5468;
+  --text-on-gold: #241a02;      /* dark text on the gold accent */
+  --text-on-teal: #04211d;
+  --text-inverse: var(--ink-900);
+
+  /* Brand */
+  --brand: var(--gold-400);
+  --brand-strong: var(--gold-300);
+  --brand-hover: var(--gold-300);
+  --brand-press: var(--gold-500);
+  --brand-subtle: rgba(249, 195, 73, 0.14);
+  --brand-subtle-hover: rgba(249, 195, 73, 0.22);
+  --brand-ring: rgba(249, 195, 73, 0.5);
+
+  /* Status */
+  --good: var(--teal-400);
+  --good-subtle: rgba(55, 224, 200, 0.14);
+  --good-text: var(--teal-300);
+  --warn: var(--amber-400);
+  --warn-subtle: rgba(255, 181, 74, 0.15);
+  --warn-text: var(--amber-400);
+  --bad: var(--coral-500);
+  --bad-subtle: rgba(255, 92, 92, 0.15);
+  --bad-text: var(--coral-400);
+  --info: var(--sky-400);
+  --info-subtle: rgba(90, 169, 255, 0.15);
+  --info-text: var(--sky-400);
+
+  /* Focus */
+  --focus-ring: var(--gold-300);
+  --focus-ring-offset: var(--canvas);
+
+  /* Aurora — the signature progress gradient (violet → teal → gold) */
+  --aurora-start: var(--violet-500);
+  --aurora-mid: var(--teal-400);
+  --aurora-end: var(--gold-300);
+  --aurora: linear-gradient(
+    120deg,
+    var(--violet-500) 0%,
+    var(--teal-400) 52%,
+    var(--gold-300) 100%
+  );
+  --aurora-soft: linear-gradient(
+    120deg,
+    rgba(124, 92, 255, 0.16),
+    rgba(55, 224, 200, 0.14),
+    rgba(255, 214, 107, 0.16)
+  );
+
+  /* Data-viz series (accessible in dark) */
+  --viz-1: var(--gold-300);
+  --viz-2: var(--teal-400);
+  --viz-3: var(--violet-400);
+  --viz-4: var(--sky-400);
+  --viz-5: var(--coral-400);
+  --viz-grid: rgba(255, 255, 255, 0.06);
+  --viz-axis: rgba(255, 255, 255, 0.28);
+  --viz-band: rgba(55, 224, 200, 0.12);
+
+  /* Elevation — layered shadow + a faint top highlight for glassy depth */
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 1px rgba(0, 0, 0, 0.3);
+  --shadow-2: 0 4px 10px rgba(0, 0, 0, 0.45), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-3: 0 12px 28px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.4);
+  --shadow-4: 0 24px 60px rgba(0, 0, 0, 0.58), 0 6px 14px rgba(0, 0, 0, 0.45);
+  --shadow-glow-brand: 0 0 0 1px rgba(249, 195, 73, 0.2),
+    0 8px 30px rgba(249, 165, 36, 0.28);
+  --shadow-glow-good: 0 0 30px rgba(55, 224, 200, 0.25);
+  --highlight-top: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+  /* Glass blur */
+  --blur-glass: 18px;
+  --blur-scrim: 3px;
+
+  /* Graph-paper texture used on example canvases / ledger surfaces */
+  --grid-line: rgba(255, 255, 255, 0.04);
+}
+
+/* --------------------------------------------------------------------------
+   3. SEMANTIC TOKENS — LIGHT (override via [data-theme="light"])
+   The Aurora docs default to light; the app can opt in.
+   -------------------------------------------------------------------------- */
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --canvas: #f7f8fb;
+  --canvas-inset: #eef0f6;
+  --surface-1: #ffffff;
+  --surface-2: #ffffff;
+  --surface-3: #f2f4f9;
+  --surface-raised: #ffffff;
+  --surface-sunken: #eceff5;
+  --surface-glass: rgba(255, 255, 255, 0.78);
+  --scrim: rgba(18, 21, 31, 0.42);
+
+  --border: rgba(18, 21, 31, 0.1);
+  --border-strong: rgba(18, 21, 31, 0.2);
+  --border-faint: rgba(18, 21, 31, 0.05);
+  --divider: rgba(18, 21, 31, 0.08);
+
+  --text-hi: #141720;
+  --text-mid: #515a70;
+  --text-lo: #7c8498;
+  --text-disabled: #aab0c0;
+  --text-on-gold: #241a02;
+  --text-on-teal: #04211d;
+  --text-inverse: #f6f8fc;
+
+  --brand: var(--gold-600);
+  --brand-strong: var(--gold-700);
+  --brand-hover: var(--gold-500);
+  --brand-press: var(--gold-700);
+  --brand-subtle: rgba(217, 134, 15, 0.12);
+  --brand-subtle-hover: rgba(217, 134, 15, 0.18);
+  --brand-ring: rgba(217, 134, 15, 0.4);
+
+  --good: var(--teal-600);
+  --good-subtle: rgba(13, 157, 140, 0.12);
+  --good-text: var(--teal-700);
+  --warn: var(--amber-600);
+  --warn-subtle: rgba(224, 125, 16, 0.12);
+  --warn-text: var(--amber-600);
+  --bad: var(--coral-600);
+  --bad-subtle: rgba(226, 61, 61, 0.1);
+  --bad-text: var(--coral-600);
+  --info: var(--sky-600);
+  --info-subtle: rgba(43, 111, 224, 0.1);
+  --info-text: var(--sky-600);
+
+  --focus-ring: var(--gold-600);
+  --focus-ring-offset: var(--canvas);
+
+  --aurora-start: var(--violet-500);
+  --aurora-mid: var(--teal-500);
+  --aurora-end: var(--gold-500);
+  --aurora: linear-gradient(
+    120deg,
+    var(--violet-500) 0%,
+    var(--teal-500) 52%,
+    var(--gold-500) 100%
+  );
+  --aurora-soft: linear-gradient(
+    120deg,
+    rgba(124, 92, 255, 0.1),
+    rgba(20, 194, 171, 0.1),
+    rgba(245, 165, 36, 0.12)
+  );
+
+  --viz-1: var(--gold-600);
+  --viz-2: var(--teal-600);
+  --viz-3: var(--violet-500);
+  --viz-4: var(--sky-600);
+  --viz-5: var(--coral-600);
+  --viz-grid: rgba(18, 21, 31, 0.07);
+  --viz-axis: rgba(18, 21, 31, 0.35);
+  --viz-band: rgba(13, 157, 140, 0.12);
+
+  --shadow-1: 0 1px 2px rgba(18, 21, 31, 0.08), 0 1px 1px rgba(18, 21, 31, 0.04);
+  --shadow-2: 0 4px 12px rgba(18, 21, 31, 0.08), 0 1px 3px rgba(18, 21, 31, 0.06);
+  --shadow-3: 0 14px 30px rgba(18, 21, 31, 0.1), 0 3px 8px rgba(18, 21, 31, 0.06);
+  --shadow-4: 0 28px 60px rgba(18, 21, 31, 0.14), 0 8px 18px rgba(18, 21, 31, 0.08);
+  --shadow-glow-brand: 0 0 0 1px rgba(217, 134, 15, 0.18),
+    0 10px 28px rgba(245, 165, 36, 0.22);
+  --shadow-glow-good: 0 0 30px rgba(20, 194, 171, 0.18);
+  --highlight-top: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+
+  --grid-line: rgba(18, 21, 31, 0.045);
+}
+
+/* --------------------------------------------------------------------------
+   4. REDUCED MOTION — collapse all timed animation to a hair.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-instant: 1ms;
+    --dur-fast: 1ms;
+    --dur-base: 1ms;
+    --dur-slow: 1ms;
+    --dur-slower: 1ms;
+    --dur-dial: 1ms;
+  }
+}

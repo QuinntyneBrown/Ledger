@@ -1,0 +1,32 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Web app shell
+
+Container_Boundary(web, "Ledger Web App") {
+  Component(shell, "AppShellComponent", "Angular component", "Hosts the theme host, navigation frame, and router outlet")
+  Component(theme, "ThemeService", "Angular service", "Applies stored theme from Aurora tokens; honors reduced motion (L2-063, L2-066)")
+  Component(unit, "UnitService", "Angular service", "Applies stored weight unit (kg/lbs)")
+  Component(router, "AppRouter", "Angular Router", "Lazy-loads a feature module per route (L2-075, L2-086)")
+  Component(guard, "AuthGuard", "Angular route guard", "Blocks unauthenticated access and redirects to sign-in")
+  Component(nav, "NavigationComponent", "Angular component", "Bottom tab bar at XS, side navigation at MD+ (L2-064)")
+  Component(bp, "BreakpointObserver", "Angular CDK service", "Reports the active responsive breakpoint")
+  Component(apilib, "ledger/api", "Angular library", "Typed HTTP and SignalR services, including AuthApi")
+  Component(comps, "ledger/components", "Angular library", "Aurora components with documented states and dialog/sheet focus trap (L2-065)")
+  Component(domain, "ledger/domain", "Angular library", "Shared domain types (L2-086)")
+}
+Container_Boundary(api, "Ledger API") {
+  Component(authctrl, "AuthController", "ASP.NET Core controller", "Serves session and refresh endpoints")
+}
+
+Rel(shell, theme, "Applies theme through")
+Rel(shell, unit, "Applies unit through")
+Rel(shell, nav, "Renders")
+Rel(shell, router, "Hosts outlet for")
+Rel(router, guard, "Evaluates before activating a route")
+Rel(nav, bp, "Observes breakpoint from")
+Rel(nav, comps, "Composes from")
+Rel(guard, apilib, "Checks session via")
+Rel(apilib, authctrl, "Calls", "JSON/HTTPS")
+Rel(apilib, domain, "Types requests and results with")
+@enduml

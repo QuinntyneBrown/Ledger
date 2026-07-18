@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Switch — Aurora Design System</title>
+  <meta name="description" content="A switch toggles a single setting on or off, taking effect immediately. Aurora's switch fills gold when on and slides its thumb with a springy ease.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+  <style>
+    /* page-scoped: a settings row that pairs a label + description with a control */
+    .demo-setting { display:flex; align-items:center; justify-content:space-between; gap:var(--space-5); padding:var(--space-4) var(--space-2); }
+    .demo-setting + .demo-setting { border-top:1px solid var(--divider); }
+    .demo-setting-text { min-width:0; }
+    .demo-setting-title { font-size:var(--text-sm); font-weight:var(--weight-semibold); color:var(--text-hi); }
+    .demo-setting-desc { font-size:var(--text-xs); color:var(--text-lo); margin-top:2px; }
+  </style>
+</head>
+<body class="doc-body">
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation">
+      <svg class="au-icon"><use href="#i-menu"></use></svg>
+    </button>
+    <a class="doc-brand" href="../index.html">
+      <span class="doc-brandmark"></span>
+      <span class="doc-brand-name">Aurora<small>Design System</small></span>
+    </a>
+    <nav class="doc-header-nav">
+      <a href="../foundations/getting-started.html">Foundations</a>
+      <a href="button.html" class="is-active">Components</a>
+      <a href="../patterns/forms-validation.html">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <!-- ============ CANONICAL SIDEBAR (shared across all DS pages) ============ -->
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="../foundations/getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="../foundations/color.html">Color</a>
+        <a class="doc-navlink" href="../foundations/typography.html">Typography</a>
+        <a class="doc-navlink" href="../foundations/spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="../foundations/elevation.html">Elevation</a>
+        <a class="doc-navlink" href="../foundations/shape.html">Shape</a>
+        <a class="doc-navlink" href="../foundations/iconography.html">Iconography</a>
+        <a class="doc-navlink" href="../foundations/motion.html">Motion</a>
+        <a class="doc-navlink" href="../foundations/accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="button.html">Button</a>
+        <a class="doc-navlink" href="text-field.html">Text field</a>
+        <a class="doc-navlink" href="select.html">Select</a>
+        <a class="doc-navlink is-active" href="switch.html">Switch</a>
+        <a class="doc-navlink" href="checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="slider.html">Slider</a>
+        <a class="doc-navlink" href="date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="card.html">Card</a>
+        <a class="doc-navlink" href="list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="avatar.html">Avatar</a>
+        <a class="doc-navlink" href="progress.html">Progress</a>
+        <a class="doc-navlink" href="gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="dialog.html">Dialog</a>
+        <a class="doc-navlink" href="snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="banner.html">Banner</a>
+        <a class="doc-navlink" href="tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="tabs.html">Tabs</a>
+        <a class="doc-navlink" href="navigation.html">Navigation</a>
+        <a class="doc-navlink" href="milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="../patterns/forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="../patterns/data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="../patterns/data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="../patterns/theming.html">Theming</a>
+        <a class="doc-navlink" href="../patterns/motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Components <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Switch</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-settings"></use></svg> Actions &amp; inputs</span>
+          <h1 class="doc-title">Switch</h1>
+          <p class="doc-lead">A switch flips a single setting <strong style="color:var(--text-hi)">on or off</strong> and applies it immediately — no save button. The track fills gold when on and the thumb glides across on a springy ease.</p>
+        </div>
+
+        <div class="doc-tabbar" data-tabs>
+          <button class="doc-tab is-active" data-tab="overview">Overview</button>
+          <button class="doc-tab" data-tab="examples">Examples</button>
+          <button class="doc-tab" data-tab="api">Tokens &amp; API</button>
+        </div>
+
+        <!-- ===== OVERVIEW ===== -->
+        <section data-tabpanel="overview">
+          <div class="doc-canvas" style="border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:var(--space-7);padding:var(--space-9);gap:var(--space-6)">
+            <label class="au-switch"><input type="checkbox"><span class="au-switch-track"></span><span class="au-switch-thumb"></span></label>
+            <label class="au-switch"><input type="checkbox" checked><span class="au-switch-track"></span><span class="au-switch-thumb"></span></label>
+          </div>
+
+          <div class="doc-prose">
+            <h2 class="doc-section-title">When to use it</h2>
+            <p>Use a switch for a binary setting that takes effect <strong>the instant it is toggled</strong> — notifications, dark mode, weekly summaries. If the change should only apply after an explicit save, or the choice is one of several, use a <a href="checkbox-radio.html">checkbox or radio</a> instead.</p>
+            <ul>
+              <li>Toggling is <strong>immediate</strong> — never require a separate confirm step.</li>
+              <li>Pair each switch with a clear <strong>label</strong>, and a description when the effect isn’t obvious.</li>
+              <li>Write the label as the <strong>on</strong> state — “Daily reminder”, not “Reminders on/off”.</li>
+              <li>For a yes/no answer inside a form that is saved later, use a checkbox.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Anatomy</h2>
+          <div class="doc-anatomy" style="padding-top:var(--space-11);padding-bottom:var(--space-11)">
+            <label class="au-switch" style="transform:scale(1.8)"><input type="checkbox" checked><span class="au-switch-track"></span><span class="au-switch-thumb"></span></label>
+            <span class="doc-anatomy-marker" style="top:24%;left:38%">1</span>
+            <span class="doc-anatomy-marker" style="top:50%;right:32%">2</span>
+          </div>
+          <div class="doc-legend">
+            <ul>
+              <li><span class="doc-legend-num">1</span> <strong style="color:var(--text-hi)">Track</strong> — the pill; neutral when off, gold when on.</li>
+              <li><span class="doc-legend-num">2</span> <strong style="color:var(--text-hi)">Thumb</strong> — slides 20px on toggle and shifts colour to sit on the fill.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Do &amp; don’t</h2>
+          <div class="doc-dodont">
+            <div class="doc-guide doc-guide--do">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-check"></use></svg> Do</div>
+              <div class="doc-guide-body">
+                <div class="demo-setting" style="width:240px">
+                  <div class="demo-setting-text"><div class="demo-setting-title">Daily reminder</div></div>
+                  <label class="au-switch"><input type="checkbox" checked><span class="au-switch-track"></span><span class="au-switch-thumb"></span></label>
+                </div>
+              </div>
+              <div class="doc-guide-note">Label the setting by its on state and let the toggle apply at once.</div>
+            </div>
+            <div class="doc-guide doc-guide--dont">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-x"></use></svg> Don’t</div>
+              <div class="doc-guide-body">
+                <div class="au-row-flex au-gap-3">
+                  <label class="au-switch"><input type="checkbox"><span class="au-switch-track"></span><span class="au-switch-thumb"></span></label>
+                  <button class="au-btn au-btn--primary au-btn--sm">Apply</button>
+                </div>
+              </div>
+              <div class="doc-guide-note">Don’t make a switch wait on a separate Apply button — that’s a checkbox.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== EXAMPLES ===== -->
+        <section data-tabpanel="examples" hidden>
+          <!-- States -->
+          <h2 class="doc-section-title">On, off, focus &amp; disabled</h2>
+          <p class="doc-section-lead">The third switch simulates the keyboard focus ring; the last pair is disabled.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">switch/states</span>
+              <div class="doc-example-tools"><button class="au-icon-btn au-icon-btn--sm" data-theme-toggle aria-label="Toggle theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button></div>
+            </div>
+            <div class="doc-canvas" style="gap:var(--space-7)">
+              <div class="au-stack au-stack-2" style="align-items:center">
+                <label class="au-switch"><input type="checkbox"><span class="au-switch-track"></span><span class="au-switch-thumb"></span></label>
+                <span class="au-caption">Off</span>
+              </div>
+              <div class="au-stack au-stack-2" style="align-items:center">
+                <label class="au-switch"><input type="checkbox" checked><span class="au-switch-track"></span><span class="au-switch-thumb"></span></label>
+                <span class="au-caption">On</span>
+              </div>
+              <div class="au-stack au-stack-2" style="align-items:center">
+                <label class="au-switch"><input type="checkbox" checked><span class="au-switch-track" style="outline:2px solid var(--focus-ring);outline-offset:2px"></span><span class="au-switch-thumb"></span></label>
+                <span class="au-caption">Focus</span>
+              </div>
+              <div class="au-stack au-stack-2" style="align-items:center">
+                <label class="au-switch"><input type="checkbox" disabled><span class="au-switch-track"></span><span class="au-switch-thumb"></span></label>
+                <span class="au-caption">Disabled off</span>
+              </div>
+              <div class="au-stack au-stack-2" style="align-items:center">
+                <label class="au-switch"><input type="checkbox" checked disabled><span class="au-switch-track"></span><span class="au-switch-thumb"></span></label>
+                <span class="au-caption">Disabled on</span>
+              </div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;label class="au-switch"&gt;
+  &lt;input type="checkbox" checked&gt;
+  &lt;span class="au-switch-track"&gt;&lt;/span&gt;
+  &lt;span class="au-switch-thumb"&gt;&lt;/span&gt;
+&lt;/label&gt;</code></pre>
+          </div>
+
+          <!-- Settings rows -->
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Settings rows</h2>
+          <p class="doc-section-lead">The most common home for a switch: a labelled row with a short description, applied immediately.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">switch/settings</span></div>
+            <div class="doc-canvas doc-canvas--start">
+              <div class="au-card" style="width:100%;max-width:460px">
+                <div class="demo-setting">
+                  <div class="demo-setting-text">
+                    <div class="demo-setting-title">Daily weigh-in reminder</div>
+                    <div class="demo-setting-desc">A gentle nudge at 8:00 each morning.</div>
+                  </div>
+                  <label class="au-switch"><input type="checkbox" checked><span class="au-switch-track"></span><span class="au-switch-thumb"></span></label>
+                </div>
+                <div class="demo-setting">
+                  <div class="demo-setting-text">
+                    <div class="demo-setting-title">Weekly summary email</div>
+                    <div class="demo-setting-desc">Your trend and average, every Sunday.</div>
+                  </div>
+                  <label class="au-switch"><input type="checkbox"><span class="au-switch-track"></span><span class="au-switch-thumb"></span></label>
+                </div>
+                <div class="demo-setting">
+                  <div class="demo-setting-text">
+                    <div class="demo-setting-title">Show trend line</div>
+                    <div class="demo-setting-desc">Overlay a 7-day moving average on the chart.</div>
+                  </div>
+                  <label class="au-switch"><input type="checkbox" checked><span class="au-switch-track"></span><span class="au-switch-thumb"></span></label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="setting-row"&gt;
+  &lt;div&gt;
+    &lt;div class="title"&gt;Daily weigh-in reminder&lt;/div&gt;
+    &lt;div class="desc"&gt;A gentle nudge at 8:00 each morning.&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;label class="au-switch"&gt;
+    &lt;input type="checkbox" checked&gt;
+    &lt;span class="au-switch-track"&gt;&lt;/span&gt;
+    &lt;span class="au-switch-thumb"&gt;&lt;/span&gt;
+  &lt;/label&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- ===== API ===== -->
+        <section data-tabpanel="api" hidden>
+          <h2 class="doc-section-title">Structure &amp; classes</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Class</th><th>Element</th><th>Role</th></tr></thead>
+              <tbody>
+                <tr><td><code>.au-switch</code></td><td>label</td><td>52×32 wrapper; the whole control is the click target.</td></tr>
+                <tr><td><code>input[type="checkbox"]</code></td><td>input</td><td>The real, visually-hidden control that holds state.</td></tr>
+                <tr><td><code>.au-switch-track</code></td><td>span</td><td>The pill background; must follow the input.</td></tr>
+                <tr><td><code>.au-switch-thumb</code></td><td>span</td><td>The sliding knob; must follow the track.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-8)">States</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>State</th><th>Trigger</th><th>Effect</th></tr></thead>
+              <tbody>
+                <tr><td>On</td><td><code>input:checked</code></td><td>Track fills gold, thumb slides 20px and inverts.</td></tr>
+                <tr><td>Off</td><td>default</td><td>Neutral <code>--surface-3</code> track with a mid thumb.</td></tr>
+                <tr><td>Focus</td><td><code>input:focus-visible</code></td><td>2px focus ring around the track.</td></tr>
+                <tr><td>Disabled</td><td><code>input:disabled</code></td><td>Track dims to 50%; pointer input blocked.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-8)">Tokens consumed</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Token</th><th>Applied to</th></tr></thead>
+              <tbody>
+                <tr><td><code>--surface-3 · --border-strong</code></td><td>Off track fill and border.</td></tr>
+                <tr><td><code>--brand</code></td><td>On track fill.</td></tr>
+                <tr><td><code>--text-mid → --text-on-gold</code></td><td>Thumb colour, off → on.</td></tr>
+                <tr><td><code>--radius-pill</code></td><td>Track shape.</td></tr>
+                <tr><td><code>--dur-base · --ease-emphasized</code></td><td>Thumb slide.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-info"></use></svg>
+            <div class="doc-callout-body"><strong>Accessibility.</strong> The control is a native checkbox, so it is keyboard-toggleable with <kbd>Space</kbd> and announced as a switch when you add <code>role="switch"</code>. Wrapping the input and its label in one <code>&lt;label&gt;</code> makes the entire pill a target. State is conveyed by position and colour together.</div>
+          </div>
+        </section>
+
+        <!-- Pager -->
+        <nav class="doc-pager">
+          <a href="select.html"><small>Previous</small><span>Select</span></a>
+          <a class="doc-pager-next" href="checkbox-radio.html"><small>Next</small><span>Checkbox &amp; radio</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

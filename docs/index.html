@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ledger — weight, kept honestly · with the Aurora design system</title>
+  <meta name="description" content="Ledger is a ruthlessly simple weight tracker. Aurora is the design system behind it. Explore both as interactive HTML mocks.">
+  <link rel="stylesheet" href="../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../design-system/assets/components.css">
+  <link rel="stylesheet" href="../design-system/assets/docs.css">
+  <script defer src="../design-system/assets/aurora.js"></script>
+</head>
+<body class="doc-body">
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <linearGradient id="auroraGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="var(--aurora-start)"></stop>
+      <stop offset="52%" stop-color="var(--aurora-mid)"></stop>
+      <stop offset="100%" stop-color="var(--aurora-end)"></stop>
+    </linearGradient>
+  </defs></svg>
+
+  <header class="doc-header">
+    <a class="doc-brand" href="index.html">
+      <span class="doc-brandmark"></span>
+      <span class="doc-brand-name">Ledger<small>Product family</small></span>
+    </a>
+    <div class="doc-header-spacer"></div>
+    <a class="au-btn au-btn--text au-btn--sm" href="app/index.html">The app</a>
+    <a class="au-btn au-btn--text au-btn--sm" href="../design-system/index.html">Design system</a>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <section class="doc-hero">
+    <span class="au-eyebrow" style="justify-content:center"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-scale"></use></svg> Two products, one design language</span>
+    <h1 class="doc-hero-title">Weight,<br><em>kept honestly.</em></h1>
+    <p class="doc-hero-lead">
+      Ledger is a ruthlessly simple weight tracker — log a number a day and watch the trend
+      move toward your goal. Aurora is the design system it’s built on, documented as a product
+      of its own. Everything here is a self-contained, interactive HTML mock.
+    </p>
+  </section>
+
+  <section class="doc-home-section" style="padding-top:0">
+    <div class="au-grid au-grid-2" style="gap:var(--space-6)">
+      <!-- LEDGER -->
+      <a class="au-card au-card--raised au-card--interactive au-card--pad-lg" href="app/index.html" style="display:flex;flex-direction:column;gap:var(--space-6)">
+        <div class="au-row-flex au-between">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-scale"></use></svg> The app</span>
+          <span class="au-tag">5 features</span>
+        </div>
+        <div class="au-center" style="display:flex;padding:var(--space-4) 0">
+          <div class="au-gauge" data-value="73" data-sweep="360" style="width:172px;height:172px">
+            <svg viewBox="0 0 120 120" width="172" height="172"><circle class="au-gauge-track" cx="60" cy="60" r="52" stroke-width="10"></circle><circle class="au-gauge-arc" cx="60" cy="60" r="52" stroke-width="10"></circle></svg>
+            <div class="au-gauge-center"><div class="au-gauge-value" style="font-size:var(--text-3xl)">74.9</div><div class="au-gauge-unit">kg</div></div>
+          </div>
+        </div>
+        <div>
+          <h2 class="au-h2" style="font-family:var(--font-display)">Ledger</h2>
+          <p class="au-text-mid au-mt-2" style="font-size:var(--text-sm);line-height:var(--leading-relaxed)">Set a goal, log a weigh-in, read the trend, celebrate milestones. Dark-first, premium, calm.</p>
+        </div>
+        <span class="au-btn au-btn--primary" style="align-self:flex-start">Open the app <svg class="au-icon"><use href="#i-arrow-right"></use></svg></span>
+      </a>
+
+      <!-- AURORA -->
+      <a class="au-card au-card--raised au-card--interactive au-card--pad-lg" href="../design-system/index.html" style="display:flex;flex-direction:column;gap:var(--space-6)">
+        <div class="au-row-flex au-between">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> The design system</span>
+          <span class="au-tag">31 pages</span>
+        </div>
+        <div class="au-center" style="display:flex;padding:var(--space-4) 0;height:172px;border-radius:var(--radius-lg);background:var(--aurora-soft);position:relative;overflow:hidden">
+          <div style="width:120px;height:120px;border-radius:24px;background:var(--aurora);box-shadow:var(--shadow-glow-brand)"></div>
+        </div>
+        <div>
+          <h2 class="au-h2" style="font-family:var(--font-display)">Aurora</h2>
+          <p class="au-text-mid au-mt-2" style="font-size:var(--text-sm);line-height:var(--leading-relaxed)">Tokens, foundations and 22 components — every state documented, two themes, zero dependencies.</p>
+        </div>
+        <span class="au-btn au-btn--tonal" style="align-self:flex-start">Explore Aurora <svg class="au-icon"><use href="#i-arrow-right"></use></svg></span>
+      </a>
+    </div>
+
+    <div class="doc-callout" style="margin-top:var(--space-8)">
+      <svg class="au-icon"><use href="#i-info"></use></svg>
+      <div class="doc-callout-body"><strong>These are mocks.</strong> Pure HTML, CSS and vanilla JS — no build step, no network, no dependencies. Open any file directly, or serve the <code>docs/</code> folder. Toggle light/dark with the sun icon anywhere.</div>
+    </div>
+  </section>
+
+  <footer class="doc-footer">
+    <span>Ledger &amp; Aurora — a design + product mock set.</span>
+    <span class="au-mono">self-contained · light + dark · accessible</span>
+  </footer>
+
+</body>
+</html>

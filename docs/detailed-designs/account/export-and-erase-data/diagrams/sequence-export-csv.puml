@@ -1,0 +1,49 @@
+@startuml
+title UML sequence behaviour — Export and erase data: export CSV
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "DataAndPrivacyPage" as page
+  participant "AccountApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "AccountController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "ExportDataQueryHandler" as handler
+  participant "AuditLogger" as audit
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+
+actor -> page : Request CSV export
+page -> client : Build typed request
+client -> controller : HTTPS GET /api/v1/account/export
+controller -> controller : Authenticate and resolve owner per L2-067
+controller -> handler : Send ExportDataQuery
+handler -> db : Read all owner WeighIn entries
+db --> handler : Owner entries only per L2-052
+handler -> handler : Build CSV rows: date, weight kg, weight display unit, note
+handler -> handler : Neutralize leading = + - @ in fields per L2-052
+handler -> audit : Record data export per L2-072
+audit -> db : Write audit record
+db --> audit : Commit
+handler --> controller : CSV file
+controller --> client : 200 OK, text/csv attachment
+client --> page : File download
+page --> actor : Deliver CSV download
+@enduml

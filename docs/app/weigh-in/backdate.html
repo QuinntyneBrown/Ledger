@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Log a past day — Ledger</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+  <style>
+    /* page-scoped mini calendar */
+    .cal-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--space-4); }
+    .cal-title { font-weight:var(--weight-semibold); font-size:var(--text-sm); }
+    .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+    .cal-dow { text-align:center; font-family:var(--font-mono); font-size:var(--text-2xs); color:var(--text-lo); text-transform:uppercase; letter-spacing:var(--tracking-wide); padding-bottom:var(--space-1); }
+    .cal-day { height:38px; display:grid; place-items:center; border-radius:var(--radius-sm); font-size:var(--text-sm); font-variant-numeric:tabular-nums; color:var(--text-mid); cursor:pointer; border:1px solid transparent; transition:background var(--dur-fast); }
+    .cal-day:hover { background:var(--surface-2); }
+    .cal-day.is-selected { background:var(--brand); color:var(--text-on-gold); font-weight:var(--weight-bold); box-shadow:var(--shadow-glow-brand); }
+    .cal-day.is-today { border-color:var(--border-strong); color:var(--text-hi); }
+    .cal-day.is-muted { color:var(--text-lo); opacity:0.3; pointer-events:none; }
+    .cal-empty { visibility:hidden; }
+  </style>
+</head>
+<body class="app-body">
+
+  <div class="app-frame">
+    <div class="app-statusbar">
+      <span>9:41</span>
+      <span class="app-statusbar-right">
+        <svg class="au-icon" style="width:15px"><use href="#i-activity"></use></svg>
+        <svg class="au-icon" style="width:15px"><use href="#i-droplet"></use></svg>
+        <span class="au-mono" style="font-size:11px">100%</span>
+      </span>
+    </div>
+
+    <div class="app-screen">
+      <div class="app-header">
+        <a class="au-icon-btn" href="log.html" aria-label="Back"><svg class="au-icon"><use href="#i-arrow-left"></use></svg></a>
+        <div class="app-header-title" style="font-size:var(--text-base)">Log a past day</div>
+        <span style="width:44px"></span>
+      </div>
+
+      <div class="app-scroll">
+        <!-- editing a past day notice -->
+        <div class="au-banner au-banner--info">
+          <svg class="au-icon"><use href="#i-info"></use></svg>
+          <div class="au-banner-body">
+            <div class="au-banner-title">Editing a past day</div>
+            <div class="au-banner-text">Pick a date below — this weight is inserted into your history and re-averages your trend.</div>
+          </div>
+        </div>
+
+        <!-- calendar picker -->
+        <div class="au-card au-mt-6" style="padding:var(--space-5)">
+          <div class="cal-head">
+            <button class="au-icon-btn au-icon-btn--sm" aria-label="Previous month"><svg class="au-icon"><use href="#i-chevron-left"></use></svg></button>
+            <span class="cal-title">July 2026</span>
+            <button class="au-icon-btn au-icon-btn--sm" aria-label="Next month"><svg class="au-icon"><use href="#i-chevron-right"></use></svg></button>
+          </div>
+          <div class="cal-grid" role="grid" aria-label="Choose a date">
+            <span class="cal-dow">Su</span><span class="cal-dow">Mo</span><span class="cal-dow">Tu</span><span class="cal-dow">We</span><span class="cal-dow">Th</span><span class="cal-dow">Fr</span><span class="cal-dow">Sa</span>
+            <span class="cal-empty"></span><span class="cal-empty"></span><span class="cal-empty"></span>
+            <button class="cal-day">1</button><button class="cal-day">2</button><button class="cal-day">3</button><button class="cal-day">4</button>
+            <button class="cal-day">5</button><button class="cal-day">6</button><button class="cal-day">7</button><button class="cal-day">8</button><button class="cal-day">9</button><button class="cal-day">10</button><button class="cal-day">11</button>
+            <button class="cal-day is-selected" aria-selected="true">12</button><button class="cal-day">13</button><button class="cal-day">14</button><button class="cal-day">15</button><button class="cal-day">16</button><button class="cal-day">17</button><button class="cal-day is-today" aria-current="date">18</button>
+            <button class="cal-day is-muted">19</button><button class="cal-day is-muted">20</button><button class="cal-day is-muted">21</button><button class="cal-day is-muted">22</button><button class="cal-day is-muted">23</button><button class="cal-day is-muted">24</button><button class="cal-day is-muted">25</button>
+            <button class="cal-day is-muted">26</button><button class="cal-day is-muted">27</button><button class="cal-day is-muted">28</button><button class="cal-day is-muted">29</button><button class="cal-day is-muted">30</button><button class="cal-day is-muted">31</button><span class="cal-empty"></span>
+          </div>
+        </div>
+
+        <!-- selected date + weight -->
+        <div style="text-align:center;margin-top:var(--space-5)">
+          <div class="au-eyebrow" style="justify-content:center">Selected date</div>
+          <div class="weigh-date au-mt-2">Sunday, Jul 12 2026</div>
+        </div>
+        <div class="weigh-stepper" style="margin:var(--space-4) 0 var(--space-3)">
+          <button class="weigh-stepper-btn" aria-label="Decrease by 0.1"><svg class="au-icon"><use href="#i-minus"></use></svg></button>
+          <div class="au-bignum-field">
+            <span class="au-bignum" style="width:auto">75.6</span>
+            <span class="au-bignum-unit">kg</span>
+          </div>
+          <button class="weigh-stepper-btn" aria-label="Increase by 0.1"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+        </div>
+
+        <button class="au-btn au-btn--primary au-btn--lg au-btn--block au-mt-4"
+                data-toast="Saved 75.6 kg for Jul 12" data-toast-type="success" data-toast-action="Undo">
+          <svg class="au-icon"><use href="#i-check"></use></svg> Save for this day
+        </button>
+        <p class="au-caption" style="text-align:center;margin-top:var(--space-3)">Future dates can't be logged</p>
+      </div>
+    </div>
+
+    <nav class="au-bottomnav app-bottomnav">
+      <a class="app-rail-brand" href="../dashboard/dashboard.html"><span class="app-rail-mark"></span>Ledger</a>
+      <a class="au-navitem" href="../dashboard/dashboard.html"><svg class="au-icon"><use href="#i-home"></use></svg>Home</a>
+      <a class="au-navitem" href="../trends/trends.html"><svg class="au-icon"><use href="#i-activity"></use></svg>Trends</a>
+      <button class="app-navfab" data-dialog-open="quickWeigh" aria-label="Log weight"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      <a class="au-navitem" href="../milestones/milestones.html"><svg class="au-icon"><use href="#i-trophy"></use></svg>Badges</a>
+      <a class="au-navitem" href="../settings/account.html"><svg class="au-icon"><use href="#i-user"></use></svg>Profile</a>
+    </nav>
+  </div>
+
+  <!-- QUICK WEIGH-IN SHEET -->
+  <div class="au-sheet-scrim" id="quickWeigh" hidden>
+    <div class="au-sheet" role="dialog" aria-modal="true" aria-label="Log today's weight">
+      <div class="au-sheet-grip"></div>
+      <div class="au-row-flex au-between" style="margin-bottom:var(--space-2)">
+        <div><div class="au-eyebrow">Today</div><div style="font-family:var(--font-mono);color:var(--text-lo);font-size:var(--text-sm)">Wed, Jul 18</div></div>
+        <button class="au-icon-btn" data-dialog-close aria-label="Close"><svg class="au-icon"><use href="#i-x"></use></svg></button>
+      </div>
+      <div class="weigh-stepper" style="margin:var(--space-6) 0">
+        <button class="weigh-stepper-btn" aria-label="Decrease"><svg class="au-icon"><use href="#i-minus"></use></svg></button>
+        <div class="au-bignum-field">
+          <span class="au-bignum" style="width:auto">74.9</span>
+          <span class="au-bignum-unit">kg</span>
+        </div>
+        <button class="weigh-stepper-btn" aria-label="Increase"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      </div>
+      <button class="au-btn au-btn--primary au-btn--lg au-btn--block" data-dialog-close data-toast="Weight logged — 74.9 kg" data-toast-action="Undo">
+        <svg class="au-icon"><use href="#i-check"></use></svg> Log weight
+      </button>
+    </div>
+  </div>
+
+</body>
+</html>

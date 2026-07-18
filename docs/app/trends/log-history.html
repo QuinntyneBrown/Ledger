@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>History — Ledger</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+  <style>
+    .hist-month {
+      display: flex; align-items: baseline; justify-content: space-between;
+      position: sticky; top: 0; z-index: 2;
+      padding: var(--space-3) var(--space-2);
+      background: var(--surface-glass);
+      -webkit-backdrop-filter: blur(var(--blur-glass)); backdrop-filter: blur(var(--blur-glass));
+      margin-top: var(--space-4);
+    }
+    .hist-month-name { font-family: var(--font-mono); font-size: var(--text-2xs); text-transform: uppercase; letter-spacing: var(--tracking-wider); color: var(--text-lo); }
+    .hist-month-delta { font-family: var(--font-mono); font-size: var(--text-xs); font-weight: var(--weight-semibold); color: var(--good-text); }
+    .hist-chip { height: 24px; padding: 0 var(--space-2); }
+    .hist-more { flex: none; }
+  </style>
+</head>
+<body class="app-body">
+
+  <div class="app-frame">
+    <div class="app-statusbar">
+      <span>9:41</span>
+      <span class="app-statusbar-right">
+        <svg class="au-icon" style="width:15px"><use href="#i-activity"></use></svg>
+        <svg class="au-icon" style="width:15px"><use href="#i-droplet"></use></svg>
+        <span class="au-mono" style="font-size:11px">100%</span>
+      </span>
+    </div>
+
+    <div class="app-screen">
+      <!-- header -->
+      <div class="app-header">
+        <div class="au-row-flex au-gap-2">
+          <a class="au-icon-btn au-icon-btn--sm" href="trends.html" aria-label="Back"><svg class="au-icon"><use href="#i-chevron-left"></use></svg></a>
+          <div>
+            <div class="app-header-sub">92 entries</div>
+            <div class="app-header-title">History</div>
+          </div>
+        </div>
+        <button class="au-icon-btn" data-dialog-open="filterSheet" aria-label="Filter"><svg class="au-icon"><use href="#i-filter"></use></svg></button>
+      </div>
+
+      <div class="app-scroll" style="padding-top:var(--space-2)">
+        <!-- swipe hint -->
+        <div class="au-banner au-banner--info" style="margin-bottom:var(--space-2)">
+          <svg class="au-icon"><use href="#i-info"></use></svg>
+          <div class="au-banner-body"><span class="au-banner-text">Tap a day to edit · swipe for quick actions</span></div>
+        </div>
+
+        <!-- JULY -->
+        <div class="hist-month">
+          <span class="hist-month-name">July 2026</span>
+          <span class="hist-month-delta">−0.8 kg</span>
+        </div>
+        <div class="au-card au-card--pad-sm">
+          <div class="au-list">
+            <button class="au-row au-row--interactive" data-dialog-open="editEntry" style="text-align:left;width:100%;background:none">
+              <span class="au-row-date">Jul 18</span>
+              <div class="au-row-main"><div class="au-row-primary">74.9 kg</div><div class="au-row-secondary">Saturday</div></div>
+              <span class="au-chip au-chip--good hist-chip">−0.1</span>
+              <svg class="au-icon au-text-lo hist-more" style="width:18px"><use href="#i-more-horizontal"></use></svg>
+            </button>
+            <button class="au-row au-row--interactive" data-dialog-open="editEntry" style="text-align:left;width:100%;background:none">
+              <span class="au-row-date">Jul 17</span>
+              <div class="au-row-main"><div class="au-row-primary">75.0 kg</div><div class="au-row-secondary">Friday</div></div>
+              <span class="au-chip au-chip--good hist-chip">−0.2</span>
+              <svg class="au-icon au-text-lo hist-more" style="width:18px"><use href="#i-more-horizontal"></use></svg>
+            </button>
+            <button class="au-row au-row--interactive" data-dialog-open="editEntry" style="text-align:left;width:100%;background:none">
+              <span class="au-row-date">Jul 16</span>
+              <div class="au-row-main"><div class="au-row-primary">75.2 kg</div><div class="au-row-secondary">Thursday</div></div>
+              <span class="au-chip hist-chip">0.0</span>
+              <svg class="au-icon au-text-lo hist-more" style="width:18px"><use href="#i-more-horizontal"></use></svg>
+            </button>
+            <button class="au-row au-row--interactive" data-dialog-open="editEntry" style="text-align:left;width:100%;background:none">
+              <span class="au-row-date">Jul 15</span>
+              <div class="au-row-main"><div class="au-row-primary">75.2 kg</div><div class="au-row-secondary">Wednesday</div></div>
+              <span class="au-chip au-chip--good hist-chip">−0.3</span>
+              <svg class="au-icon au-text-lo hist-more" style="width:18px"><use href="#i-more-horizontal"></use></svg>
+            </button>
+            <button class="au-row au-row--interactive" data-dialog-open="editEntry" style="text-align:left;width:100%;background:none">
+              <span class="au-row-date">Jul 13</span>
+              <div class="au-row-main"><div class="au-row-primary">75.5 kg</div><div class="au-row-secondary">Monday</div></div>
+              <span class="au-chip au-chip--bad hist-chip">+0.2</span>
+              <svg class="au-icon au-text-lo hist-more" style="width:18px"><use href="#i-more-horizontal"></use></svg>
+            </button>
+            <button class="au-row au-row--interactive" data-dialog-open="editEntry" style="text-align:left;width:100%;background:none">
+              <span class="au-row-date">Jul 11</span>
+              <div class="au-row-main"><div class="au-row-primary">75.3 kg</div><div class="au-row-secondary">Saturday</div></div>
+              <span class="au-chip au-chip--good hist-chip">−0.4</span>
+              <svg class="au-icon au-text-lo hist-more" style="width:18px"><use href="#i-more-horizontal"></use></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- JUNE -->
+        <div class="hist-month">
+          <span class="hist-month-name">June 2026</span>
+          <span class="hist-month-delta">−1.5 kg</span>
+        </div>
+        <div class="au-card au-card--pad-sm">
+          <div class="au-list">
+            <button class="au-row au-row--interactive" data-dialog-open="editEntry" style="text-align:left;width:100%;background:none">
+              <span class="au-row-date">Jun 28</span>
+              <div class="au-row-main"><div class="au-row-primary">75.7 kg</div><div class="au-row-secondary">Sunday</div></div>
+              <span class="au-chip au-chip--good hist-chip">−0.3</span>
+              <svg class="au-icon au-text-lo hist-more" style="width:18px"><use href="#i-more-horizontal"></use></svg>
+            </button>
+            <button class="au-row au-row--interactive" data-dialog-open="editEntry" style="text-align:left;width:100%;background:none">
+              <span class="au-row-date">Jun 24</span>
+              <div class="au-row-main"><div class="au-row-primary">76.0 kg</div><div class="au-row-secondary">Wednesday</div></div>
+              <span class="au-chip au-chip--good hist-chip">−0.2</span>
+              <svg class="au-icon au-text-lo hist-more" style="width:18px"><use href="#i-more-horizontal"></use></svg>
+            </button>
+            <button class="au-row au-row--interactive" data-dialog-open="editEntry" style="text-align:left;width:100%;background:none">
+              <span class="au-row-date">Jun 19</span>
+              <div class="au-row-main"><div class="au-row-primary">76.4 kg</div><div class="au-row-secondary">Friday</div></div>
+              <span class="au-chip au-chip--good hist-chip">−0.5</span>
+              <svg class="au-icon au-text-lo hist-more" style="width:18px"><use href="#i-more-horizontal"></use></svg>
+            </button>
+            <button class="au-row au-row--interactive" data-dialog-open="editEntry" style="text-align:left;width:100%;background:none">
+              <span class="au-row-date">Jun 14</span>
+              <div class="au-row-main"><div class="au-row-primary">76.9 kg</div><div class="au-row-secondary">Sunday</div></div>
+              <span class="au-chip au-chip--good hist-chip">−0.3</span>
+              <svg class="au-icon au-text-lo hist-more" style="width:18px"><use href="#i-more-horizontal"></use></svg>
+            </button>
+            <button class="au-row au-row--interactive" data-dialog-open="editEntry" style="text-align:left;width:100%;background:none">
+              <span class="au-row-date">Jun 08</span>
+              <div class="au-row-main"><div class="au-row-primary">77.2 kg</div><div class="au-row-secondary">Monday</div></div>
+              <span class="au-chip au-chip--good hist-chip">−0.4</span>
+              <svg class="au-icon au-text-lo hist-more" style="width:18px"><use href="#i-more-horizontal"></use></svg>
+            </button>
+            <button class="au-row au-row--interactive" data-dialog-open="editEntry" style="text-align:left;width:100%;background:none">
+              <span class="au-row-date">Jun 02</span>
+              <div class="au-row-main"><div class="au-row-primary">77.5 kg</div><div class="au-row-secondary">Tuesday</div></div>
+              <span class="au-chip au-chip--good hist-chip">−0.2</span>
+              <svg class="au-icon au-text-lo hist-more" style="width:18px"><use href="#i-more-horizontal"></use></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- MAY -->
+        <div class="hist-month">
+          <span class="hist-month-name">May 2026</span>
+          <span class="hist-month-delta">−1.2 kg</span>
+        </div>
+        <div class="au-card au-card--pad-sm">
+          <div class="au-list">
+            <button class="au-row au-row--interactive" data-dialog-open="editEntry" style="text-align:left;width:100%;background:none">
+              <span class="au-row-date">May 27</span>
+              <div class="au-row-main"><div class="au-row-primary">77.7 kg</div><div class="au-row-secondary">Tuesday</div></div>
+              <span class="au-chip au-chip--good hist-chip">−0.3</span>
+              <svg class="au-icon au-text-lo hist-more" style="width:18px"><use href="#i-more-horizontal"></use></svg>
+            </button>
+            <button class="au-row au-row--interactive" data-dialog-open="editEntry" style="text-align:left;width:100%;background:none">
+              <span class="au-row-date">May 20</span>
+              <div class="au-row-main"><div class="au-row-primary">78.0 kg</div><div class="au-row-secondary">Tuesday</div></div>
+              <span class="au-chip au-chip--good hist-chip">−0.4</span>
+              <svg class="au-icon au-text-lo hist-more" style="width:18px"><use href="#i-more-horizontal"></use></svg>
+            </button>
+            <button class="au-row au-row--interactive" data-dialog-open="editEntry" style="text-align:left;width:100%;background:none">
+              <span class="au-row-date">May 12</span>
+              <div class="au-row-main"><div class="au-row-primary">78.4 kg</div><div class="au-row-secondary">Monday</div></div>
+              <span class="au-chip au-chip--good hist-chip">−0.5</span>
+              <svg class="au-icon au-text-lo hist-more" style="width:18px"><use href="#i-more-horizontal"></use></svg>
+            </button>
+            <button class="au-row au-row--interactive" data-dialog-open="editEntry" style="text-align:left;width:100%;background:none">
+              <span class="au-row-date">May 04</span>
+              <div class="au-row-main"><div class="au-row-primary">78.9 kg</div><div class="au-row-secondary">Sunday</div></div>
+              <span class="au-chip hist-chip">0.0</span>
+              <svg class="au-icon au-text-lo hist-more" style="width:18px"><use href="#i-more-horizontal"></use></svg>
+            </button>
+          </div>
+        </div>
+
+        <div style="height:var(--space-4)"></div>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav class="au-bottomnav app-bottomnav">
+      <a class="app-rail-brand" href="../dashboard/dashboard.html"><span class="app-rail-mark"></span>Ledger</a>
+      <a class="au-navitem" href="../dashboard/dashboard.html"><svg class="au-icon"><use href="#i-home"></use></svg>Home</a>
+      <a class="au-navitem is-active" href="trends.html"><svg class="au-icon"><use href="#i-activity"></use></svg>Trends</a>
+      <button class="app-navfab" data-dialog-open="quickWeigh" aria-label="Log weight"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      <a class="au-navitem" href="../milestones/milestones.html"><svg class="au-icon"><use href="#i-trophy"></use></svg>Badges</a>
+      <a class="au-navitem" href="../settings/account.html"><svg class="au-icon"><use href="#i-user"></use></svg>Profile</a>
+    </nav>
+  </div>
+
+  <!-- EDIT ENTRY SHEET -->
+  <div class="au-sheet-scrim" id="editEntry" hidden>
+    <div class="au-sheet" role="dialog" aria-modal="true" aria-label="Edit weigh-in">
+      <div class="au-sheet-grip"></div>
+      <div class="au-row-flex au-between" style="margin-bottom:var(--space-2)">
+        <div><div class="au-eyebrow">Edit entry</div><div style="font-family:var(--font-mono);color:var(--text-lo);font-size:var(--text-sm)">Sat, Jul 18</div></div>
+        <button class="au-icon-btn" data-dialog-close aria-label="Close"><svg class="au-icon"><use href="#i-x"></use></svg></button>
+      </div>
+      <div class="weigh-stepper" style="margin:var(--space-6) 0">
+        <button class="weigh-stepper-btn" aria-label="Decrease"><svg class="au-icon"><use href="#i-minus"></use></svg></button>
+        <div class="au-bignum-field">
+          <span class="au-bignum" style="width:auto">74.9</span>
+          <span class="au-bignum-unit">kg</span>
+        </div>
+        <button class="weigh-stepper-btn" aria-label="Increase"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      </div>
+      <div class="au-row-flex au-gap-3">
+        <button class="au-btn au-btn--danger" data-dialog-close data-toast="Entry deleted" data-toast-type="error" data-toast-action="Undo" aria-label="Delete entry"><svg class="au-icon"><use href="#i-trash"></use></svg></button>
+        <button class="au-btn au-btn--primary au-btn--lg au-fill" data-dialog-close data-toast="Entry updated — 74.9 kg" data-toast-type="success">
+          <svg class="au-icon"><use href="#i-check"></use></svg> Save changes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTER SHEET -->
+  <div class="au-sheet-scrim" id="filterSheet" hidden>
+    <div class="au-sheet" role="dialog" aria-modal="true" aria-label="Filter history">
+      <div class="au-sheet-grip"></div>
+      <div class="au-row-flex au-between" style="margin-bottom:var(--space-5)">
+        <div class="au-eyebrow">Filter &amp; sort</div>
+        <button class="au-icon-btn" data-dialog-close aria-label="Close"><svg class="au-icon"><use href="#i-x"></use></svg></button>
+      </div>
+      <div class="au-segmented" style="width:100%;margin-bottom:var(--space-4)">
+        <button class="is-active" style="flex:1">Newest</button>
+        <button style="flex:1">Oldest</button>
+        <button style="flex:1">Biggest drop</button>
+      </div>
+      <button class="au-btn au-btn--primary au-btn--lg au-btn--block" data-dialog-close>Apply</button>
+    </div>
+  </div>
+
+</body>
+</html>

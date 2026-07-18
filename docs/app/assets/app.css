@@ -1,0 +1,263 @@
+/* ==========================================================================
+   LEDGER APP — layout for the weight-tracker mock.
+   A responsive web application: a persistent left sidebar + fluid, centered
+   content on desktop; a sticky top bar + bottom nav on mobile. Dark-first.
+   Consumes tokens.css + components.css (linked before this file).
+   ========================================================================== */
+
+.app-body {
+  min-height: 100vh;
+  background: var(--canvas);
+}
+
+/* ---- App shell (fills the browser, no device chrome) ------------------ */
+.app-frame {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--canvas);
+}
+
+/* The faux mobile status bar (9:41 / battery) is a native-app artifact —
+   hidden in the web app; markup is left in place harmlessly. */
+.app-statusbar { display: none; }
+.app-statusbar-right { display: flex; align-items: center; gap: 6px; }
+.app-statusbar-right .au-icon { width: 16px; height: 16px; }
+
+.app-screen { flex: 1; min-width: 0; position: relative; }
+.app-scroll { padding: var(--space-5) var(--space-5) var(--space-10); max-width: 920px; margin: 0 auto; }
+.app-scroll--flush { padding: 0; max-width: none; }
+
+/* Focused flows with no sidebar (onboarding) read best in a narrow column */
+.app-frame:not(:has(.app-bottomnav)) .app-screen { max-width: 600px; margin: 0 auto; }
+
+/* App header (within frame) */
+.app-header {
+  position: sticky; top: 0; z-index: var(--z-sticky);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  background: var(--surface-glass);
+  -webkit-backdrop-filter: blur(var(--blur-glass)); backdrop-filter: blur(var(--blur-glass));
+  border-bottom: 1px solid var(--border);
+}
+.app-header-title { font-size: var(--text-lg); font-weight: var(--weight-bold); letter-spacing: var(--tracking-tight); }
+.app-header-sub { font-size: var(--text-2xs); color: var(--text-lo); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: var(--tracking-wide); }
+
+/* Bottom nav pinned to frame */
+.app-bottomnav {
+  position: sticky; bottom: 0; z-index: var(--z-sticky);
+  flex: none;
+}
+/* Rail-only brand lockup — hidden while the nav is a mobile bottom bar */
+.app-rail-brand { display: none; }
+
+/* FAB floating above the bottom nav (mobile empty states) */
+.app-fab-slot { position: fixed; right: var(--space-5); bottom: calc(72px + var(--space-4)); z-index: var(--z-raised); }
+
+/* Centered weigh-in FAB embedded in the bottom nav */
+.app-navfab {
+  flex: none; width: 58px; height: 58px; margin-top: -20px; border: none;
+  border-radius: 50%; background: var(--brand); color: var(--text-on-gold);
+  display: grid; place-items: center; cursor: pointer;
+  box-shadow: var(--shadow-3), var(--shadow-glow-brand);
+  transition: transform var(--dur-fast) var(--ease-emphasized);
+}
+.app-navfab:hover { transform: translateY(-2px) scale(1.04); }
+.app-navfab:active { transform: scale(0.96); }
+.app-navfab .au-icon { width: 28px; height: 28px; }
+
+/* ---- Greeting / page intro ------------------------------------------- */
+.app-greeting { margin: var(--space-4) 0 var(--space-6); }
+.app-greeting-hi { font-size: var(--text-sm); color: var(--text-lo); font-family: var(--font-mono); }
+.app-greeting-name { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: var(--weight-bold); letter-spacing: var(--tracking-tight); }
+
+.app-section-title { display: flex; align-items: center; justify-content: space-between; margin: var(--space-7) 0 var(--space-3); }
+.app-section-title h2 { font-size: var(--text-base); font-weight: var(--weight-semibold); color: var(--text-mid); }
+.app-section-title a { font-size: var(--text-xs); color: var(--brand); font-weight: var(--weight-semibold); }
+
+/* ---- Dashboard hero (the dial) --------------------------------------- */
+.dash-hero { display: flex; flex-direction: column; align-items: center; padding: var(--space-5) 0 var(--space-3); }
+.dash-hero-dial { position: relative; }
+.dash-hero-meta { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-4); }
+.dash-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-3); }
+.dash-ministat { padding: var(--space-4) var(--space-3); text-align: center; min-width: 0; }
+.dash-ministat .au-stat-value { font-size: var(--text-xl); }
+.dash-ministat .au-stat-label { justify-content: center; }
+.dash-quickcards { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+
+/* ---- Weigh-in pad ----------------------------------------------------- */
+.weigh-hero { text-align: center; padding: var(--space-6) 0; }
+.weigh-date { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--text-lo); }
+.weigh-dial-wrap { display: grid; place-items: center; padding: var(--space-4) 0; }
+.keypad { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-3); margin-top: var(--space-5); }
+.keypad button {
+  height: 60px; border: none; border-radius: var(--radius-md);
+  background: var(--surface-2); color: var(--text-hi);
+  font-family: var(--font-display); font-size: var(--text-2xl); font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums; cursor: pointer;
+  transition: background var(--dur-fast), transform var(--dur-fast);
+}
+.keypad button:hover { background: var(--surface-3); }
+.keypad button:active { transform: scale(0.95); }
+.keypad button.is-accent { color: var(--brand); }
+
+/* Weight adjust stepper */
+.weigh-stepper { display: flex; align-items: center; justify-content: center; gap: var(--space-5); }
+.weigh-stepper-btn { width: 56px; height: 56px; border-radius: 50%; border: 1px solid var(--border-strong); background: var(--surface-2); color: var(--text-hi); display: grid; place-items: center; cursor: pointer; }
+.weigh-stepper-btn:hover { background: var(--surface-3); }
+.weigh-stepper-btn .au-icon { width: 26px; height: 26px; }
+
+/* ---- Trends ----------------------------------------------------------- */
+.trend-chartcard { padding: var(--space-5) var(--space-4); }
+.trend-range { display: flex; justify-content: center; margin: var(--space-4) 0; }
+.trend-legend { display: flex; gap: var(--space-4); justify-content: center; font-size: var(--text-xs); color: var(--text-mid); margin-top: var(--space-3); flex-wrap: wrap; }
+.trend-legend span { display: inline-flex; align-items: center; gap: var(--space-2); }
+.trend-legend i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+
+/* ---- Milestones ------------------------------------------------------- */
+.mile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.mile-streak { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-5); }
+.mile-flames { display: flex; gap: 3px; }
+.mile-flame { color: var(--warn); }
+.mile-flame.is-off { color: var(--surface-3); }
+
+/* ---- Auth ------------------------------------------------------------- */
+.auth-body {
+  min-height: 100vh; display: grid; place-items: center; padding: var(--space-6) var(--space-4);
+  background:
+    radial-gradient(900px 600px at 50% -10%, rgba(124, 92, 255, 0.18), transparent 60%),
+    radial-gradient(700px 500px at 90% 100%, rgba(249, 195, 73, 0.12), transparent 60%),
+    var(--canvas-inset);
+}
+.auth-card { width: min(400px, 100%); }
+.auth-logo { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); margin-bottom: var(--space-7); text-align: center; }
+.auth-mark { width: 56px; height: 56px; border-radius: var(--radius-lg); background: var(--aurora); display: grid; place-items: center; box-shadow: var(--shadow-glow-brand); }
+.auth-mark::after { content: ""; width: 22px; height: 22px; border-radius: 6px; background: var(--canvas); }
+.auth-title { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: var(--weight-heavy); letter-spacing: var(--tracking-tight); }
+.auth-sub { color: var(--text-mid); font-size: var(--text-sm); }
+.auth-alt { text-align: center; font-size: var(--text-sm); color: var(--text-mid); margin-top: var(--space-5); }
+.auth-divider { display: flex; align-items: center; gap: var(--space-3); color: var(--text-lo); font-size: var(--text-xs); margin: var(--space-5) 0; }
+.auth-divider::before, .auth-divider::after { content: ""; flex: 1; height: 1px; background: var(--divider); }
+
+/* ---- Onboarding ------------------------------------------------------- */
+.onb-progress { display: flex; gap: var(--space-2); padding: var(--space-4) 0; }
+.onb-progress i { flex: 1; height: 4px; border-radius: var(--radius-pill); background: var(--surface-3); }
+.onb-progress i.is-done { background: var(--brand); }
+.onb-step { padding: var(--space-6) 0; }
+.onb-step-num { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--brand); letter-spacing: var(--tracking-wide); }
+.onb-step-title { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: var(--weight-bold); letter-spacing: var(--tracking-tight); margin: var(--space-2) 0 var(--space-2); }
+.onb-step-sub { color: var(--text-mid); }
+
+/* ---- Settings --------------------------------------------------------- */
+.set-group { margin-bottom: var(--space-6); }
+.set-group-title { font-family: var(--font-mono); font-size: var(--text-2xs); text-transform: uppercase; letter-spacing: var(--tracking-wider); color: var(--text-lo); padding: 0 var(--space-2); margin-bottom: var(--space-2); }
+.set-row { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4); }
+.set-row + .set-row { border-top: 1px solid var(--divider); }
+.set-row-icon { width: 38px; height: 38px; border-radius: var(--radius-sm); background: var(--surface-2); display: grid; place-items: center; color: var(--text-mid); flex: none; }
+.set-row-main { flex: 1; min-width: 0; }
+.set-row-label { font-size: var(--text-sm); font-weight: var(--weight-medium); }
+.set-row-desc { font-size: var(--text-xs); color: var(--text-lo); }
+.set-row-value { color: var(--text-lo); font-size: var(--text-sm); font-family: var(--font-mono); }
+
+/* ---- Celebration ------------------------------------------------------ */
+.celebrate { position: relative; text-align: center; padding: var(--space-9) var(--space-5); display: flex; flex-direction: column; align-items: center; gap: var(--space-5); }
+.celebrate-medal { animation: au-pop-in var(--dur-slower) var(--ease-emphasized); }
+.confetti { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.confetti i { position: absolute; top: -10px; width: 8px; height: 12px; border-radius: 2px; animation: confetti-fall 2.6s linear infinite; }
+@keyframes confetti-fall { to { transform: translateY(700px) rotate(540deg); opacity: 0.4; } }
+@media (prefers-reduced-motion: reduce) { .confetti { display: none; } }
+
+/* ---- Gallery (app index) ---------------------------------------------- */
+.gallery-body { min-height: 100vh; padding: var(--space-8) var(--space-6) var(--space-12); background: var(--canvas); }
+.gallery-wrap { max-width: var(--container-max); margin: 0 auto; }
+.gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space-5); }
+.gallery-card { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; text-decoration: none; color: inherit; background: var(--surface-1); transition: transform var(--dur-base) var(--ease-emphasized), border-color var(--dur-base); }
+.gallery-card:hover { transform: translateY(-4px); border-color: var(--border-strong); text-decoration: none; }
+.gallery-thumb { height: 150px; display: grid; place-items: center; background: var(--aurora-soft); color: var(--brand-strong); border-bottom: 1px solid var(--border); }
+.gallery-thumb .au-icon { width: 40px; height: 40px; }
+.gallery-meta { padding: var(--space-4); }
+.gallery-name { font-weight: var(--weight-semibold); }
+.gallery-desc { font-size: var(--text-xs); color: var(--text-lo); margin-top: 2px; }
+
+/* ---- Desktop (≥900px): bottom nav becomes a left sidebar rail --------- */
+@media (min-width: 900px) {
+  .app-frame { flex-direction: row; }
+
+  .app-bottomnav {
+    order: -1;
+    position: sticky; top: 0; align-self: flex-start;
+    width: 264px; height: 100vh; flex: none;
+    flex-direction: column; justify-content: flex-start; align-items: stretch;
+    gap: 3px; padding: var(--space-5) var(--space-4) var(--space-5);
+    border-top: none; border-right: 1px solid var(--border);
+    background: var(--surface-1);
+  }
+
+  /* Brand lockup — logo mark + wordmark, links home */
+  .app-rail-brand {
+    order: -3; display: flex; align-items: center; gap: var(--space-3);
+    padding: var(--space-1) var(--space-2) var(--space-5);
+    font-family: var(--font-display); font-weight: var(--weight-heavy);
+    font-size: var(--text-xl); letter-spacing: var(--tracking-tight);
+    color: var(--text-hi); text-decoration: none;
+  }
+  .app-rail-brand:hover { text-decoration: none; }
+  .app-rail-mark {
+    width: 30px; height: 30px; border-radius: 9px; flex: none;
+    background: var(--aurora); display: grid; place-items: center;
+    box-shadow: var(--shadow-glow-brand);
+  }
+  .app-rail-mark::after { content: ""; width: 12px; height: 12px; border-radius: 4px; background: var(--surface-1); }
+
+  /* The weigh-in FAB becomes the rail's primary action, full width */
+  .app-navfab {
+    order: -2; display: flex; align-items: center; justify-content: center;
+    width: 100%; height: 46px; margin: 0 0 var(--space-5);
+    border-radius: var(--radius-pill); gap: var(--space-2);
+  }
+  .app-navfab .au-icon { width: 20px; height: 20px; }
+  .app-navfab::after { content: "Log weight"; font-size: var(--text-sm); font-weight: var(--weight-bold); }
+
+  /* Rail items: horizontal icon + label, left-aligned */
+  .app-bottomnav .au-navitem {
+    position: relative; flex: none; flex-direction: row; justify-content: flex-start;
+    gap: var(--space-3); padding: var(--space-3) var(--space-4); height: auto;
+    border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: var(--weight-medium);
+    color: var(--text-mid);
+  }
+  .app-bottomnav .au-navitem .au-icon { width: 20px; height: 20px; }
+  .app-bottomnav .au-navitem:hover { background: var(--surface-2); color: var(--text-hi); }
+  .app-bottomnav .au-navitem.is-active {
+    background: var(--brand-subtle); color: var(--brand-strong);
+    box-shadow: inset 3px 0 0 var(--brand);
+  }
+  /* Account/profile sits at the foot of the rail */
+  .app-bottomnav .au-navitem:last-child { margin-top: auto; }
+
+  /* Content column */
+  .app-header { padding: var(--space-4) var(--space-8); }
+  .app-scroll { padding: var(--space-8) var(--space-8) var(--space-11); }
+  .app-fab-slot { display: none; }
+
+  /* The quick weigh-in sheet centers like a modal on desktop */
+  .au-sheet-scrim { align-items: center; }
+  .au-sheet { border-radius: var(--radius-2xl); max-width: 440px; }
+
+  /* Reward grid can breathe wider */
+  .mile-grid { grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); }
+}
+
+/* ---- Wide desktop (≥1200px): content column widens ------------------- */
+@media (min-width: 1200px) {
+  .app-scroll { max-width: 1040px; }
+}
+
+/* ---- Narrow phones (≤430px): tighten the 3-up stat row --------------- */
+@media (max-width: 430px) {
+  .app-scroll { padding-left: var(--space-4); padding-right: var(--space-4); }
+  .dash-stats { gap: var(--space-2); }
+  .dash-ministat { padding: var(--space-3) var(--space-2); }
+  .dash-ministat .au-stat-value { font-size: var(--text-lg); }
+}

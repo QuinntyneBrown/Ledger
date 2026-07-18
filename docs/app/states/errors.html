@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Errors &amp; validation — Ledger states</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <link rel="stylesheet" href="../../../design-system/assets/docs.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+  <style>
+    .state-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:var(--space-5); align-items:start; }
+    .state-tile { border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; background:var(--surface-1); }
+    .state-tile-label { padding:var(--space-3) var(--space-4); border-bottom:1px solid var(--divider); font-family:var(--font-mono); font-size:var(--text-xs); color:var(--text-lo); }
+    .state-tile-body { padding:var(--space-5); }
+  </style>
+</head>
+<body class="gallery-body">
+  <div class="gallery-wrap">
+    <div class="doc-breadcrumb"><a href="../../index.html">Home</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> <a href="../index.html">Ledger</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Errors &amp; validation</div>
+    <div class="au-row-flex au-between au-wrap" style="gap:var(--space-4);margin-bottom:var(--space-7)">
+      <div><h1 class="doc-title" style="font-size:var(--text-3xl)">Errors &amp; validation</h1><p class="doc-lead">Every error message, in the interface’s own voice — specific, and always with a way forward.</p></div>
+      <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+    </div>
+
+    <!-- INLINE BANNERS -->
+    <span class="au-eyebrow" style="margin-bottom:var(--space-4)">System banners</span>
+    <div class="au-stack au-stack-3" style="max-width:640px;margin-bottom:var(--space-8)">
+      <div class="au-banner au-banner--warn"><svg class="au-icon"><use href="#i-alert-triangle"></use></svg><div class="au-banner-body"><div class="au-banner-title">You’re offline</div><div class="au-banner-text">Your weigh-in is saved on this device and will sync when you reconnect.</div></div></div>
+      <div class="au-banner au-banner--bad"><svg class="au-icon"><use href="#i-alert-circle"></use></svg><div class="au-banner-body"><div class="au-banner-title">Couldn’t save your entry</div><div class="au-banner-text">Something went wrong on our end.</div></div><button class="au-btn au-btn--sm au-btn--outlined">Retry</button></div>
+      <div class="au-banner au-banner--warn"><svg class="au-icon"><use href="#i-trending-down"></use></svg><div class="au-banner-body"><div class="au-banner-title">That’s a fast pace</div><div class="au-banner-text">Losing more than 1 kg/week is hard to sustain. Consider a gentler target date.</div></div></div>
+      <div class="au-banner au-banner--info"><svg class="au-icon"><use href="#i-info"></use></svg><div class="au-banner-body"><div class="au-banner-title">Behind pace</div><div class="au-banner-text">You’re about 5 days behind your goal. A small nudge gets you back on track.</div></div></div>
+    </div>
+
+    <!-- FIELD VALIDATION -->
+    <span class="au-eyebrow" style="margin-bottom:var(--space-4)">Field validation</span>
+    <div class="state-grid">
+      <div class="state-tile"><div class="state-tile-label">empty required field</div><div class="state-tile-body">
+        <div class="au-field is-error"><label class="au-label">Goal weight <span class="au-req">*</span></label><div class="au-input-wrap"><input class="au-input" value=""><span class="au-input-affix">kg</span></div><div class="au-help is-error"><svg class="au-icon"><use href="#i-alert-circle"></use></svg> Enter a goal weight to continue.</div></div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label">goal equals start</div><div class="state-tile-body">
+        <div class="au-field is-error"><label class="au-label">Goal weight <span class="au-req">*</span></label><div class="au-input-wrap"><input class="au-input" value="80.0"><span class="au-input-affix">kg</span></div><div class="au-help is-error"><svg class="au-icon"><use href="#i-alert-circle"></use></svg> Your goal matches your start — pick a different target.</div></div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label">out of plausible range</div><div class="state-tile-body">
+        <div class="au-field is-error"><label class="au-label">Today’s weight</label><div class="au-input-wrap"><input class="au-input" value="740"><span class="au-input-affix">kg</span></div><div class="au-help is-error"><svg class="au-icon"><use href="#i-alert-circle"></use></svg> That looks off. Enter a weight between 20 and 400 kg.</div></div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label">non-numeric</div><div class="state-tile-body">
+        <div class="au-field is-error"><label class="au-label">Today’s weight</label><div class="au-input-wrap"><input class="au-input" value="seventy"><span class="au-input-affix">kg</span></div><div class="au-help is-error"><svg class="au-icon"><use href="#i-alert-circle"></use></svg> Use numbers only, e.g. 74.8.</div></div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label">future date</div><div class="state-tile-body">
+        <div class="au-field is-error"><label class="au-label">Date</label><div class="au-input-wrap"><svg class="au-icon"><use href="#i-calendar"></use></svg><input class="au-input" value="Jul 25, 2026"></div><div class="au-help is-error"><svg class="au-icon"><use href="#i-alert-circle"></use></svg> You can’t log a weight in the future.</div></div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label">target date in past</div><div class="state-tile-body">
+        <div class="au-field is-error"><label class="au-label">Target date</label><div class="au-input-wrap"><svg class="au-icon"><use href="#i-calendar"></use></svg><input class="au-input" value="Jan 1, 2026"></div><div class="au-help is-error"><svg class="au-icon"><use href="#i-alert-circle"></use></svg> Choose a date in the future.</div></div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label">auth · wrong password</div><div class="state-tile-body">
+        <div class="au-field is-error"><label class="au-label">Password</label><div class="au-input-wrap"><svg class="au-icon"><use href="#i-lock"></use></svg><input class="au-input" type="password" value="123456"><button class="au-icon-btn au-icon-btn--sm" aria-label="Show password"><svg class="au-icon"><use href="#i-eye"></use></svg></button></div><div class="au-help is-error"><svg class="au-icon"><use href="#i-alert-circle"></use></svg> Incorrect email or password.</div></div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label">auth · account exists</div><div class="state-tile-body">
+        <div class="au-field is-error"><label class="au-label">Email</label><div class="au-input-wrap"><svg class="au-icon"><use href="#i-mail"></use></svg><input class="au-input" value="alex@email.com"></div><div class="au-help is-error"><svg class="au-icon"><use href="#i-alert-circle"></use></svg> An account already uses this email. <a href="../auth/login.html">Sign in instead?</a></div></div>
+      </div></div>
+
+      <div class="state-tile"><div class="state-tile-label">auth · passwords don’t match</div><div class="state-tile-body">
+        <div class="au-field is-error"><label class="au-label">Confirm password</label><div class="au-input-wrap"><svg class="au-icon"><use href="#i-lock"></use></svg><input class="au-input" type="password" value="••••••"></div><div class="au-help is-error"><svg class="au-icon"><use href="#i-alert-circle"></use></svg> Passwords don’t match.</div></div>
+      </div></div>
+    </div>
+
+    <!-- EXPIRED LINK / FULL PAGE ERROR -->
+    <span class="au-eyebrow" style="margin:var(--space-8) 0 var(--space-4);display:block">Blocking errors</span>
+    <div class="au-stack au-stack-3" style="max-width:640px">
+      <div class="au-banner au-banner--bad"><svg class="au-icon"><use href="#i-clock"></use></svg><div class="au-banner-body"><div class="au-banner-title">This reset link has expired</div><div class="au-banner-text">Links are valid for 30 minutes.</div></div><button class="au-btn au-btn--sm au-btn--outlined">New link</button></div>
+      <div class="au-banner au-banner--bad"><svg class="au-icon"><use href="#i-shield"></use></svg><div class="au-banner-body"><div class="au-banner-title">Session expired</div><div class="au-banner-text">Please sign in again to keep your data secure.</div></div><button class="au-btn au-btn--sm au-btn--primary">Sign in</button></div>
+    </div>
+
+  </div>
+</body>
+</html>

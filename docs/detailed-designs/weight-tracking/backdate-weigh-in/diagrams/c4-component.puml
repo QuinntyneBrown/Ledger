@@ -1,0 +1,26 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Backdate a weigh-in
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+Container_Boundary(web, "Ledger Web App") {
+  Component(page, "BackdateWeighInPage", "Angular component", "Calendar picker that mutes and disables future days")
+  Component(client, "WeighInsApi", "Angular HTTP service", "Typed weigh-ins client in ledger/api")
+}
+Container_Boundary(api, "Ledger API") {
+  Component(ctrl, "WeighInsController", "ASP.NET Core controller", "Exposes /api/v1/weigh-ins endpoints")
+  Component(validator, "LogWeighInCommandValidator", "FluentValidation", "Rejects a future date per L2-017")
+  Component(handler, "LogWeighInCommandHandler", "MediatR handler", "Inserts or updates the entry for the chosen date")
+  Component(entity, "WeighIn", "Domain entity", "Owns UserId, Date, WeightKg, and Note")
+  ComponentDb(db, "Ledger Database", "SQL Server", "Persists weigh-ins with a unique userId+date")
+}
+
+Rel(member, page, "Picks a past day using", "HTTPS")
+Rel(page, client, "Builds the typed command")
+Rel(client, ctrl, "Calls POST /api/v1/weigh-ins", "JSON/HTTPS")
+Rel(ctrl, validator, "Rejects a future date per L2-017")
+Rel(ctrl, handler, "Sends LogWeighInCommand")
+Rel(handler, entity, "Inserts or updates for the chosen date per L2-017")
+Rel(handler, db, "Persists in one unit of work", "EF Core")
+@enduml

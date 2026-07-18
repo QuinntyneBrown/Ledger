@@ -1,0 +1,30 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — View trends
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+Container_Boundary(web, "Ledger Web App") {
+  Component(page, "TrendsPage", "Angular component", "Renders the chart, range selector, summary stats, and recent-entries preview")
+  Component(client, "TrendsApi", "Angular HTTP service", "Typed client in ledger/api; caches windows loaded this session")
+}
+Container_Boundary(api, "Ledger API") {
+  Component(ctrl, "TrendsController", "ASP.NET Core controller", "Exposes /api/v1/trends and dispatches the query")
+  Component(handler, "GetTrendsQueryHandler", "MediatR handler", "Builds the windowed trend read model")
+  Component(analytics, "WeightAnalytics", "Application service", "Computes the moving average, band, and summary figures from WeighIn data")
+  Component(weighin, "WeighIn", "Domain entity", "Holds a dated weight in kilograms")
+  Component(goal, "Goal", "Domain entity", "Supplies the goal line and height for BMI")
+  Component(milestone, "Milestone", "Domain entity", "Supplies annotation markers")
+  ComponentDb(db, "Ledger Database", "SQL Server", "Weigh-ins indexed on (userId, date)")
+}
+
+Rel(member, page, "Opens the trends screen and selects a range", "HTTPS")
+Rel(page, client, "Requests the selected window")
+Rel(client, ctrl, "Calls GET /api/v1/trends", "JSON/HTTPS")
+Rel(ctrl, handler, "Sends GetTrendsQuery")
+Rel(handler, db, "Reads owner-scoped weigh-ins on the (userId, date) index per L2-076", "EF Core")
+Rel(handler, analytics, "Computes series and figures with")
+Rel(analytics, weighin, "Reads dated weights")
+Rel(handler, goal, "Reads the goal line")
+Rel(handler, milestone, "Reads annotations per L2-027")
+@enduml

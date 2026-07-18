@@ -1,0 +1,52 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Track streaks
+
+class Streak {
+  +Guid UserId
+  +int Current
+  +int Longest
+  +DateOnly? LastLoggedDate
+  +Apply(result: StreakResult): void
+}
+
+class StreakResult {
+  +int Current
+  +int Longest
+}
+
+class StreakCalculator {
+  +Compute(days: IReadOnlyList<DateOnly>, today: DateOnly, weekStartsOn: DayOfWeek): StreakResult
+}
+
+class RecomputeStreakCommand {
+  +Guid UserId
+}
+
+class RecomputeStreakCommandHandler {
+  +Handle(command: RecomputeStreakCommand): Task<Streak>
+}
+
+class WeighIn {
+  +Guid Id
+  +Guid UserId
+  +DateOnly Date
+  +decimal WeightKg
+}
+
+RecomputeStreakCommandHandler ..> RecomputeStreakCommand : handles
+RecomputeStreakCommandHandler --> StreakCalculator : computes with
+RecomputeStreakCommandHandler --> Streak : loads and updates
+StreakCalculator ..> WeighIn : reads dates of
+StreakCalculator ..> StreakResult : returns
+Streak ..> StreakResult : applied from
+@enduml

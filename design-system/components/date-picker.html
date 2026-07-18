@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Date picker — Aurora Design System</title>
+  <meta name="description" content="The date picker pairs a calendar-icon field with an inline month grid. The selected day fills gold, today wears a ring, and out-of-month days are muted.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+  <style>
+    /* page-scoped: an inline month calendar, hand-built from a token-styled grid */
+    .cal { width:300px; max-width:100%; }
+    .cal-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--space-4); }
+    .cal-title { font-size:var(--text-sm); font-weight:var(--weight-semibold); color:var(--text-hi); font-variant-numeric:tabular-nums; }
+    .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
+    .cal-dow { text-align:center; font-family:var(--font-mono); font-size:var(--text-2xs); text-transform:uppercase; letter-spacing:var(--tracking-wide); color:var(--text-lo); padding-bottom:var(--space-2); }
+    .cal-day { aspect-ratio:1; display:grid; place-items:center; border:none; background:transparent; color:var(--text-mid);
+      font-family:var(--font-mono); font-variant-numeric:tabular-nums; font-size:var(--text-sm); border-radius:var(--radius-sm); cursor:pointer;
+      transition:background var(--dur-fast), color var(--dur-fast); }
+    .cal-day:hover { background:var(--surface-2); color:var(--text-hi); }
+    .cal-day.is-muted { color:var(--text-disabled); }
+    .cal-day.is-today { box-shadow:inset 0 0 0 1.5px var(--brand); color:var(--text-hi); font-weight:var(--weight-semibold); }
+    .cal-day.is-selected { background:var(--brand); color:var(--text-on-gold); font-weight:var(--weight-bold); box-shadow:var(--shadow-glow-brand); }
+    .cal-day.is-selected:hover { background:var(--brand-hover); color:var(--text-on-gold); }
+  </style>
+</head>
+<body class="doc-body">
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation">
+      <svg class="au-icon"><use href="#i-menu"></use></svg>
+    </button>
+    <a class="doc-brand" href="../index.html">
+      <span class="doc-brandmark"></span>
+      <span class="doc-brand-name">Aurora<small>Design System</small></span>
+    </a>
+    <nav class="doc-header-nav">
+      <a href="../foundations/getting-started.html">Foundations</a>
+      <a href="button.html" class="is-active">Components</a>
+      <a href="../patterns/forms-validation.html">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <!-- ============ CANONICAL SIDEBAR (shared across all DS pages) ============ -->
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="../foundations/getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="../foundations/color.html">Color</a>
+        <a class="doc-navlink" href="../foundations/typography.html">Typography</a>
+        <a class="doc-navlink" href="../foundations/spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="../foundations/elevation.html">Elevation</a>
+        <a class="doc-navlink" href="../foundations/shape.html">Shape</a>
+        <a class="doc-navlink" href="../foundations/iconography.html">Iconography</a>
+        <a class="doc-navlink" href="../foundations/motion.html">Motion</a>
+        <a class="doc-navlink" href="../foundations/accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="button.html">Button</a>
+        <a class="doc-navlink" href="text-field.html">Text field</a>
+        <a class="doc-navlink" href="select.html">Select</a>
+        <a class="doc-navlink" href="switch.html">Switch</a>
+        <a class="doc-navlink" href="checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="slider.html">Slider</a>
+        <a class="doc-navlink is-active" href="date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="card.html">Card</a>
+        <a class="doc-navlink" href="list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="avatar.html">Avatar</a>
+        <a class="doc-navlink" href="progress.html">Progress</a>
+        <a class="doc-navlink" href="gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="dialog.html">Dialog</a>
+        <a class="doc-navlink" href="snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="banner.html">Banner</a>
+        <a class="doc-navlink" href="tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="tabs.html">Tabs</a>
+        <a class="doc-navlink" href="navigation.html">Navigation</a>
+        <a class="doc-navlink" href="milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="../patterns/forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="../patterns/data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="../patterns/data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="../patterns/theming.html">Theming</a>
+        <a class="doc-navlink" href="../patterns/motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Components <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Date picker</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-calendar"></use></svg> Actions &amp; inputs</span>
+          <h1 class="doc-title">Date picker</h1>
+          <p class="doc-lead">Choose a day. A calendar-icon field opens an inline month grid where the <strong style="color:var(--text-hi)">selected day fills gold</strong>, today wears a brand ring, and days from neighbouring months fade back.</p>
+        </div>
+
+        <div class="doc-tabbar" data-tabs>
+          <button class="doc-tab is-active" data-tab="overview">Overview</button>
+          <button class="doc-tab" data-tab="examples">Examples</button>
+          <button class="doc-tab" data-tab="api">Tokens &amp; API</button>
+        </div>
+
+        <!-- ===== OVERVIEW ===== -->
+        <section data-tabpanel="overview">
+          <div class="doc-canvas" style="border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:var(--space-7);padding:var(--space-9);gap:var(--space-8);align-items:flex-start">
+            <div class="au-field" style="width:240px">
+              <label class="au-label" for="ov-date">Target date</label>
+              <div class="au-input-wrap">
+                <svg class="au-icon"><use href="#i-calendar"></use></svg>
+                <input class="au-input au-numeral" id="ov-date" value="24 Jul 2026" readonly>
+                <svg class="au-icon"><use href="#i-chevron-down"></use></svg>
+              </div>
+            </div>
+            <div class="au-card cal">
+              <div class="cal-head">
+                <button class="au-icon-btn au-icon-btn--sm" aria-label="Previous month"><svg class="au-icon"><use href="#i-chevron-left"></use></svg></button>
+                <span class="cal-title">July 2026</span>
+                <button class="au-icon-btn au-icon-btn--sm" aria-label="Next month"><svg class="au-icon"><use href="#i-chevron-right"></use></svg></button>
+              </div>
+              <div class="cal-grid" role="grid" aria-label="July 2026">
+                <div class="cal-dow">Su</div><div class="cal-dow">Mo</div><div class="cal-dow">Tu</div><div class="cal-dow">We</div><div class="cal-dow">Th</div><div class="cal-dow">Fr</div><div class="cal-dow">Sa</div>
+                <button class="cal-day is-muted">28</button><button class="cal-day is-muted">29</button><button class="cal-day is-muted">30</button><button class="cal-day">1</button><button class="cal-day">2</button><button class="cal-day">3</button><button class="cal-day">4</button>
+                <button class="cal-day">5</button><button class="cal-day">6</button><button class="cal-day">7</button><button class="cal-day">8</button><button class="cal-day">9</button><button class="cal-day">10</button><button class="cal-day">11</button>
+                <button class="cal-day">12</button><button class="cal-day">13</button><button class="cal-day">14</button><button class="cal-day">15</button><button class="cal-day">16</button><button class="cal-day">17</button><button class="cal-day is-today" aria-current="date">18</button>
+                <button class="cal-day">19</button><button class="cal-day">20</button><button class="cal-day">21</button><button class="cal-day">22</button><button class="cal-day">23</button><button class="cal-day is-selected" aria-selected="true">24</button><button class="cal-day">25</button>
+                <button class="cal-day">26</button><button class="cal-day">27</button><button class="cal-day">28</button><button class="cal-day">29</button><button class="cal-day">30</button><button class="cal-day">31</button><button class="cal-day is-muted">1</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="doc-prose">
+            <h2 class="doc-section-title">When to use it</h2>
+            <p>Use a date picker when the value is a calendar day the person recognizes on sight — a goal deadline, a start date, the day of a weigh-in. The field alone is enough for a keyboard-first flow; the inline grid helps when someone is choosing relative to “today” or a weekend. For a pure numeric value, use a <a href="text-field.html">field</a>; for one of a few preset ranges, a <a href="select.html">segmented control</a>.</p>
+            <ul>
+              <li>Show the chosen date back in a <strong>human, tabular</strong> format — “24 Jul 2026”.</li>
+              <li>Mark <strong>today</strong> with a ring and the <strong>selection</strong> with the gold fill — never the same treatment.</li>
+              <li>Fade <strong>out-of-month</strong> days so the current month stays the figure.</li>
+              <li>Disable impossible days (before today for a target) rather than letting them be picked.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Anatomy</h2>
+          <div class="doc-anatomy" style="padding:var(--space-8)">
+            <div class="au-card cal" style="margin:0">
+              <div class="cal-head">
+                <button class="au-icon-btn au-icon-btn--sm" aria-label="Previous month"><svg class="au-icon"><use href="#i-chevron-left"></use></svg></button>
+                <span class="cal-title">July 2026</span>
+                <button class="au-icon-btn au-icon-btn--sm" aria-label="Next month"><svg class="au-icon"><use href="#i-chevron-right"></use></svg></button>
+              </div>
+              <div class="cal-grid">
+                <div class="cal-dow">Su</div><div class="cal-dow">Mo</div><div class="cal-dow">Tu</div><div class="cal-dow">We</div><div class="cal-dow">Th</div><div class="cal-dow">Fr</div><div class="cal-dow">Sa</div>
+                <button class="cal-day is-muted">28</button><button class="cal-day is-muted">29</button><button class="cal-day is-muted">30</button><button class="cal-day">1</button><button class="cal-day">2</button><button class="cal-day">3</button><button class="cal-day">4</button>
+                <button class="cal-day">5</button><button class="cal-day">6</button><button class="cal-day">7</button><button class="cal-day">8</button><button class="cal-day">9</button><button class="cal-day">10</button><button class="cal-day">11</button>
+                <button class="cal-day">12</button><button class="cal-day">13</button><button class="cal-day">14</button><button class="cal-day">15</button><button class="cal-day">16</button><button class="cal-day">17</button><button class="cal-day is-today">18</button>
+                <button class="cal-day">19</button><button class="cal-day">20</button><button class="cal-day">21</button><button class="cal-day">22</button><button class="cal-day">23</button><button class="cal-day is-selected">24</button><button class="cal-day">25</button>
+                <button class="cal-day">26</button><button class="cal-day">27</button><button class="cal-day">28</button><button class="cal-day">29</button><button class="cal-day">30</button><button class="cal-day">31</button><button class="cal-day is-muted">1</button>
+              </div>
+            </div>
+            <span class="doc-anatomy-marker" style="top:12%;left:50%">1</span>
+            <span class="doc-anatomy-marker" style="top:56%;left:74%">2</span>
+            <span class="doc-anatomy-marker" style="bottom:20%;left:66%">3</span>
+          </div>
+          <div class="doc-legend">
+            <ul>
+              <li><span class="doc-legend-num">1</span> <strong style="color:var(--text-hi)">Header</strong> — the month label between two month-stepper buttons.</li>
+              <li><span class="doc-legend-num">2</span> <strong style="color:var(--text-hi)">Selected day</strong> — a gold-filled cell with a soft brand glow.</li>
+              <li><span class="doc-legend-num">3</span> <strong style="color:var(--text-hi)">Today</strong> — a brand ring, distinct from the selection.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Do &amp; don’t</h2>
+          <div class="doc-dodont">
+            <div class="doc-guide doc-guide--do">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-check"></use></svg> Do</div>
+              <div class="doc-guide-body">
+                <div class="au-input-wrap" style="width:200px">
+                  <svg class="au-icon"><use href="#i-calendar"></use></svg>
+                  <input class="au-input au-numeral" value="24 Jul 2026" readonly aria-label="Do example">
+                </div>
+              </div>
+              <div class="doc-guide-note">Echo the picked date in a clear, tabular format people can read at a glance.</div>
+            </div>
+            <div class="doc-guide doc-guide--dont">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-x"></use></svg> Don’t</div>
+              <div class="doc-guide-body">
+                <div class="au-input-wrap" style="width:200px">
+                  <svg class="au-icon"><use href="#i-calendar"></use></svg>
+                  <input class="au-input au-numeral" value="2026-07-24T00:00Z" readonly aria-label="Dont example">
+                </div>
+              </div>
+              <div class="doc-guide-note">Don’t surface a raw machine timestamp — format it for a human.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== EXAMPLES ===== -->
+        <section data-tabpanel="examples" hidden>
+          <!-- Date field -->
+          <h2 class="doc-section-title">Date field</h2>
+          <p class="doc-section-lead">A read-only field with a leading calendar glyph and a trailing chevron that opens the grid. The middle field simulates focus.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">date/field</span>
+              <div class="doc-example-tools"><button class="au-icon-btn au-icon-btn--sm" data-theme-toggle aria-label="Toggle theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button></div>
+            </div>
+            <div class="doc-canvas" style="gap:var(--space-6);align-items:flex-start">
+              <div class="au-field" style="width:220px">
+                <label class="au-label">Default</label>
+                <div class="au-input-wrap"><svg class="au-icon"><use href="#i-calendar"></use></svg><input class="au-input au-numeral" value="24 Jul 2026" readonly aria-label="Default date"><svg class="au-icon"><use href="#i-chevron-down"></use></svg></div>
+              </div>
+              <div class="au-field" style="width:220px">
+                <label class="au-label">Focus</label>
+                <div class="au-input-wrap" style="border-color:var(--brand);box-shadow:0 0 0 4px var(--brand-ring)"><svg class="au-icon"><use href="#i-calendar"></use></svg><input class="au-input au-numeral" value="24 Jul 2026" readonly aria-label="Focused date"><svg class="au-icon"><use href="#i-chevron-down"></use></svg></div>
+              </div>
+              <div class="au-field" style="width:220px">
+                <label class="au-label">Empty</label>
+                <div class="au-input-wrap"><svg class="au-icon"><use href="#i-calendar"></use></svg><input class="au-input" placeholder="Pick a date" aria-label="Empty date"><svg class="au-icon"><use href="#i-chevron-down"></use></svg></div>
+              </div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-input-wrap"&gt;
+  &lt;svg class="au-icon"&gt;&lt;use href="#i-calendar"/&gt;&lt;/svg&gt;
+  &lt;input class="au-input au-numeral" value="24 Jul 2026" readonly&gt;
+  &lt;svg class="au-icon"&gt;&lt;use href="#i-chevron-down"/&gt;&lt;/svg&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+
+          <!-- Inline calendar -->
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Inline calendar</h2>
+          <p class="doc-section-lead">A CSS-grid month. Day cells are buttons; state classes carry the meaning.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">date/calendar</span></div>
+            <div class="doc-canvas">
+              <div class="au-card cal">
+                <div class="cal-head">
+                  <button class="au-icon-btn au-icon-btn--sm" aria-label="Previous month"><svg class="au-icon"><use href="#i-chevron-left"></use></svg></button>
+                  <span class="cal-title">July 2026</span>
+                  <button class="au-icon-btn au-icon-btn--sm" aria-label="Next month"><svg class="au-icon"><use href="#i-chevron-right"></use></svg></button>
+                </div>
+                <div class="cal-grid" role="grid" aria-label="July 2026">
+                  <div class="cal-dow">Su</div><div class="cal-dow">Mo</div><div class="cal-dow">Tu</div><div class="cal-dow">We</div><div class="cal-dow">Th</div><div class="cal-dow">Fr</div><div class="cal-dow">Sa</div>
+                  <button class="cal-day is-muted">28</button><button class="cal-day is-muted">29</button><button class="cal-day is-muted">30</button><button class="cal-day">1</button><button class="cal-day">2</button><button class="cal-day">3</button><button class="cal-day">4</button>
+                  <button class="cal-day">5</button><button class="cal-day">6</button><button class="cal-day">7</button><button class="cal-day">8</button><button class="cal-day">9</button><button class="cal-day">10</button><button class="cal-day">11</button>
+                  <button class="cal-day">12</button><button class="cal-day">13</button><button class="cal-day">14</button><button class="cal-day">15</button><button class="cal-day">16</button><button class="cal-day">17</button><button class="cal-day is-today" aria-current="date">18</button>
+                  <button class="cal-day">19</button><button class="cal-day">20</button><button class="cal-day">21</button><button class="cal-day">22</button><button class="cal-day">23</button><button class="cal-day is-selected" aria-selected="true">24</button><button class="cal-day">25</button>
+                  <button class="cal-day">26</button><button class="cal-day">27</button><button class="cal-day">28</button><button class="cal-day">29</button><button class="cal-day">30</button><button class="cal-day">31</button><button class="cal-day is-muted">1</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="cal-grid" role="grid"&gt;
+  &lt;div class="cal-dow"&gt;Su&lt;/div&gt; … &lt;div class="cal-dow"&gt;Sa&lt;/div&gt;
+  &lt;button class="cal-day is-muted"&gt;30&lt;/button&gt;
+  &lt;button class="cal-day"&gt;1&lt;/button&gt;
+  &lt;button class="cal-day is-today" aria-current="date"&gt;18&lt;/button&gt;
+  &lt;button class="cal-day is-selected" aria-selected="true"&gt;24&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+
+          <!-- Pick a target date -->
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Pick a target date</h2>
+          <p class="doc-section-lead">The field and grid together, framed as a goal deadline with a helpful summary.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">date/target</span></div>
+            <div class="doc-canvas doc-canvas--start">
+              <div class="au-card" style="width:100%;max-width:340px">
+                <div class="au-card-head" style="margin-bottom:var(--space-5)">
+                  <div class="au-card-title"><svg class="au-icon" style="width:16px;height:16px"><use href="#i-target"></use></svg> Goal deadline</div>
+                </div>
+                <div class="cal" style="width:100%">
+                  <div class="cal-head">
+                    <button class="au-icon-btn au-icon-btn--sm" aria-label="Previous month"><svg class="au-icon"><use href="#i-chevron-left"></use></svg></button>
+                    <span class="cal-title">July 2026</span>
+                    <button class="au-icon-btn au-icon-btn--sm" aria-label="Next month"><svg class="au-icon"><use href="#i-chevron-right"></use></svg></button>
+                  </div>
+                  <div class="cal-grid" role="grid" aria-label="July 2026">
+                    <div class="cal-dow">Su</div><div class="cal-dow">Mo</div><div class="cal-dow">Tu</div><div class="cal-dow">We</div><div class="cal-dow">Th</div><div class="cal-dow">Fr</div><div class="cal-dow">Sa</div>
+                    <button class="cal-day is-muted">28</button><button class="cal-day is-muted">29</button><button class="cal-day is-muted">30</button><button class="cal-day">1</button><button class="cal-day">2</button><button class="cal-day">3</button><button class="cal-day">4</button>
+                    <button class="cal-day">5</button><button class="cal-day">6</button><button class="cal-day">7</button><button class="cal-day">8</button><button class="cal-day">9</button><button class="cal-day">10</button><button class="cal-day">11</button>
+                    <button class="cal-day">12</button><button class="cal-day">13</button><button class="cal-day">14</button><button class="cal-day">15</button><button class="cal-day">16</button><button class="cal-day">17</button><button class="cal-day is-today" aria-current="date">18</button>
+                    <button class="cal-day">19</button><button class="cal-day">20</button><button class="cal-day">21</button><button class="cal-day">22</button><button class="cal-day">23</button><button class="cal-day is-selected" aria-selected="true">24</button><button class="cal-day">25</button>
+                    <button class="cal-day">26</button><button class="cal-day">27</button><button class="cal-day">28</button><button class="cal-day">29</button><button class="cal-day">30</button><button class="cal-day">31</button><button class="cal-day is-muted">1</button>
+                  </div>
+                </div>
+                <hr class="au-hairline">
+                <div class="au-row-flex au-between">
+                  <span class="au-caption">Target date</span>
+                  <span class="au-mono" style="color:var(--brand-strong);font-weight:var(--weight-semibold)">Fri, 24 Jul 2026</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-card"&gt;
+  &lt;div class="au-card-title"&gt;Goal deadline&lt;/div&gt;
+  &lt;div class="cal"&gt; … inline calendar … &lt;/div&gt;
+  &lt;hr class="au-hairline"&gt;
+  &lt;div class="au-row-flex au-between"&gt;
+    &lt;span&gt;Target date&lt;/span&gt;
+    &lt;span class="au-mono"&gt;Fri, 24 Jul 2026&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- ===== API ===== -->
+        <section data-tabpanel="api" hidden>
+          <h2 class="doc-section-title">Structure &amp; classes</h2>
+          <p class="doc-section-lead">The date <em>field</em> reuses the standard <code class="doc-td-name">.au-input-wrap</code>. The inline calendar below is a documented pattern built from tokens — drop these class names into your own grid.</p>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Class</th><th>Element</th><th>Role</th></tr></thead>
+              <tbody>
+                <tr><td><code>.au-input-wrap</code> + <code>#i-calendar</code></td><td>div</td><td>The trigger field; a leading calendar icon and a formatted value.</td></tr>
+                <tr><td><code>.cal</code></td><td>div</td><td>Calendar container (pattern class).</td></tr>
+                <tr><td><code>.cal-head</code> / <code>.cal-title</code></td><td>div / span</td><td>Month label between stepper icon buttons.</td></tr>
+                <tr><td><code>.cal-grid</code></td><td>div</td><td>7-column CSS grid holding the weekday row and day cells.</td></tr>
+                <tr><td><code>.cal-dow</code></td><td>div</td><td>A weekday header cell in the mono face.</td></tr>
+                <tr><td><code>.cal-day</code></td><td>button</td><td>A single day; carries the state classes below.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-8)">Day states</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Class</th><th>Meaning</th><th>Treatment</th></tr></thead>
+              <tbody>
+                <tr><td><code>.cal-day</code></td><td>In-month day</td><td>Mid-tone numeral; hover raises a surface.</td></tr>
+                <tr><td><code>.is-selected</code></td><td>Chosen date</td><td>Gold fill, on-gold text, brand glow. Set <code>aria-selected</code>.</td></tr>
+                <tr><td><code>.is-today</code></td><td>Current day</td><td>Inset brand ring. Set <code>aria-current="date"</code>.</td></tr>
+                <tr><td><code>.is-muted</code></td><td>Adjacent month</td><td>Faded to <code>--text-disabled</code>.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-8)">Tokens consumed</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Token</th><th>Applied to</th></tr></thead>
+              <tbody>
+                <tr><td><code>--brand · --text-on-gold</code></td><td>Selected day fill and text.</td></tr>
+                <tr><td><code>--shadow-glow-brand</code></td><td>Selected day glow.</td></tr>
+                <tr><td><code>--text-disabled</code></td><td>Out-of-month days.</td></tr>
+                <tr><td><code>--font-mono</code></td><td>Weekday labels and day numerals (tabular).</td></tr>
+                <tr><td><code>--surface-2</code></td><td>Day hover surface.</td></tr>
+                <tr><td><code>--radius-sm</code></td><td>Day cell rounding.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-info"></use></svg>
+            <div class="doc-callout-body"><strong>Accessibility.</strong> Give the grid <code>role="grid"</code> and an accessible month label, mark the current day with <code>aria-current="date"</code> and the chosen one with <code>aria-selected="true"</code>. Because today and the selection use different visuals, they never collide. Keep a plain typed-date field available for keyboard-only entry.</div>
+          </div>
+        </section>
+
+        <!-- Pager -->
+        <nav class="doc-pager">
+          <a href="slider.html"><small>Previous</small><span>Slider</span></a>
+          <a class="doc-pager-next" href="card.html"><small>Next</small><span>Card</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

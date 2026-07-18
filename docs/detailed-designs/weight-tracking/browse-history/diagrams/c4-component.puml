@@ -1,0 +1,24 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Browse weigh-in history
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+Container_Boundary(web, "Ledger Web App") {
+  Component(page, "HistoryPage", "Angular component", "Month-grouped list with sticky headers, filter, and sort")
+  Component(client, "WeighInsApi", "Angular HTTP service", "Typed weigh-ins client in ledger/api")
+}
+Container_Boundary(api, "Ledger API") {
+  Component(ctrl, "WeighInsController", "ASP.NET Core controller", "Exposes GET /api/v1/weigh-ins with paging")
+  Component(handler, "GetHistoryQueryHandler", "MediatR handler", "Returns a bounded, month-grouped page")
+  Component(entity, "WeighIn", "Domain entity", "Owns UserId, Date, WeightKg, and Note")
+  ComponentDb(db, "Ledger Database", "SQL Server", "Indexed on userId+date per L2-076")
+}
+
+Rel(member, page, "Scrolls and filters history using", "HTTPS")
+Rel(page, client, "Builds the typed query")
+Rel(client, ctrl, "Calls GET /api/v1/weigh-ins?page&sort", "JSON/HTTPS")
+Rel(ctrl, handler, "Sends GetHistoryQuery")
+Rel(handler, db, "Reads one bounded page over the userId+date index per L2-076", "EF Core")
+Rel(handler, entity, "Projects entries and month net change per L2-030")
+@enduml

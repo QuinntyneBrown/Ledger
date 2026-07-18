@@ -1,0 +1,48 @@
+@startuml
+title UML sequence behaviour — Manage reminders: schedule a reminder
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "RemindersPage" as page
+  participant "AccountApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "RemindersController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "ScheduleReminderCommandHandler" as handler
+  participant "Preferences" as entity
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+
+actor -> page : Toggle reminder on and pick a time
+page -> client : Build typed request
+client -> controller : HTTPS PUT /api/v1/reminders
+controller -> controller : Authenticate and resolve owner per L2-067
+controller -> handler : Send ScheduleReminderCommand
+handler -> db : Load owner Preferences
+db --> handler : Preferences
+handler -> entity : Enable reminder and set time per L2-049
+entity --> handler : Updated settings
+handler -> db : Persist in one unit of work
+db --> handler : Commit
+handler --> controller : Typed result
+controller --> client : 200 OK or ProblemDetails
+client --> page : Confirmed schedule
+page --> actor : Show reminder on at the chosen time with confirmation per L2-049
+@enduml

@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dialog — Aurora Design System</title>
+  <meta name="description" content="Aurora's modal dialog and bottom sheet: a focused, blocking surface for a single decision — confirm, destructive and good variants — over a blurred scrim.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+</head>
+<body class="doc-body">
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation"><svg class="au-icon"><use href="#i-menu"></use></svg></button>
+    <a class="doc-brand" href="../index.html"><span class="doc-brandmark"></span><span class="doc-brand-name">Aurora<small>Design System</small></span></a>
+    <nav class="doc-header-nav">
+      <a href="../foundations/getting-started.html">Foundations</a>
+      <a href="button.html" class="is-active">Components</a>
+      <a href="../patterns/forms-validation.html">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="../foundations/getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="../foundations/color.html">Color</a>
+        <a class="doc-navlink" href="../foundations/typography.html">Typography</a>
+        <a class="doc-navlink" href="../foundations/spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="../foundations/elevation.html">Elevation</a>
+        <a class="doc-navlink" href="../foundations/shape.html">Shape</a>
+        <a class="doc-navlink" href="../foundations/iconography.html">Iconography</a>
+        <a class="doc-navlink" href="../foundations/motion.html">Motion</a>
+        <a class="doc-navlink" href="../foundations/accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="button.html">Button</a>
+        <a class="doc-navlink" href="text-field.html">Text field</a>
+        <a class="doc-navlink" href="select.html">Select</a>
+        <a class="doc-navlink" href="switch.html">Switch</a>
+        <a class="doc-navlink" href="checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="slider.html">Slider</a>
+        <a class="doc-navlink" href="date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="card.html">Card</a>
+        <a class="doc-navlink" href="list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="avatar.html">Avatar</a>
+        <a class="doc-navlink" href="progress.html">Progress</a>
+        <a class="doc-navlink" href="gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink is-active" href="dialog.html">Dialog</a>
+        <a class="doc-navlink" href="snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="banner.html">Banner</a>
+        <a class="doc-navlink" href="tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="tabs.html">Tabs</a>
+        <a class="doc-navlink" href="navigation.html">Navigation</a>
+        <a class="doc-navlink" href="milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="../patterns/forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="../patterns/data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="../patterns/data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="../patterns/theming.html">Theming</a>
+        <a class="doc-navlink" href="../patterns/motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Components <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Dialog</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-alert-circle"></use></svg> Feedback &amp; navigation</span>
+          <h1 class="doc-title">Dialog</h1>
+          <p class="doc-lead">A focused, blocking surface that interrupts the flow to ask for <strong style="color:var(--text-hi)">one decision</strong>. It floats above a blurred scrim, leads with an intent icon, and pairs a clear primary action with an easy way out. The mobile <strong style="color:var(--text-hi)">bottom sheet</strong> is its thumb-reachable sibling.</p>
+        </div>
+
+        <div class="doc-tabbar" data-tabs>
+          <button class="doc-tab is-active" data-tab="overview">Overview</button>
+          <button class="doc-tab" data-tab="examples">Examples</button>
+          <button class="doc-tab" data-tab="api">Tokens &amp; API</button>
+        </div>
+
+        <!-- ===== OVERVIEW ===== -->
+        <section data-tabpanel="overview">
+          <div class="doc-canvas" style="border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:var(--space-7);padding:var(--space-9)">
+            <div class="au-dialog" role="dialog" aria-modal="true" aria-labelledby="hero-dlg-title" style="animation:none">
+              <div class="au-dialog-icon"><svg class="au-icon"><use href="#i-flag"></use></svg></div>
+              <h2 class="au-dialog-title" id="hero-dlg-title">Set your goal weight?</h2>
+              <p class="au-dialog-body">We&rsquo;ll track your progress from today&rsquo;s <strong style="color:var(--text-hi)">78.4&nbsp;kg</strong> toward <strong style="color:var(--text-hi)">73.0&nbsp;kg</strong>. You can change this any time in settings.</p>
+              <div class="au-dialog-actions">
+                <button class="au-btn au-btn--outlined">Not yet</button>
+                <button class="au-btn au-btn--primary">Set goal</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="doc-prose">
+            <h2 class="doc-section-title">When to use it</h2>
+            <p>Reach for a dialog when the app <strong>cannot continue</strong> until the person responds — confirming a destructive action, committing an important change, or acknowledging something consequential. Because it steals focus and dims everything behind it, use it sparingly.</p>
+            <ul>
+              <li>Use it for a <strong>single, well-scoped decision</strong> with at most two or three actions.</li>
+              <li>Prefer the <strong>bottom sheet</strong> on mobile for input-heavy tasks like the quick weigh-in — it stays within thumb reach.</li>
+              <li>For a message that doesn&rsquo;t block progress, use a <a href="snackbar.html">snackbar</a> or <a href="banner.html">banner</a> instead.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Anatomy</h2>
+          <div class="doc-anatomy">
+            <div class="au-dialog" role="presentation" style="animation:none;box-shadow:var(--shadow-2)">
+              <div class="au-dialog-icon"><svg class="au-icon"><use href="#i-target"></use></svg></div>
+              <h2 class="au-dialog-title">Dialog title</h2>
+              <p class="au-dialog-body">A short line of supporting body copy that frames the decision being asked for.</p>
+              <div class="au-dialog-actions">
+                <button class="au-btn au-btn--outlined">Cancel</button>
+                <button class="au-btn au-btn--primary">Confirm</button>
+              </div>
+            </div>
+            <span class="doc-anatomy-marker" style="top:14%;left:16%">1</span>
+            <span class="doc-anatomy-marker" style="top:31%;left:16%">2</span>
+            <span class="doc-anatomy-marker" style="top:49%;left:16%">3</span>
+            <span class="doc-anatomy-marker" style="bottom:15%;right:16%">4</span>
+          </div>
+          <div class="doc-legend">
+            <ul>
+              <li><span class="doc-legend-num">1</span> <strong style="color:var(--text-hi)">Icon</strong> — signals intent: brand, <span style="color:var(--bad-text)">danger</span> or <span style="color:var(--good-text)">good</span>.</li>
+              <li><span class="doc-legend-num">2</span> <strong style="color:var(--text-hi)">Title</strong> — the question or statement, phrased plainly.</li>
+              <li><span class="doc-legend-num">3</span> <strong style="color:var(--text-hi)">Body</strong> — one or two lines of context, no more.</li>
+              <li><span class="doc-legend-num">4</span> <strong style="color:var(--text-hi)">Actions</strong> — dismiss on the left, the committing action on the right.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Do &amp; don&rsquo;t</h2>
+          <div class="doc-dodont">
+            <div class="doc-guide doc-guide--do">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-check"></use></svg> Do</div>
+              <div class="doc-guide-body">
+                <div class="au-dialog" style="animation:none;width:260px;padding:var(--space-5);box-shadow:var(--shadow-2)">
+                  <div class="au-dialog-icon is-danger" style="width:40px;height:40px;margin-bottom:var(--space-3)"><svg class="au-icon" style="width:20px;height:20px"><use href="#i-trash"></use></svg></div>
+                  <div class="au-dialog-title" style="font-size:var(--text-base)">Delete this entry?</div>
+                  <div class="au-dialog-actions" style="margin-top:var(--space-4)"><button class="au-btn au-btn--outlined au-btn--sm">Cancel</button><button class="au-btn au-btn--danger-solid au-btn--sm">Delete</button></div>
+                </div>
+              </div>
+              <div class="doc-guide-note">Name the consequence in the title and color the destructive action so the stakes are unmistakable.</div>
+            </div>
+            <div class="doc-guide doc-guide--dont">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-x"></use></svg> Don&rsquo;t</div>
+              <div class="doc-guide-body">
+                <div class="au-dialog" style="animation:none;width:260px;padding:var(--space-5);box-shadow:var(--shadow-2)">
+                  <div class="au-dialog-title" style="font-size:var(--text-base)">Are you sure?</div>
+                  <div class="au-dialog-body" style="font-size:var(--text-xs)">This will do the thing you asked for.</div>
+                  <div class="au-dialog-actions" style="margin-top:var(--space-4)"><button class="au-btn au-btn--sm">OK</button><button class="au-btn au-btn--sm">Yes</button><button class="au-btn au-btn--sm">Maybe</button></div>
+                </div>
+              </div>
+              <div class="doc-guide-note">Don&rsquo;t use a vague title or crowd the footer with ambiguous, competing choices.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== EXAMPLES ===== -->
+        <section data-tabpanel="examples" hidden>
+          <h2 class="doc-section-title">Confirm dialog</h2>
+          <p class="doc-section-lead">A brand-tinted intent icon and a gold primary action. Open it, then dismiss with the button, the close icon, the scrim or <kbd style="font-family:var(--font-mono);font-size:var(--text-2xs)">Esc</kbd>.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">dialog/confirm</span></div>
+            <div class="doc-canvas">
+              <button class="au-btn au-btn--primary" data-dialog-open="dlg-confirm"><svg class="au-icon"><use href="#i-flag"></use></svg> Set goal weight</button>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;button class="au-btn au-btn--primary" data-dialog-open="dlg-confirm"&gt;Set goal weight&lt;/button&gt;
+
+&lt;div class="au-scrim" id="dlg-confirm" hidden&gt;
+  &lt;div class="au-dialog" role="dialog" aria-modal="true"&gt;
+    &lt;button class="au-icon-btn au-dialog-close" data-dialog-close aria-label="Close"&gt;
+      &lt;svg class="au-icon"&gt;&lt;use href="#i-x"/&gt;&lt;/svg&gt;
+    &lt;/button&gt;
+    &lt;div class="au-dialog-icon"&gt;&lt;svg class="au-icon"&gt;&lt;use href="#i-flag"/&gt;&lt;/svg&gt;&lt;/div&gt;
+    &lt;h2 class="au-dialog-title"&gt;Set your goal weight?&lt;/h2&gt;
+    &lt;p class="au-dialog-body"&gt;We&amp;rsquo;ll track from 78.4 kg toward 73.0 kg.&lt;/p&gt;
+    &lt;div class="au-dialog-actions"&gt;
+      &lt;button class="au-btn au-btn--outlined" data-dialog-close&gt;Not yet&lt;/button&gt;
+      &lt;button class="au-btn au-btn--primary" data-dialog-close&gt;Set goal&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Destructive dialog</h2>
+          <p class="doc-section-lead">The <code class="doc-td-name">is-danger</code> icon and a solid coral action mark an irreversible choice.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">dialog/destructive</span></div>
+            <div class="doc-canvas">
+              <button class="au-btn au-btn--danger" data-dialog-open="dlg-delete"><svg class="au-icon"><use href="#i-trash"></use></svg> Delete entry</button>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-scrim" id="dlg-delete" hidden&gt;
+  &lt;div class="au-dialog au-dialog--sm" role="dialog" aria-modal="true"&gt;
+    &lt;div class="au-dialog-icon is-danger"&gt;&lt;svg class="au-icon"&gt;&lt;use href="#i-trash"/&gt;&lt;/svg&gt;&lt;/div&gt;
+    &lt;h2 class="au-dialog-title"&gt;Delete this weigh-in?&lt;/h2&gt;
+    &lt;p class="au-dialog-body"&gt;The 74.9 kg entry from Jul 18 will be removed. This can&amp;rsquo;t be undone.&lt;/p&gt;
+    &lt;div class="au-dialog-actions"&gt;
+      &lt;button class="au-btn au-btn--outlined" data-dialog-close&gt;Cancel&lt;/button&gt;
+      &lt;button class="au-btn au-btn--danger-solid" data-dialog-close&gt;Delete&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Bottom sheet</h2>
+          <p class="doc-section-lead">On mobile, slide a <code class="doc-td-name">.au-sheet</code> up from the bottom edge. The grip signals it can be dismissed downward; it&rsquo;s ideal for the quick weigh-in.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">dialog/bottom-sheet</span></div>
+            <div class="doc-canvas">
+              <button class="au-btn au-btn--tonal" data-dialog-open="sheet-weighin"><svg class="au-icon"><use href="#i-scale"></use></svg> Log weight</button>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-sheet-scrim" id="sheet-weighin" hidden&gt;
+  &lt;div class="au-sheet" role="dialog" aria-modal="true" aria-label="Log weight"&gt;
+    &lt;div class="au-sheet-grip"&gt;&lt;/div&gt;
+    &lt;!-- big numeric entry, actions, etc. --&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Sizes</h2>
+          <p class="doc-section-lead">Add <code class="doc-td-name">--sm</code> for a terse confirm or <code class="doc-td-name">--lg</code> for a form.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">dialog/sizes</span></div>
+            <div class="doc-canvas au-gap-3" style="gap:var(--space-3)">
+              <button class="au-btn au-btn--outlined au-btn--sm" data-dialog-open="dlg-delete">--sm</button>
+              <button class="au-btn au-btn--outlined au-btn--sm" data-dialog-open="dlg-confirm">default</button>
+              <button class="au-btn au-btn--outlined au-btn--sm" data-dialog-open="dlg-large">--lg</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== API ===== -->
+        <section data-tabpanel="api" hidden>
+          <h2 class="doc-section-title">Structure &amp; classes</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Class</th><th>Element</th><th>Role</th></tr></thead>
+              <tbody>
+                <tr><td><code>.au-scrim</code></td><td>overlay</td><td>Fixed, blurred backdrop that centers the dialog. Click to dismiss.</td></tr>
+                <tr><td><code>.au-dialog</code></td><td>surface</td><td>The floating panel. Add <code>.au-dialog--sm</code> / <code>.au-dialog--lg</code>.</td></tr>
+                <tr><td><code>.au-dialog-icon</code></td><td>div</td><td>Intent chip. Add <code>.is-danger</code> or <code>.is-good</code>.</td></tr>
+                <tr><td><code>.au-dialog-title</code></td><td>h2</td><td>The decision, in one plain line.</td></tr>
+                <tr><td><code>.au-dialog-body</code></td><td>p</td><td>Supporting context.</td></tr>
+                <tr><td><code>.au-dialog-actions</code></td><td>div</td><td>Footer row; children flex to equal width.</td></tr>
+                <tr><td><code>.au-dialog-close</code></td><td>button</td><td>Optional icon button pinned top-right.</td></tr>
+                <tr><td><code>.au-sheet-scrim</code> / <code>.au-sheet</code></td><td>overlay</td><td>Bottom-anchored variant with a <code>.au-sheet-grip</code>.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-8)">Behaviour</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Attribute / API</th><th>Effect</th></tr></thead>
+              <tbody>
+                <tr><td><code>data-dialog-open="ID"</code></td><td>On a trigger — reveals the overlay with that <code>id</code>.</td></tr>
+                <tr><td><code>data-dialog-close</code></td><td>On any element inside — closes the nearest overlay.</td></tr>
+                <tr><td><code>Esc</code> / scrim click</td><td>Dismisses the open overlay.</td></tr>
+                <tr><td><code>Aurora.openDialog(id)</code></td><td>Open programmatically; <code>Aurora.closeDialog(id)</code> to close.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-info"></use></svg>
+            <div class="doc-callout-body"><strong>Accessibility.</strong> Put <code>role="dialog" aria-modal="true"</code> on <code>.au-dialog</code> and point <code>aria-labelledby</code> at the title (or add <code>aria-label</code> on the sheet). Icon-only closers need an <code>aria-label</code>. Focus should move into the dialog on open and return to the trigger on close; entry animations are disabled under <code>prefers-reduced-motion</code>.</div>
+          </div>
+        </section>
+
+        <nav class="doc-pager">
+          <a href="chart.html"><small>Previous</small><span>Chart</span></a>
+          <a class="doc-pager-next" href="snackbar.html"><small>Next</small><span>Snackbar</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+  <!-- ===== LIVE OVERLAYS (hidden until triggered) ===== -->
+  <div class="au-scrim" id="dlg-confirm" hidden>
+    <div class="au-dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-confirm-title">
+      <button class="au-icon-btn au-dialog-close" data-dialog-close aria-label="Close"><svg class="au-icon"><use href="#i-x"></use></svg></button>
+      <div class="au-dialog-icon"><svg class="au-icon"><use href="#i-flag"></use></svg></div>
+      <h2 class="au-dialog-title" id="dlg-confirm-title">Set your goal weight?</h2>
+      <p class="au-dialog-body">We&rsquo;ll track your progress from today&rsquo;s <strong style="color:var(--text-hi)">78.4&nbsp;kg</strong> toward <strong style="color:var(--text-hi)">73.0&nbsp;kg</strong>. You can change this any time.</p>
+      <div class="au-dialog-actions">
+        <button class="au-btn au-btn--outlined" data-dialog-close>Not yet</button>
+        <button class="au-btn au-btn--primary" data-dialog-close>Set goal</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="au-scrim" id="dlg-delete" hidden>
+    <div class="au-dialog au-dialog--sm" role="dialog" aria-modal="true" aria-labelledby="dlg-delete-title">
+      <div class="au-dialog-icon is-danger"><svg class="au-icon"><use href="#i-trash"></use></svg></div>
+      <h2 class="au-dialog-title" id="dlg-delete-title">Delete this weigh-in?</h2>
+      <p class="au-dialog-body">The <strong style="color:var(--text-hi)">74.9&nbsp;kg</strong> entry from Jul 18 will be removed. This can&rsquo;t be undone.</p>
+      <div class="au-dialog-actions">
+        <button class="au-btn au-btn--outlined" data-dialog-close>Cancel</button>
+        <button class="au-btn au-btn--danger-solid" data-dialog-close>Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="au-scrim" id="dlg-large" hidden>
+    <div class="au-dialog au-dialog--lg" role="dialog" aria-modal="true" aria-labelledby="dlg-large-title">
+      <button class="au-icon-btn au-dialog-close" data-dialog-close aria-label="Close"><svg class="au-icon"><use href="#i-x"></use></svg></button>
+      <div class="au-dialog-icon is-good"><svg class="au-icon"><use href="#i-check-circle"></use></svg></div>
+      <h2 class="au-dialog-title" id="dlg-large-title">You hit a new low</h2>
+      <p class="au-dialog-body">Today&rsquo;s reading of <strong style="color:var(--text-hi)">74.9&nbsp;kg</strong> is your lightest in 90 days &mdash; that&rsquo;s <strong style="color:var(--good-text)">3.5&nbsp;kg</strong> down from where you started. Keep the streak going.</p>
+      <div class="au-dialog-actions">
+        <button class="au-btn au-btn--outlined" data-dialog-close>Close</button>
+        <button class="au-btn au-btn--primary" data-dialog-close><svg class="au-icon"><use href="#i-share"></use></svg> Share progress</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="au-sheet-scrim" id="sheet-weighin" hidden>
+    <div class="au-sheet" role="dialog" aria-modal="true" aria-label="Log today's weight">
+      <div class="au-sheet-grip"></div>
+      <div class="au-stack au-stack-2" style="text-align:center;margin-bottom:var(--space-6)">
+        <span class="au-eyebrow" style="justify-content:center"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-calendar"></use></svg> Today · Jul 18</span>
+        <div class="au-bignum-field"><span class="au-bignum" style="width:auto">74.9</span><span class="au-bignum-unit">kg</span></div>
+      </div>
+      <div class="au-dialog-actions" style="margin-top:0">
+        <button class="au-btn au-btn--outlined" data-dialog-close>Cancel</button>
+        <button class="au-btn au-btn--primary" data-dialog-close><svg class="au-icon"><use href="#i-check"></use></svg> Save weigh-in</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

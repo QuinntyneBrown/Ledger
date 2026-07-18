@@ -1,0 +1,34 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — View the dashboard
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+Container_Boundary(web, "Ledger Web App") {
+  Component(page, "DashboardPage", "Angular component", "Renders the hero dial, mini-stats, sparkline, next milestone, and non-nominal states")
+  Component(client, "DashboardApi", "Angular HTTP service", "Typed client in ledger/api for the dashboard endpoint")
+}
+Container_Boundary(api, "Ledger API") {
+  Component(ctrl, "DashboardController", "ASP.NET Core controller", "Exposes /api/v1/dashboard and dispatches the query")
+  Component(handler, "GetDashboardQueryHandler", "MediatR handler", "Assembles the dashboard read model for the owner")
+  Component(analytics, "WeightAnalytics", "Application service", "Computes percent-to-goal, weekly figures, streak, and 30-day change from WeighIn data")
+  Component(goal, "Goal", "Domain entity", "Holds the start weight, goal weight, and target date")
+  Component(weighin, "WeighIn", "Domain entity", "Holds a dated weight in kilograms")
+  Component(milestone, "Milestone", "Domain entity", "Holds earned and pending badges")
+  Component(tracker, "IErrorTracker", "Application service", "Reports unhandled failures per L2-084")
+  ComponentDb(db, "Ledger Database", "SQL Server", "Members, goals, weigh-ins, milestones")
+}
+System_Ext(errors, "Error tracking", "Captures unhandled errors with context and alerts on-call")
+
+Rel(member, page, "Opens the dashboard", "HTTPS")
+Rel(page, client, "Requests the dashboard summary")
+Rel(client, ctrl, "Calls GET /api/v1/dashboard", "JSON/HTTPS")
+Rel(ctrl, handler, "Sends GetDashboardQuery")
+Rel(handler, db, "Reads the owner's goal, weigh-ins, and milestones", "EF Core")
+Rel(handler, goal, "Reads")
+Rel(handler, milestone, "Reads the nearest pending badge")
+Rel(handler, analytics, "Computes figures with")
+Rel(analytics, weighin, "Reads dated weights")
+Rel(ctrl, tracker, "Reports unhandled failures per L2-084")
+Rel(tracker, errors, "Sends error context to")
+@enduml

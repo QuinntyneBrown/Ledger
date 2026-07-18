@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Snackbar — Aurora Design System</title>
+  <meta name="description" content="Aurora's snackbar (toast): a brief, self-dismissing confirmation that slides up from the bottom with an optional single action such as Undo.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+</head>
+<body class="doc-body">
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation"><svg class="au-icon"><use href="#i-menu"></use></svg></button>
+    <a class="doc-brand" href="../index.html"><span class="doc-brandmark"></span><span class="doc-brand-name">Aurora<small>Design System</small></span></a>
+    <nav class="doc-header-nav">
+      <a href="../foundations/getting-started.html">Foundations</a>
+      <a href="button.html" class="is-active">Components</a>
+      <a href="../patterns/forms-validation.html">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="../foundations/getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="../foundations/color.html">Color</a>
+        <a class="doc-navlink" href="../foundations/typography.html">Typography</a>
+        <a class="doc-navlink" href="../foundations/spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="../foundations/elevation.html">Elevation</a>
+        <a class="doc-navlink" href="../foundations/shape.html">Shape</a>
+        <a class="doc-navlink" href="../foundations/iconography.html">Iconography</a>
+        <a class="doc-navlink" href="../foundations/motion.html">Motion</a>
+        <a class="doc-navlink" href="../foundations/accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="button.html">Button</a>
+        <a class="doc-navlink" href="text-field.html">Text field</a>
+        <a class="doc-navlink" href="select.html">Select</a>
+        <a class="doc-navlink" href="switch.html">Switch</a>
+        <a class="doc-navlink" href="checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="slider.html">Slider</a>
+        <a class="doc-navlink" href="date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="card.html">Card</a>
+        <a class="doc-navlink" href="list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="avatar.html">Avatar</a>
+        <a class="doc-navlink" href="progress.html">Progress</a>
+        <a class="doc-navlink" href="gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="dialog.html">Dialog</a>
+        <a class="doc-navlink is-active" href="snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="banner.html">Banner</a>
+        <a class="doc-navlink" href="tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="tabs.html">Tabs</a>
+        <a class="doc-navlink" href="navigation.html">Navigation</a>
+        <a class="doc-navlink" href="milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="../patterns/forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="../patterns/data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="../patterns/data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="../patterns/theming.html">Theming</a>
+        <a class="doc-navlink" href="../patterns/motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Components <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Snackbar</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; navigation</span>
+          <h1 class="doc-title">Snackbar</h1>
+          <p class="doc-lead">A brief, low-friction confirmation that slides up from the bottom, lingers for a few seconds and dismisses itself. It reassures without blocking &mdash; and can carry <strong style="color:var(--text-hi)">one</strong> action, most often <strong style="color:var(--text-hi)">Undo</strong>.</p>
+        </div>
+
+        <div class="doc-tabbar" data-tabs>
+          <button class="doc-tab is-active" data-tab="overview">Overview</button>
+          <button class="doc-tab" data-tab="examples">Examples</button>
+          <button class="doc-tab" data-tab="api">Tokens &amp; API</button>
+        </div>
+
+        <!-- ===== OVERVIEW ===== -->
+        <section data-tabpanel="overview">
+          <div class="doc-canvas" style="border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:var(--space-7);padding:var(--space-9)">
+            <div class="au-toast au-toast--success" style="animation:none;width:min(360px,100%)">
+              <svg class="au-icon au-toast-icon"><use href="#i-check-circle"></use></svg>
+              <span class="au-toast-msg">Weight logged &mdash; 74.9 kg</span>
+              <button class="au-toast-action" type="button">Undo</button>
+            </div>
+          </div>
+
+          <div class="doc-prose">
+            <h2 class="doc-section-title">When to use it</h2>
+            <p>Use a snackbar to confirm that something <strong>just happened</strong> &mdash; a weigh-in saved, a note deleted, a setting changed &mdash; when the person doesn&rsquo;t need to act and shouldn&rsquo;t be interrupted. It&rsquo;s the quietest way to close a loop.</p>
+            <ul>
+              <li>Keep the message to <strong>one short line</strong>; the snackbar is a receipt, not a paragraph.</li>
+              <li>Offer at most <strong>one action</strong>. <code>Undo</code> is the classic &mdash; it makes destructive edits feel safe.</li>
+              <li>For a persistent, in-page status use a <a href="banner.html">banner</a>; for a decision that blocks, a <a href="dialog.html">dialog</a>.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Anatomy</h2>
+          <div class="doc-anatomy">
+            <div class="au-toast" style="animation:none;width:min(360px,100%)">
+              <svg class="au-icon au-toast-icon" style="color:var(--good)"><use href="#i-check-circle"></use></svg>
+              <span class="au-toast-msg">Message text</span>
+              <button class="au-toast-action" type="button">Undo</button>
+            </div>
+            <span class="doc-anatomy-marker" style="top:22%;left:12%">1</span>
+            <span class="doc-anatomy-marker" style="top:22%;left:44%">2</span>
+            <span class="doc-anatomy-marker" style="top:22%;right:16%">3</span>
+          </div>
+          <div class="doc-legend">
+            <ul>
+              <li><span class="doc-legend-num">1</span> <strong style="color:var(--text-hi)">Icon</strong> — tinted by type: success, error or info.</li>
+              <li><span class="doc-legend-num">2</span> <strong style="color:var(--text-hi)">Message</strong> — a single, plain-language line.</li>
+              <li><span class="doc-legend-num">3</span> <strong style="color:var(--text-hi)">Action</strong> — optional; a lone brand-colored verb.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Do &amp; don&rsquo;t</h2>
+          <div class="doc-dodont">
+            <div class="doc-guide doc-guide--do">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-check"></use></svg> Do</div>
+              <div class="doc-guide-body">
+                <div class="au-toast au-toast--success" style="animation:none;width:250px">
+                  <svg class="au-icon au-toast-icon"><use href="#i-check-circle"></use></svg>
+                  <span class="au-toast-msg" style="font-size:var(--text-xs)">Entry deleted</span>
+                  <button class="au-toast-action" style="font-size:var(--text-xs)" type="button">Undo</button>
+                </div>
+              </div>
+              <div class="doc-guide-note">Pair a destructive result with an immediate Undo so mistakes cost nothing.</div>
+            </div>
+            <div class="doc-guide doc-guide--dont">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-x"></use></svg> Don&rsquo;t</div>
+              <div class="doc-guide-body">
+                <div class="au-toast au-toast--error" style="animation:none;width:250px">
+                  <svg class="au-icon au-toast-icon"><use href="#i-alert-circle"></use></svg>
+                  <span class="au-toast-msg" style="font-size:var(--text-xs)">Sync failed. Retry now or later? Learn more&hellip;</span>
+                </div>
+              </div>
+              <div class="doc-guide-note">Don&rsquo;t pack a full explanation or a decision into a toast &mdash; that belongs in a banner or dialog.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== EXAMPLES ===== -->
+        <section data-tabpanel="examples" hidden>
+          <h2 class="doc-section-title">Trigger a snackbar</h2>
+          <p class="doc-section-lead">The <code class="doc-td-name">data-toast</code> attributes spawn a live toast in the shared region. Press a button &mdash; each slides up, waits, then fades on its own.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">snackbar/triggers</span></div>
+            <div class="doc-canvas" style="gap:var(--space-3)">
+              <button class="au-btn au-btn--primary" data-toast="Weight logged — 74.9 kg" data-toast-type="success" data-toast-action="Undo"><svg class="au-icon"><use href="#i-check"></use></svg> Log weight</button>
+              <button class="au-btn au-btn--outlined" data-toast="Entry deleted" data-toast-type="success" data-toast-action="Undo"><svg class="au-icon"><use href="#i-trash"></use></svg> Delete entry</button>
+              <button class="au-btn au-btn--outlined" data-toast="Couldn’t save — you’re offline" data-toast-type="error"><svg class="au-icon"><use href="#i-alert-circle"></use></svg> Fail to save</button>
+              <button class="au-btn au-btn--outlined" data-toast="Reminder set for 8:00 AM" data-toast-type="info"><svg class="au-icon"><use href="#i-bell"></use></svg> Set reminder</button>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;button class="au-btn au-btn--primary"
+        data-toast="Weight logged — 74.9 kg"
+        data-toast-type="success"
+        data-toast-action="Undo"&gt;Log weight&lt;/button&gt;</code></pre>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Types</h2>
+          <p class="doc-section-lead">Three tints map to intent. The message and layout are identical; only the leading icon changes color.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">snackbar/types</span></div>
+            <div class="doc-canvas doc-canvas--stack" style="gap:var(--space-3)">
+              <div class="au-toast au-toast--success" style="animation:none;margin:0 auto">
+                <svg class="au-icon au-toast-icon"><use href="#i-check-circle"></use></svg>
+                <span class="au-toast-msg">Weight logged — 74.9 kg</span>
+                <button class="au-toast-action" type="button">Undo</button>
+              </div>
+              <div class="au-toast au-toast--error" style="animation:none;margin:0 auto">
+                <svg class="au-icon au-toast-icon"><use href="#i-alert-circle"></use></svg>
+                <span class="au-toast-msg">Couldn&rsquo;t save — you&rsquo;re offline</span>
+                <button class="au-toast-action" type="button">Retry</button>
+              </div>
+              <div class="au-toast au-toast--info" style="animation:none;margin:0 auto">
+                <svg class="au-icon au-toast-icon"><use href="#i-info"></use></svg>
+                <span class="au-toast-msg">Reminder set for 8:00 AM</span>
+              </div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-toast au-toast--success"&gt;
+  &lt;svg class="au-icon au-toast-icon"&gt;&lt;use href="#i-check-circle"/&gt;&lt;/svg&gt;
+  &lt;span class="au-toast-msg"&gt;Weight logged — 74.9 kg&lt;/span&gt;
+  &lt;button class="au-toast-action"&gt;Undo&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">From JavaScript</h2>
+          <p class="doc-section-lead">Most toasts are fired in code once an operation resolves. The action&rsquo;s <code class="doc-td-name">onAction</code> callback runs before the toast clears.</p>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>Aurora.toast("Weight logged — 74.9 kg", {
+  type: "success",     // "success" | "error" | "info"
+  action: "Undo",       // optional single action
+  onAction: restoreEntry,
+  duration: 3600        // ms before auto-dismiss
+});</code></pre>
+          </div>
+        </section>
+
+        <!-- ===== API ===== -->
+        <section data-tabpanel="api" hidden>
+          <h2 class="doc-section-title">Structure &amp; classes</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Class</th><th>Element</th><th>Role</th></tr></thead>
+              <tbody>
+                <tr><td><code>.au-toast-region</code></td><td>container</td><td>Fixed, bottom-centered stack. Auto-created on first toast.</td></tr>
+                <tr><td><code>.au-toast</code></td><td>surface</td><td>A single snackbar. Add <code>--success</code>, <code>--error</code> or <code>--info</code>.</td></tr>
+                <tr><td><code>.au-toast-icon</code></td><td>svg</td><td>Leading icon, tinted by the type modifier.</td></tr>
+                <tr><td><code>.au-toast-msg</code></td><td>span</td><td>The message; flexes to fill the row.</td></tr>
+                <tr><td><code>.au-toast-action</code></td><td>button</td><td>Optional lone action in brand color.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-8)">Triggers &amp; API</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Attribute / call</th><th>Effect</th></tr></thead>
+              <tbody>
+                <tr><td><code>data-toast="…"</code></td><td>On a trigger — the message to show.</td></tr>
+                <tr><td><code>data-toast-type="…"</code></td><td>Optional type; defaults to <code>success</code>.</td></tr>
+                <tr><td><code>data-toast-action="…"</code></td><td>Optional action label.</td></tr>
+                <tr><td><code>Aurora.toast(msg, opts)</code></td><td>Fire from code. <code>opts</code>: <code>type</code>, <code>action</code>, <code>onAction</code>, <code>duration</code>.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-info"></use></svg>
+            <div class="doc-callout-body"><strong>Accessibility.</strong> The region is an <code>aria-live="polite"</code> status area, so screen readers announce each toast without stealing focus. Keep messages self-contained, never rely on color alone for meaning, and give people enough time &mdash; the default life is 3.6&nbsp;s and the entry animation is disabled under <code>prefers-reduced-motion</code>.</div>
+          </div>
+        </section>
+
+        <nav class="doc-pager">
+          <a href="dialog.html"><small>Previous</small><span>Dialog</span></a>
+          <a class="doc-pager-next" href="banner.html"><small>Next</small><span>Banner</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

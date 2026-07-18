@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aurora — the design system behind Ledger</title>
+  <meta name="description" content="Aurora is the design language and component library that powers Ledger. Tokens, foundations, and components for building calm, precise, best-in-class product UI.">
+  <link rel="stylesheet" href="assets/tokens.css">
+  <link rel="stylesheet" href="assets/components.css">
+  <link rel="stylesheet" href="assets/docs.css">
+  <script defer src="assets/aurora.js"></script>
+</head>
+<body class="doc-body">
+
+  <header class="doc-header">
+    <a class="doc-brand" href="index.html">
+      <span class="doc-brandmark"></span>
+      <span class="doc-brand-name">Aurora<small>Design System</small></span>
+    </a>
+    <nav class="doc-header-nav">
+      <a href="foundations/getting-started.html">Foundations</a>
+      <a href="components/button.html">Components</a>
+      <a href="patterns/forms-validation.html">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search the documentation">
+      <svg class="au-icon"><use href="#i-search"></use></svg>
+      <span>Search</span>
+      <kbd>/</kbd>
+    </div>
+    <a class="au-btn au-btn--tonal au-btn--sm" href="../docs/app/index.html">
+      <svg class="au-icon"><use href="#i-scale"></use></svg> Ledger app
+    </a>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme">
+      <svg class="au-icon"><use href="#i-sun"></use></svg>
+    </button>
+  </header>
+
+  <!-- HERO -->
+  <section class="doc-hero">
+    <span class="au-eyebrow" style="justify-content:center">
+      <svg class="au-icon" style="width:14px;height:14px"><use href="#i-sparkles"></use></svg>
+      The design system behind Ledger
+    </span>
+    <h1 class="doc-hero-title">Calm, precise UI,<br>kept in <em>perfect balance</em>.</h1>
+    <p class="doc-hero-lead">
+      Aurora is the design language and component library that powers Ledger. One set of
+      tokens, two themes, and every control you need to build data-rich product interfaces
+      that feel best-in-class — documented like a product of its own.
+    </p>
+    <div class="doc-hero-actions">
+      <a class="au-btn au-btn--primary au-btn--lg" href="foundations/getting-started.html">
+        Get started <svg class="au-icon"><use href="#i-arrow-right"></use></svg>
+      </a>
+      <a class="au-btn au-btn--outlined au-btn--lg" href="components/button.html">Browse components</a>
+    </div>
+
+    <!-- Live signature preview -->
+    <div class="au-card au-card--glass au-card--raised" style="max-width:560px;margin:var(--space-9) auto 0;display:grid;grid-template-columns:auto 1fr;gap:var(--space-6);align-items:center;text-align:left">
+      <div class="au-gauge" data-value="72" data-sweep="360" style="width:150px;height:150px">
+        <svg viewBox="0 0 120 120" width="150" height="150">
+          <defs>
+            <linearGradient id="auroraGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="var(--aurora-start)"></stop>
+              <stop offset="52%" stop-color="var(--aurora-mid)"></stop>
+              <stop offset="100%" stop-color="var(--aurora-end)"></stop>
+            </linearGradient>
+          </defs>
+          <circle class="au-gauge-track" cx="60" cy="60" r="52" stroke-width="11"></circle>
+          <circle class="au-gauge-arc" cx="60" cy="60" r="52" stroke-width="11"></circle>
+        </svg>
+        <div class="au-gauge-center">
+          <div class="au-gauge-value" style="font-size:var(--text-2xl)"><span data-countup="72" data-decimals="0" data-suffix="%">0%</span></div>
+          <div class="au-gauge-caption">to goal</div>
+        </div>
+      </div>
+      <div class="au-stack au-stack-3">
+        <span class="au-eyebrow">The signature dial</span>
+        <p class="au-text-mid" style="font-size:var(--text-sm);line-height:var(--leading-relaxed)">
+          A progress arc that travels <strong style="color:var(--text-hi)">violet → teal → gold</strong>
+          as you approach your goal. The colour is the story.
+        </p>
+        <a class="au-btn au-btn--text au-btn--sm" href="components/gauge.html" style="align-self:flex-start;padding-left:0">
+          See the Gauge <svg class="au-icon"><use href="#i-arrow-right"></use></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOUNDATIONS -->
+  <section class="doc-home-section">
+    <div class="au-row-flex au-between" style="margin-bottom:var(--space-6)">
+      <div>
+        <span class="au-eyebrow">Foundations</span>
+        <h2 class="au-h2 au-mt-2">The rules of the system</h2>
+      </div>
+      <a class="au-btn au-btn--text au-btn--sm" href="foundations/getting-started.html">All foundations <svg class="au-icon"><use href="#i-arrow-right"></use></svg></a>
+    </div>
+    <div class="doc-cardgrid">
+      <a class="au-card au-card--interactive" href="foundations/color.html">
+        <div class="au-row-flex au-gap-3"><span class="set-row-icon" style="background:var(--brand-subtle);color:var(--brand)"><svg class="au-icon"><use href="#i-palette"></use></svg></span><strong>Color</strong></div>
+        <p class="au-caption au-mt-2">Ink, gold and the aurora gradient — semantic tokens for both themes.</p>
+      </a>
+      <a class="au-card au-card--interactive" href="foundations/typography.html">
+        <div class="au-row-flex au-gap-3"><span class="set-row-icon" style="background:var(--good-subtle);color:var(--good)"><svg class="au-icon"><use href="#i-type"></use></svg></span><strong>Typography</strong></div>
+        <p class="au-caption au-mt-2">A tabular, data-first type scale with system-font stacks.</p>
+      </a>
+      <a class="au-card au-card--interactive" href="foundations/spacing.html">
+        <div class="au-row-flex au-gap-3"><span class="set-row-icon" style="background:var(--info-subtle);color:var(--info)"><svg class="au-icon"><use href="#i-grid"></use></svg></span><strong>Spacing &amp; layout</strong></div>
+        <p class="au-caption au-mt-2">A 4px rhythm, containers and responsive breakpoints.</p>
+      </a>
+      <a class="au-card au-card--interactive" href="foundations/elevation.html">
+        <div class="au-row-flex au-gap-3"><span class="set-row-icon" style="background:var(--surface-3)"><svg class="au-icon"><use href="#i-layers"></use></svg></span><strong>Elevation</strong></div>
+        <p class="au-caption au-mt-2">Layered shadow and glass for depth in the dark.</p>
+      </a>
+      <a class="au-card au-card--interactive" href="foundations/motion.html">
+        <div class="au-row-flex au-gap-3"><span class="set-row-icon" style="background:var(--warn-subtle);color:var(--warn)"><svg class="au-icon"><use href="#i-zap"></use></svg></span><strong>Motion</strong></div>
+        <p class="au-caption au-mt-2">Durations, easings and the reduced-motion contract.</p>
+      </a>
+      <a class="au-card au-card--interactive" href="foundations/iconography.html">
+        <div class="au-row-flex au-gap-3"><span class="set-row-icon"><svg class="au-icon"><use href="#i-star"></use></svg></span><strong>Iconography</strong></div>
+        <p class="au-caption au-mt-2">A 24px stroke icon set, injected inline for offline use.</p>
+      </a>
+    </div>
+  </section>
+
+  <hr class="au-ledger-line" style="max-width:var(--container-max);margin-left:auto;margin-right:auto">
+
+  <!-- COMPONENTS -->
+  <section class="doc-home-section">
+    <div class="au-row-flex au-between" style="margin-bottom:var(--space-6)">
+      <div>
+        <span class="au-eyebrow">Components</span>
+        <h2 class="au-h2 au-mt-2">22 components, every state documented</h2>
+      </div>
+      <a class="au-btn au-btn--text au-btn--sm" href="components/button.html">All components <svg class="au-icon"><use href="#i-arrow-right"></use></svg></a>
+    </div>
+    <div class="doc-cardgrid">
+      <a class="au-card au-card--interactive" href="components/gauge.html"><div class="au-row-flex au-between"><strong>Gauge</strong><span class="au-tag">Signature</span></div><p class="au-caption au-mt-2">The radial progress dial.</p></a>
+      <a class="au-card au-card--interactive" href="components/chart.html"><div class="au-row-flex au-between"><strong>Chart</strong><span class="au-tag">Signature</span></div><p class="au-caption au-mt-2">Trend line, MA band, annotations.</p></a>
+      <a class="au-card au-card--interactive" href="components/button.html"><strong>Button</strong><p class="au-caption au-mt-2">Primary, tonal, outlined, text, FAB.</p></a>
+      <a class="au-card au-card--interactive" href="components/text-field.html"><strong>Text field</strong><p class="au-caption au-mt-2">Inputs, affixes, validation.</p></a>
+      <a class="au-card au-card--interactive" href="components/switch.html"><strong>Switch</strong><p class="au-caption au-mt-2">Binary toggles &amp; segmented.</p></a>
+      <a class="au-card au-card--interactive" href="components/dialog.html"><strong>Dialog</strong><p class="au-caption au-mt-2">Modals, sheets, confirmations.</p></a>
+      <a class="au-card au-card--interactive" href="components/snackbar.html"><strong>Snackbar</strong><p class="au-caption au-mt-2">Toasts with actions &amp; undo.</p></a>
+      <a class="au-card au-card--interactive" href="components/milestone-badge.html"><strong>Milestone badge</strong><p class="au-caption au-mt-2">Earned &amp; locked medals.</p></a>
+    </div>
+  </section>
+
+  <footer class="doc-footer">
+    <span>Aurora Design System — the language behind <a href="../docs/app/index.html">Ledger</a>.</span>
+    <span class="au-mono">v1.0 · built for the web, no dependencies</span>
+  </footer>
+
+</body>
+</html>

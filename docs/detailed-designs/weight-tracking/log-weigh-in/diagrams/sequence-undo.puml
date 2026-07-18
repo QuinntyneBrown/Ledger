@@ -1,0 +1,46 @@
+@startuml
+title UML sequence behaviour — Undo the last logged weigh-in
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle { BorderColor #344054 FontColor #101828 }
+skinparam package  { BorderColor #667085 FontColor #101828 BackgroundColor #F9FAFB }
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "LogWeighInPage" as page
+  participant "WeighInsApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "WeighInsController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "LogWeighInCommandHandler" as loghandler
+  participant "DeleteWeighInCommandHandler" as delhandler
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+actor -> page : Activate Undo on the confirmation toast per L2-020
+alt The last log created a new entry
+  page -> client : Build typed DeleteWeighInCommand for the new entry
+  client -> controller : HTTPS DELETE /api/v1/weigh-ins/{id}
+  controller -> controller : Authenticate and authorize the owner
+  controller -> delhandler : Send DeleteWeighInCommand
+  delhandler -> db : Remove the entry so no orphan remains per L2-020
+  db --> delhandler : Commit
+  delhandler --> controller : Typed result
+else The last log updated an existing entry
+  page -> client : Build typed LogWeighInCommand with the prior value
+  client -> controller : HTTPS POST /api/v1/weigh-ins
+  controller -> controller : Authenticate and authorize the owner
+  controller -> loghandler : Send LogWeighInCommand
+  loghandler -> db : Restore the prior WeightKg and Note per L2-020
+  db --> loghandler : Commit
+  loghandler --> controller : Typed result
+end
+controller --> client : 200 with the restored state
+client --> page : Analytics return to their prior values per L2-020
+page --> actor : Confirm the undo
+@enduml

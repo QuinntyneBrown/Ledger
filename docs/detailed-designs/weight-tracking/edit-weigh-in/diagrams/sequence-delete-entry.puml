@@ -1,0 +1,57 @@
+@startuml
+title UML sequence behaviour — Delete an entry with undo
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle { BorderColor #344054 FontColor #101828 }
+skinparam package  { BorderColor #667085 FontColor #101828 BackgroundColor #F9FAFB }
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "EditWeighInSheet" as sheet
+  participant "WeighInsApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "WeighInsController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "DeleteWeighInCommandHandler" as delhandler
+  participant "LogWeighInCommandHandler" as loghandler
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+actor -> sheet : Delete the entry per L2-019
+sheet -> client : Build typed DeleteWeighInCommand
+client -> controller : HTTPS DELETE /api/v1/weigh-ins/{id}
+controller -> controller : Authenticate the caller
+controller -> delhandler : Send DeleteWeighInCommand
+delhandler -> db : Load the entry by id
+db --> delhandler : Entry with its owner UserId
+alt Entry owner != authenticated user per L2-067
+  delhandler --> controller : Ownership failure
+  controller --> client : 403/404 without leaking data per L2-067
+  client --> sheet : Show the not-allowed state
+else Owner matches
+  delhandler -> db : Remove the entry in one unit of work per L2-019
+  db --> delhandler : Commit
+  delhandler --> controller : Typed result
+  controller --> client : 200 deleted
+  client --> sheet : Show toast "Entry deleted" with Undo per L2-019
+  alt Member activates Undo within the window
+    actor -> sheet : Undo
+    sheet -> client : Build LogWeighInCommand to restore date, value, and note
+    client -> controller : HTTPS POST /api/v1/weigh-ins
+    controller -> loghandler : Send LogWeighInCommand
+    loghandler -> db : Insert the restored entry per L2-019
+    db --> loghandler : Commit
+    loghandler --> controller : Typed result
+    controller --> client : 200 restored
+    client --> sheet : Entry restored with its original values per L2-019
+  else Undo window elapses
+    sheet -> sheet : Deletion is final; re-derived analytics exclude the entry per L2-019
+  end
+  sheet --> actor : Present the result
+end
+@enduml

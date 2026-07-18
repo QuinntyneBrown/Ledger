@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Real-time sync across devices
+
+Person(member, "Member", "Uses Ledger on more than one device")
+System_Boundary(ledger, "Ledger") {
+  Container(web, "Ledger Web App", "Angular 21 SPA", "Member-facing responsive web app; one authenticated session per device")
+  Container(api, "Ledger API", "ASP.NET Core, MediatR", "CQRS application and domain logic; hosts the SignalR hub")
+  Container(hub, "Realtime Hub", "ASP.NET Core SignalR", "Pushes changes to a member's other sessions")
+  Container(backplane, "Realtime Backplane", "SignalR scale-out backplane <TO SUPPLY>", "Relays hub messages across API instances so real-time works when scaled out per L2-077")
+  ContainerDb(db, "Ledger Database", "SQL Server", "Members, goals, weigh-ins, milestones, and the change feed")
+}
+
+Rel(member, web, "Uses on each device", "HTTPS")
+Rel(web, api, "Logs, edits, deletes, and reconciles changes over", "JSON/HTTPS")
+Rel(web, hub, "Subscribes to its own user's change events over", "WebSocket (SignalR), JWT bearer")
+Rel(api, db, "Reads and writes state and appends the change feed", "EF Core")
+Rel(api, hub, "Publishes change notifications through", "IHubContext")
+Rel(hub, backplane, "Fans messages out across instances through", "scale-out backplane")
+Rel(hub, web, "Delivers WeighInChangedEvent and GoalChangedEvent to the member's own sessions per L2-067")
+@enduml

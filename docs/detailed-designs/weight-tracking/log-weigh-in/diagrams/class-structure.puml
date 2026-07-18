@@ -1,0 +1,58 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Log a weigh-in
+
+class WeighInsController {
+  +Log(command: LogWeighInCommand): Task<IActionResult>
+}
+
+class LogWeighInCommand {
+  +Guid UserId
+  +DateOnly Date
+  +decimal WeightKg
+  +string Note
+}
+
+class LogWeighInCommandValidator {
+  +LogWeighInCommandValidator()
+}
+note bottom of LogWeighInCommandValidator
+  Rejects weight outside 20.0-500.0 kg per L2-015
+  Rejects a note longer than 280 chars per L2-013
+end note
+
+class LogWeighInCommandHandler {
+  +Handle(command: LogWeighInCommand): Task<WeighInDto>
+}
+
+class WeighIn {
+  +Guid Id
+  +Guid UserId
+  +DateOnly Date
+  +decimal WeightKg
+  +string Note
+  +DateTime CreatedAt
+  +DateTime UpdatedAt
+  +UpdateWeight(weightKg: decimal, note: string): void
+}
+
+class WeighInsApi <<Angular>> {
+  +log(command: LogWeighInCommand): Observable<WeighInDto>
+  +undo(priorState: WeighInDto): Observable<WeighInDto>
+}
+
+WeighInsController ..> LogWeighInCommand : sends
+LogWeighInCommandValidator ..> LogWeighInCommand : validates
+LogWeighInCommandHandler ..> LogWeighInCommand : handles
+LogWeighInCommandHandler --> WeighIn : loads / upserts
+WeighInsApi ..> LogWeighInCommand : builds
+@enduml

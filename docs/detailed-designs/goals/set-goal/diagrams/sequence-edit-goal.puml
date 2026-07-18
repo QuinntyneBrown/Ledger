@@ -1,0 +1,57 @@
+@startuml
+title UML sequence behaviour — Set a goal: edit goal weight and target date
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "GoalPage" as page
+  participant "GoalsApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "GoalsController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "SetGoalCommandHandler" as handler
+  participant "Goal" as entity
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+
+actor -> page : Adjust goal weight and target date, save
+page -> page : Pre-validate future date and goal differs from current
+page -> client : Build typed request
+client -> controller : HTTPS PUT /api/v1/goals
+controller -> controller : Authenticate and scope to owner
+controller -> handler : Send SetGoalCommand
+handler -> db : Load owner goal and latest weigh-in
+db --> handler : Goal and current weight
+alt target date not after today, or goal equals current weight per L2-022
+  handler --> controller : Validation failure
+  controller --> client : 400 ProblemDetails with field errors
+  client --> page : Field errors
+  page --> actor : Show guidance and keep prior goal
+else valid change
+  handler -> entity : ChangeTarget(goalWeightKg, targetDate, currentWeightKg, today) per L2-022
+  entity --> handler : Goal updated, direction resolved
+  handler -> db : Save in one unit of work
+  db --> handler : Commit
+  handler -> handler : Recompute progress and pace figures per L2-022
+  handler --> controller : Typed result
+  controller --> client : 200 with updated goal
+  client --> page : Updated goal and progress
+  page --> actor : Present recomputed progress
+end
+@enduml

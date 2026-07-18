@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Badges — Ledger</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+  <style>
+    .mile-streak-num { font-family: var(--font-display); font-weight: var(--weight-heavy); font-size: var(--text-4xl); line-height: 1; letter-spacing: var(--tracking-tight); }
+    .mile-flames { flex-wrap: wrap; }
+    .mile-flame .au-icon { width: 15px; height: 15px; }
+    .mile-next { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-5); }
+    .badge-earned-tick { position: absolute; top: 10px; right: 10px; color: var(--good); }
+    .badge-earned-tick .au-icon { width: 20px; height: 20px; }
+    .badge-lock-tick { position: absolute; top: 10px; right: 10px; color: var(--text-lo); }
+    .badge-lock-tick .au-icon { width: 18px; height: 18px; }
+    .au-badge-tile .au-medal { width: 60px; height: 60px; }
+    .au-badge-tile .au-medal .au-icon { width: 28px; height: 28px; }
+  </style>
+</head>
+<body class="app-body">
+
+  <div class="app-frame">
+    <div class="app-statusbar">
+      <span>9:41</span>
+      <span class="app-statusbar-right">
+        <svg class="au-icon" style="width:15px"><use href="#i-activity"></use></svg>
+        <svg class="au-icon" style="width:15px"><use href="#i-droplet"></use></svg>
+        <span class="au-mono" style="font-size:11px">100%</span>
+      </span>
+    </div>
+
+    <div class="app-screen">
+      <!-- header -->
+      <div class="app-header">
+        <div>
+          <div class="app-header-sub">Rewards</div>
+          <div class="app-header-title">Badges</div>
+        </div>
+        <span class="au-chip au-chip--brand"><svg class="au-icon"><use href="#i-award"></use></svg> 5 of 8</span>
+      </div>
+
+      <div class="app-scroll">
+        <!-- STREAK CARD -->
+        <section class="au-card mile-streak au-rise au-rise-1" style="align-items:flex-start;gap:var(--space-4)">
+          <div class="au-medal" style="width:52px;height:52px;flex:none">
+            <svg class="au-icon au-icon--fill"><use href="#i-flame"></use></svg>
+          </div>
+          <div class="au-fill">
+            <div class="au-row-flex au-between">
+              <div class="au-row-flex" style="align-items:baseline;gap:var(--space-2)">
+                <span class="mile-streak-num" style="color:var(--warn)">12</span>
+                <span class="au-caption">day streak</span>
+              </div>
+              <div style="text-align:right">
+                <div class="au-mono" style="font-weight:var(--weight-bold)">21</div>
+                <div class="au-caption">longest</div>
+              </div>
+            </div>
+            <div class="mile-flames" style="margin-top:var(--space-3)">
+              <span class="mile-flame"><svg class="au-icon au-icon--fill"><use href="#i-flame"></use></svg></span>
+              <span class="mile-flame"><svg class="au-icon au-icon--fill"><use href="#i-flame"></use></svg></span>
+              <span class="mile-flame"><svg class="au-icon au-icon--fill"><use href="#i-flame"></use></svg></span>
+              <span class="mile-flame"><svg class="au-icon au-icon--fill"><use href="#i-flame"></use></svg></span>
+              <span class="mile-flame"><svg class="au-icon au-icon--fill"><use href="#i-flame"></use></svg></span>
+              <span class="mile-flame"><svg class="au-icon au-icon--fill"><use href="#i-flame"></use></svg></span>
+              <span class="mile-flame"><svg class="au-icon au-icon--fill"><use href="#i-flame"></use></svg></span>
+              <span class="mile-flame"><svg class="au-icon au-icon--fill"><use href="#i-flame"></use></svg></span>
+              <span class="mile-flame"><svg class="au-icon au-icon--fill"><use href="#i-flame"></use></svg></span>
+              <span class="mile-flame"><svg class="au-icon au-icon--fill"><use href="#i-flame"></use></svg></span>
+              <span class="mile-flame"><svg class="au-icon au-icon--fill"><use href="#i-flame"></use></svg></span>
+              <span class="mile-flame"><svg class="au-icon au-icon--fill"><use href="#i-flame"></use></svg></span>
+              <span class="mile-flame is-off"><svg class="au-icon au-icon--fill"><use href="#i-flame"></use></svg></span>
+              <span class="mile-flame is-off"><svg class="au-icon au-icon--fill"><use href="#i-flame"></use></svg></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- NEXT BADGE PROGRESS -->
+        <div class="app-section-title"><h2>Next badge</h2></div>
+        <section class="au-card mile-next au-rise au-rise-2">
+          <div class="au-ring" style="--_pct:72;width:64px;height:64px;position:relative;flex:none"><span>72%</span></div>
+          <div class="au-fill">
+            <div style="font-weight:var(--weight-semibold)">−5 kg club</div>
+            <div class="au-caption" style="margin-bottom:var(--space-2)">Just 1.9 kg to go to unlock this badge</div>
+            <div class="au-progress au-progress--brand"><div class="au-progress-bar" style="width:72%"></div></div>
+          </div>
+        </section>
+
+        <!-- BADGE GRID -->
+        <div class="app-section-title"><h2>Your collection</h2></div>
+        <div class="mile-grid au-rise au-rise-3">
+          <!-- EARNED -->
+          <div class="au-badge-tile">
+            <span class="badge-earned-tick"><svg class="au-icon"><use href="#i-check-circle"></use></svg></span>
+            <div class="au-medal"><svg class="au-icon"><use href="#i-flag"></use></svg></div>
+            <div class="au-badge-name">First entry</div>
+            <div class="au-badge-desc">Your journey began</div>
+          </div>
+          <div class="au-badge-tile">
+            <span class="badge-earned-tick"><svg class="au-icon"><use href="#i-check-circle"></use></svg></span>
+            <div class="au-medal au-medal--violet"><svg class="au-icon au-icon--fill"><use href="#i-flame"></use></svg></div>
+            <div class="au-badge-name">7-day streak</div>
+            <div class="au-badge-desc">A week straight</div>
+          </div>
+          <div class="au-badge-tile">
+            <span class="badge-earned-tick"><svg class="au-icon"><use href="#i-check-circle"></use></svg></span>
+            <div class="au-medal au-medal--good"><svg class="au-icon"><use href="#i-trending-down"></use></svg></div>
+            <div class="au-badge-name">−1 kg</div>
+            <div class="au-badge-desc">First kilo gone</div>
+          </div>
+          <div class="au-badge-tile">
+            <span class="badge-earned-tick"><svg class="au-icon"><use href="#i-check-circle"></use></svg></span>
+            <div class="au-medal au-medal--good"><svg class="au-icon"><use href="#i-trending-down"></use></svg></div>
+            <div class="au-badge-name">−2.5 kg</div>
+            <div class="au-badge-desc">Real momentum</div>
+          </div>
+          <div class="au-badge-tile">
+            <span class="badge-earned-tick"><svg class="au-icon"><use href="#i-check-circle"></use></svg></span>
+            <div class="au-medal"><svg class="au-icon"><use href="#i-calendar"></use></svg></div>
+            <div class="au-badge-name">30-day streak</div>
+            <div class="au-badge-desc">A full month</div>
+          </div>
+          <!-- LOCKED -->
+          <div class="au-badge-tile is-locked">
+            <span class="badge-lock-tick"><svg class="au-icon"><use href="#i-lock"></use></svg></span>
+            <div class="au-medal"><svg class="au-icon"><use href="#i-target"></use></svg></div>
+            <div class="au-badge-name">−5 kg club</div>
+            <div class="au-badge-desc">1.9 kg to go</div>
+          </div>
+          <div class="au-badge-tile is-locked">
+            <span class="badge-lock-tick"><svg class="au-icon"><use href="#i-lock"></use></svg></span>
+            <div class="au-medal"><svg class="au-icon"><use href="#i-trophy"></use></svg></div>
+            <div class="au-badge-name">Goal 73.0</div>
+            <div class="au-badge-desc">−7 kg · the finish</div>
+          </div>
+          <div class="au-badge-tile is-locked">
+            <span class="badge-lock-tick"><svg class="au-icon"><use href="#i-lock"></use></svg></span>
+            <div class="au-medal"><svg class="au-icon"><use href="#i-list"></use></svg></div>
+            <div class="au-badge-name">100 entries</div>
+            <div class="au-badge-desc">92 / 100 logged</div>
+          </div>
+        </div>
+
+        <div style="height:var(--space-4)"></div>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav class="au-bottomnav app-bottomnav">
+      <a class="app-rail-brand" href="../dashboard/dashboard.html"><span class="app-rail-mark"></span>Ledger</a>
+      <a class="au-navitem" href="../dashboard/dashboard.html"><svg class="au-icon"><use href="#i-home"></use></svg>Home</a>
+      <a class="au-navitem" href="../trends/trends.html"><svg class="au-icon"><use href="#i-activity"></use></svg>Trends</a>
+      <button class="app-navfab" data-dialog-open="quickWeigh" aria-label="Log weight"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      <a class="au-navitem is-active" href="milestones.html"><svg class="au-icon"><use href="#i-trophy"></use></svg>Badges</a>
+      <a class="au-navitem" href="../settings/account.html"><svg class="au-icon"><use href="#i-user"></use></svg>Profile</a>
+    </nav>
+  </div>
+
+  <!-- QUICK WEIGH-IN SHEET -->
+  <div class="au-sheet-scrim" id="quickWeigh" hidden>
+    <div class="au-sheet" role="dialog" aria-modal="true" aria-label="Log today's weight">
+      <div class="au-sheet-grip"></div>
+      <div class="au-row-flex au-between" style="margin-bottom:var(--space-2)">
+        <div><div class="au-eyebrow">Today</div><div style="font-family:var(--font-mono);color:var(--text-lo);font-size:var(--text-sm)">Wed, Jul 18</div></div>
+        <button class="au-icon-btn" data-dialog-close aria-label="Close"><svg class="au-icon"><use href="#i-x"></use></svg></button>
+      </div>
+      <div class="weigh-stepper" style="margin:var(--space-6) 0">
+        <button class="weigh-stepper-btn" aria-label="Decrease"><svg class="au-icon"><use href="#i-minus"></use></svg></button>
+        <div class="au-bignum-field">
+          <span class="au-bignum" style="width:auto">74.8</span>
+          <span class="au-bignum-unit">kg</span>
+        </div>
+        <button class="weigh-stepper-btn" aria-label="Increase"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      </div>
+      <button class="au-btn au-btn--primary au-btn--lg au-btn--block" data-dialog-close data-toast="Weight logged — 74.8 kg" data-toast-action="Undo">
+        <svg class="au-icon"><use href="#i-check"></use></svg> Log weight
+      </button>
+    </div>
+  </div>
+
+</body>
+</html>

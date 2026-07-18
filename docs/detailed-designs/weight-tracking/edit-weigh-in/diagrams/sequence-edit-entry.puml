@@ -1,0 +1,47 @@
+@startuml
+title UML sequence behaviour — Edit an existing entry
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle { BorderColor #344054 FontColor #101828 }
+skinparam package  { BorderColor #667085 FontColor #101828 BackgroundColor #F9FAFB }
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "EditWeighInSheet" as sheet
+  participant "WeighInsApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "WeighInsController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "EditWeighInCommandHandler" as handler
+  participant "WeighIn" as entity
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+actor -> sheet : Open an entry and change the value per L2-018
+sheet -> client : Build typed EditWeighInCommand
+client -> controller : HTTPS PUT /api/v1/weigh-ins/{id}
+controller -> controller : Authenticate the caller
+controller -> handler : Send EditWeighInCommand
+handler -> db : Load the entry by id
+db --> handler : Entry with its owner UserId
+alt Entry owner != authenticated user per L2-067
+  handler --> controller : Ownership failure
+  controller --> client : 403/404 without leaking data per L2-067
+  client --> sheet : Show the not-allowed state
+  sheet --> actor : Present the authorization error
+else Owner matches
+  handler -> entity : Apply the new value; set UpdatedAt per L2-018
+  entity --> handler : Updated weigh-in
+  handler -> db : Save in one unit of work
+  db --> handler : Commit
+  handler --> controller : Typed weigh-in result
+  controller --> client : 200 with the updated entry
+  client --> sheet : Deltas, averages, badges, and streaks recompute per L2-018
+  sheet --> actor : Toast "Entry updated — {value}"
+end
+@enduml

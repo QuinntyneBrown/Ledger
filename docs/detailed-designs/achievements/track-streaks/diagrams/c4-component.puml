@@ -1,0 +1,30 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Track streaks
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+
+Container_Boundary(web, "Ledger Web App") {
+  Component(page, "LogWeighInPage", "Angular component", "Logs and edits a weigh-in; shows the current and longest streak")
+  Component(client, "WeighInsApi", "Angular HTTP service", "Typed client for /api/v1/weigh-ins in ledger/api")
+}
+
+Container_Boundary(api, "Ledger API") {
+  Component(ctrl, "WeighInsController", "ASP.NET Core controller", "Exposes /api/v1/weigh-ins endpoints")
+  Component(weighInHandler, "LogWeighInCommandHandler", "MediatR handler", "Persists a weigh-in and dispatches streak recomputation")
+  Component(handler, "RecomputeStreakCommandHandler", "MediatR handler", "Recomputes current and longest streak on log or edit")
+  Component(calc, "StreakCalculator", "Domain service", "Counts consecutive local days ending today or yesterday")
+  Component(entity, "Streak", "Domain entity", "Holds the current and longest streak for a member")
+  ComponentDb(db, "Ledger Database", "SQL Server", "Persists streak state and weigh-in dates")
+}
+
+Rel(member, page, "Uses", "HTTPS")
+Rel(page, client, "Sends weigh-in changes through")
+Rel(client, ctrl, "Calls", "JSON/HTTPS")
+Rel(ctrl, weighInHandler, "Sends LogWeighInCommand")
+Rel(weighInHandler, handler, "Sends RecomputeStreakCommand on log or edit")
+Rel(handler, calc, "Computes the streak with")
+Rel(handler, entity, "Loads and updates")
+Rel(handler, db, "Reads weigh-in dates; persists streak", "EF Core")
+@enduml

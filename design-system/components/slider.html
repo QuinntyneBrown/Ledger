@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Slider — Aurora Design System</title>
+  <meta name="description" content="A slider picks a value along a continuous range. Aurora fills the track gold up to the thumb, and points to the Gauge for its rotary, dial-style cousin.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+  <style>
+    /* page-scoped: a labelled slider row with a live value read-out */
+    .demo-slider-row { width:100%; max-width:460px; }
+    .demo-slider-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:var(--space-2); }
+    .demo-slider-val { font-family:var(--font-mono); font-variant-numeric:tabular-nums; font-weight:var(--weight-semibold); color:var(--brand-strong); }
+    .demo-slider-scale { display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:var(--text-2xs); color:var(--text-lo); margin-top:var(--space-1); }
+  </style>
+</head>
+<body class="doc-body">
+
+  <!-- Shared gradient for the dial-concept gauge -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="auroraGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="var(--aurora-start)"></stop>
+        <stop offset="52%" stop-color="var(--aurora-mid)"></stop>
+        <stop offset="100%" stop-color="var(--aurora-end)"></stop>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation">
+      <svg class="au-icon"><use href="#i-menu"></use></svg>
+    </button>
+    <a class="doc-brand" href="../index.html">
+      <span class="doc-brandmark"></span>
+      <span class="doc-brand-name">Aurora<small>Design System</small></span>
+    </a>
+    <nav class="doc-header-nav">
+      <a href="../foundations/getting-started.html">Foundations</a>
+      <a href="button.html" class="is-active">Components</a>
+      <a href="../patterns/forms-validation.html">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <!-- ============ CANONICAL SIDEBAR (shared across all DS pages) ============ -->
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="../foundations/getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="../foundations/color.html">Color</a>
+        <a class="doc-navlink" href="../foundations/typography.html">Typography</a>
+        <a class="doc-navlink" href="../foundations/spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="../foundations/elevation.html">Elevation</a>
+        <a class="doc-navlink" href="../foundations/shape.html">Shape</a>
+        <a class="doc-navlink" href="../foundations/iconography.html">Iconography</a>
+        <a class="doc-navlink" href="../foundations/motion.html">Motion</a>
+        <a class="doc-navlink" href="../foundations/accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="button.html">Button</a>
+        <a class="doc-navlink" href="text-field.html">Text field</a>
+        <a class="doc-navlink" href="select.html">Select</a>
+        <a class="doc-navlink" href="switch.html">Switch</a>
+        <a class="doc-navlink" href="checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink is-active" href="slider.html">Slider</a>
+        <a class="doc-navlink" href="date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="card.html">Card</a>
+        <a class="doc-navlink" href="list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="avatar.html">Avatar</a>
+        <a class="doc-navlink" href="progress.html">Progress</a>
+        <a class="doc-navlink" href="gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="dialog.html">Dialog</a>
+        <a class="doc-navlink" href="snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="banner.html">Banner</a>
+        <a class="doc-navlink" href="tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="tabs.html">Tabs</a>
+        <a class="doc-navlink" href="navigation.html">Navigation</a>
+        <a class="doc-navlink" href="milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="../patterns/forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="../patterns/data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="../patterns/data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="../patterns/theming.html">Theming</a>
+        <a class="doc-navlink" href="../patterns/motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Components <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Slider</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-activity"></use></svg> Actions &amp; inputs</span>
+          <h1 class="doc-title">Slider</h1>
+          <p class="doc-lead">A slider sets a value along a continuous range. The track fills <strong style="color:var(--text-hi)">gold up to the thumb</strong> so the current position reads at a glance — ideal for a goal pace or a target you tune by feel.</p>
+        </div>
+
+        <div class="doc-tabbar" data-tabs>
+          <button class="doc-tab is-active" data-tab="overview">Overview</button>
+          <button class="doc-tab" data-tab="examples">Examples</button>
+          <button class="doc-tab" data-tab="api">Tokens &amp; API</button>
+        </div>
+
+        <!-- ===== OVERVIEW ===== -->
+        <section data-tabpanel="overview">
+          <div class="doc-canvas" style="border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:var(--space-7);padding:var(--space-9)">
+            <div class="demo-slider-row">
+              <div class="demo-slider-head">
+                <span class="au-label" style="margin:0">Goal pace</span>
+                <span class="demo-slider-val">0.5 kg / wk</span>
+              </div>
+              <div class="au-slider"><input type="range" min="0" max="100" value="50" style="--_pct:50%" aria-label="Goal pace"></div>
+              <div class="demo-slider-scale"><span>Gentle</span><span>Aggressive</span></div>
+            </div>
+          </div>
+
+          <div class="doc-prose">
+            <h2 class="doc-section-title">When to use it</h2>
+            <p>Reach for a slider when the exact number matters less than the <strong>feel</strong> of a value along a range — a goal pace, a target band, a reminder time. When precision is essential, pair the slider with a numeric <a href="text-field.html">field</a> that mirrors it. When there’s a hard target and the story is “how close am I?”, the value belongs in a <a href="gauge.html">Gauge</a>, not a slider.</p>
+            <ul>
+              <li>Always show the <strong>current value</strong> in a live read-out beside the track.</li>
+              <li>Label the two ends so the direction of travel is unmistakable.</li>
+              <li>Set a sensible <code>step</code> — round numbers beat pixel-perfect precision.</li>
+              <li>The fill is driven by a <code>--_pct</code> custom property; keep it in sync with the value.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Anatomy</h2>
+          <div class="doc-anatomy" style="padding-top:var(--space-11);padding-bottom:var(--space-11)">
+            <div class="au-slider" style="width:280px"><input type="range" min="0" max="100" value="64" style="--_pct:64%" aria-label="Anatomy example"></div>
+            <span class="doc-anatomy-marker" style="top:34%;left:30%">1</span>
+            <span class="doc-anatomy-marker" style="top:34%;left:70%">2</span>
+            <span class="doc-anatomy-marker" style="top:50%;left:64%">3</span>
+          </div>
+          <div class="doc-legend">
+            <ul>
+              <li><span class="doc-legend-num">1</span> <strong style="color:var(--text-hi)">Fill</strong> — the gold portion from the start to the thumb.</li>
+              <li><span class="doc-legend-num">2</span> <strong style="color:var(--text-hi)">Track</strong> — the remaining range in a muted surface.</li>
+              <li><span class="doc-legend-num">3</span> <strong style="color:var(--text-hi)">Thumb</strong> — a 24px grabbable handle ringed against the canvas.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">The rotary cousin — a dial</h2>
+          <p class="doc-section-lead">When a value curls back on itself or wants to feel like a physical knob, use the radial <a href="gauge.html">Gauge</a> as a <strong>dial input</strong>. Same aurora fill, wrapped into a circle. The linear slider and the rotary dial are two readings of one idea.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">slider/dial-concept</span></div>
+            <div class="doc-canvas" style="gap:var(--space-9)">
+              <div class="au-stack au-stack-3" style="align-items:center">
+                <div class="au-slider" style="width:200px"><input type="range" min="0" max="100" value="72" style="--_pct:72%" aria-label="Linear"></div>
+                <span class="au-caption">Linear slider</span>
+              </div>
+              <div class="au-stack au-stack-3" style="align-items:center">
+                <div class="au-gauge" data-value="72" data-sweep="270" style="width:120px;height:120px">
+                  <svg viewBox="0 0 120 120" width="120" height="120" style="transform:rotate(135deg)"><circle class="au-gauge-track" cx="60" cy="60" r="52" stroke-width="12"></circle><circle class="au-gauge-arc" cx="60" cy="60" r="52" stroke-width="12"></circle></svg>
+                  <div class="au-gauge-center"><div class="au-gauge-value" style="font-size:var(--text-xl)">72</div></div>
+                </div>
+                <span class="au-caption">Rotary dial (Gauge)</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== EXAMPLES ===== -->
+        <section data-tabpanel="examples" hidden>
+          <!-- Values -->
+          <h2 class="doc-section-title">Values across the range</h2>
+          <p class="doc-section-lead">The fill grows with the value. Set <code class="doc-td-name">--_pct</code> to match the thumb.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">slider/values</span>
+              <div class="doc-example-tools"><button class="au-icon-btn au-icon-btn--sm" data-theme-toggle aria-label="Toggle theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button></div>
+            </div>
+            <div class="doc-canvas doc-canvas--stack" style="gap:var(--space-6);max-width:none">
+              <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:var(--space-6)">
+                <div class="au-slider"><input type="range" min="0" max="100" value="15" style="--_pct:15%" aria-label="15 percent"></div>
+                <div class="au-slider"><input type="range" min="0" max="100" value="40" style="--_pct:40%" aria-label="40 percent"></div>
+                <div class="au-slider"><input type="range" min="0" max="100" value="70" style="--_pct:70%" aria-label="70 percent"></div>
+                <div class="au-slider"><input type="range" min="0" max="100" value="100" style="--_pct:100%" aria-label="100 percent"></div>
+              </div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-slider"&gt;
+  &lt;input type="range" min="0" max="100" value="70"
+         style="--_pct:70%" aria-label="Target"&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+
+          <!-- Rate of change -->
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Rate-of-change slider</h2>
+          <p class="doc-section-lead">A goal-pace control with a live read-out and labelled ends — the value updates as you drag.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">slider/rate</span></div>
+            <div class="doc-canvas doc-canvas--start">
+              <div class="au-card demo-slider-row">
+                <div class="demo-slider-head">
+                  <span class="au-label" style="margin:0"><svg class="au-icon" style="width:16px;height:16px;color:var(--good)"><use href="#i-trending-down"></use></svg> Weekly rate of change</span>
+                  <span class="demo-slider-val">−0.6 kg / wk</span>
+                </div>
+                <div class="au-slider"><input type="range" min="0" max="100" value="60" style="--_pct:60%" aria-label="Weekly rate of change"></div>
+                <div class="demo-slider-scale"><span>−0.1 kg</span><span>−1.0 kg</span></div>
+                <p class="au-caption" style="margin-top:var(--space-3)">A moderate, sustainable loss. Reaches your goal in about 14 weeks.</p>
+              </div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="slider-row"&gt;
+  &lt;div class="head"&gt;
+    &lt;span class="au-label"&gt;Weekly rate of change&lt;/span&gt;
+    &lt;span class="val"&gt;&amp;minus;0.6 kg / wk&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="au-slider"&gt;
+    &lt;input type="range" min="0" max="100" value="60" style="--_pct:60%"&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+
+          <!-- Disabled -->
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Disabled</h2>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">slider/disabled</span></div>
+            <div class="doc-canvas doc-canvas--start">
+              <div class="au-slider" style="width:100%;max-width:420px;opacity:0.5;pointer-events:none"><input type="range" min="0" max="100" value="30" style="--_pct:30%" disabled aria-label="Disabled slider"></div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-slider" style="opacity:.5;pointer-events:none"&gt;
+  &lt;input type="range" value="30" style="--_pct:30%" disabled&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- ===== API ===== -->
+        <section data-tabpanel="api" hidden>
+          <h2 class="doc-section-title">Structure &amp; properties</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Name</th><th>Element</th><th>Role</th></tr></thead>
+              <tbody>
+                <tr><td><code>.au-slider</code></td><td>div</td><td>44px-tall wrapper that centres the native range input.</td></tr>
+                <tr><td><code>input[type="range"]</code></td><td>input</td><td>The control; its track is styled with a two-stop gradient.</td></tr>
+                <tr><td><code>--_pct</code></td><td>custom property</td><td>Percentage of the fill, e.g. <code>--_pct:70%</code>. Keep it in step with <code>value</code>.</td></tr>
+                <tr><td><code>::-webkit-slider-thumb</code> / <code>::-moz-range-thumb</code></td><td>pseudo-element</td><td>The 24px handle; scales up 1.15× on hover.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-8)">States</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>State</th><th>Trigger</th><th>Effect</th></tr></thead>
+              <tbody>
+                <tr><td>Hover</td><td><code>:hover</code> on thumb</td><td>Thumb scales to 1.15×.</td></tr>
+                <tr><td>Focus</td><td><code>:focus-visible</code></td><td>Standard focus ring on the input.</td></tr>
+                <tr><td>Disabled</td><td><code>:disabled</code></td><td>Dim the wrapper and remove pointer events.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-8)">Tokens consumed</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Token</th><th>Applied to</th></tr></thead>
+              <tbody>
+                <tr><td><code>--brand</code></td><td>Track fill and thumb.</td></tr>
+                <tr><td><code>--surface-3</code></td><td>Remaining (unfilled) track.</td></tr>
+                <tr><td><code>--canvas</code></td><td>Thumb ring, cut against the background.</td></tr>
+                <tr><td><code>--radius-pill</code></td><td>Track shape.</td></tr>
+                <tr><td><code>--shadow-2</code></td><td>Thumb elevation.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-info"></use></svg>
+            <div class="doc-callout-body"><strong>Accessibility.</strong> The native range input is keyboard-operable with the arrow keys out of the box. Give it an <code>aria-label</code> or a bound <code>&lt;label&gt;</code>, and expose the current value in visible text so it isn’t carried by the thumb position alone. For a circular dial input, mirror this with <code>role="slider"</code> and <code>aria-valuenow</code> on the <a href="gauge.html">Gauge</a>.</div>
+          </div>
+        </section>
+
+        <!-- Pager -->
+        <nav class="doc-pager">
+          <a href="checkbox-radio.html"><small>Previous</small><span>Checkbox &amp; radio</span></a>
+          <a class="doc-pager-next" href="date-picker.html"><small>Next</small><span>Date picker</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

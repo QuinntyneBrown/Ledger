@@ -1,0 +1,68 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Manage reminders
+
+class Preferences {
+  +Guid UserId
+  +bool ReminderEnabled
+  +TimeOnly ReminderTime
+  +bool QuietHoursEnabled
+  +TimeOnly QuietHoursStart
+  +TimeOnly QuietHoursEnd
+  +string TimeZone
+  +EnableReminder(time: TimeOnly): void
+  +DisableReminder(): void
+  +IsWithinQuietHours(localTime: TimeOnly): bool
+}
+
+class WeighIn {
+  +Guid Id
+  +Guid UserId
+  +DateOnly Date
+  +double WeightKg
+}
+
+class ScheduleReminderCommand {
+  +Guid UserId
+  +bool Enabled
+  +TimeOnly Time
+}
+
+class ScheduleReminderCommandHandler {
+  +Handle(command: ScheduleReminderCommand): Task<Result>
+}
+
+class DeliverReminderCommand {
+  +Guid UserId
+  +DateTime FireAtUtc
+}
+
+class DeliverReminderCommandHandler {
+  +Handle(command: DeliverReminderCommand): Task<Result>
+}
+
+class ReminderSchedulerJob {
+  +ExecuteAsync(token: CancellationToken): Task
+}
+
+class RemindersController {
+  +Schedule(command: ScheduleReminderCommand): Task<IActionResult>
+}
+
+RemindersController ..> ScheduleReminderCommand : sends
+ScheduleReminderCommandHandler ..> ScheduleReminderCommand : handles
+ScheduleReminderCommandHandler --> Preferences : loads / mutates
+ReminderSchedulerJob ..> DeliverReminderCommand : dispatches
+DeliverReminderCommandHandler ..> DeliverReminderCommand : handles
+DeliverReminderCommandHandler --> Preferences : reads
+DeliverReminderCommandHandler ..> WeighIn : checks today's entry per L2-051
+@enduml

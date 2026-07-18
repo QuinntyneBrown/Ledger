@@ -1,0 +1,46 @@
+@startuml
+title UML sequence behaviour — Quick weigh-in from anywhere
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle { BorderColor #344054 FontColor #101828 }
+skinparam package  { BorderColor #667085 FontColor #101828 BackgroundColor #F9FAFB }
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "Primary screen" as host
+  participant "QuickWeighInSheet" as sheet
+  participant "WeighInsApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "WeighInsController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "LogWeighInCommandHandler" as handler
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+actor -> host : Activate the "+" floating action per L2-014
+host -> sheet : Open the bottom sheet with role=dialog aria-modal=true per L2-014
+sheet -> sheet : Trap focus within the sheet per L2-079
+alt Member dismisses the sheet
+  actor -> sheet : Press Escape, close control, or scrim per L2-014
+  sheet -> host : Close without saving; return focus to the "+" control per L2-079
+  host --> actor : Restore the primary screen
+else Member logs the value
+  actor -> sheet : Adjust the value by 0.1 and save per L2-013
+  sheet -> client : Build typed LogWeighInCommand
+  client -> controller : HTTPS POST /api/v1/weigh-ins
+  controller -> controller : Authenticate and authorize the owner
+  controller -> handler : Send LogWeighInCommand
+  handler -> db : Upsert one entry per calendar day per L2-016
+  db --> handler : Commit
+  handler --> controller : Typed weigh-in result
+  controller --> client : 200 with the saved entry
+  client --> sheet : Success
+  sheet -> host : Close the sheet; return focus to the "+" control per L2-079
+  host --> actor : Toast "Weight logged" with Undo per L2-020
+end
+@enduml

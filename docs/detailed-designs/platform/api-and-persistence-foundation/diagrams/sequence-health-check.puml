@@ -1,0 +1,38 @@
+@startuml
+title UML sequence behaviour — API and persistence foundation: health check
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Monitoring and orchestrator" as actor
+box "Backend — Ledger API application" #D1FADF
+  participant "Health endpoints" as health
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+  participant "SignalR backplane" as backplane
+end box
+
+actor -> health : GET /health/live
+health --> actor : 200 Healthy (process up)
+actor -> health : GET /health/ready
+health -> db : Check database connectivity (L2-083)
+db --> health : Database status
+health -> backplane : Check backplane connectivity (L2-083)
+backplane --> health : Backplane status
+alt All dependencies healthy
+  health --> actor : 200 Ready
+else A dependency is unhealthy
+  health --> actor : 503 Not ready; instance removed from rotation (L2-083)
+end
+@enduml

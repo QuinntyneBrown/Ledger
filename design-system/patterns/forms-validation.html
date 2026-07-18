@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Forms &amp; validation — Aurora Design System</title>
+  <meta name="description" content="How to compose fields, labels and help text, when to validate, and how to surface errors so a form feels calm and forgiving.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+  <style>
+    /* Page-scoped helpers for the forms guide */
+    .pat-form { width: min(460px, 100%); margin: 0 auto; text-align: left; }
+    .pat-form .au-field + .au-field { margin-top: var(--space-5); }
+    .pat-fieldrow { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+    @media (max-width: 560px) { .pat-fieldrow { grid-template-columns: 1fr; } }
+    .pat-anatomy-field { width: min(420px, 100%); }
+    .pat-summary-link { color: var(--bad-text); text-decoration: underline; text-underline-offset: 2px; font-weight: var(--weight-medium); }
+    .pat-summary-link:hover { color: var(--bad-text); }
+  </style>
+</head>
+<body class="doc-body">
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation"><svg class="au-icon"><use href="#i-menu"></use></svg></button>
+    <a class="doc-brand" href="../index.html"><span class="doc-brandmark"></span><span class="doc-brand-name">Aurora<small>Design System</small></span></a>
+    <nav class="doc-header-nav">
+      <a href="../foundations/getting-started.html">Foundations</a>
+      <a href="../components/button.html">Components</a>
+      <a href="forms-validation.html" class="is-active">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <!-- ============ CANONICAL SIDEBAR ============ -->
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="../foundations/getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="../foundations/color.html">Color</a>
+        <a class="doc-navlink" href="../foundations/typography.html">Typography</a>
+        <a class="doc-navlink" href="../foundations/spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="../foundations/elevation.html">Elevation</a>
+        <a class="doc-navlink" href="../foundations/shape.html">Shape</a>
+        <a class="doc-navlink" href="../foundations/iconography.html">Iconography</a>
+        <a class="doc-navlink" href="../foundations/motion.html">Motion</a>
+        <a class="doc-navlink" href="../foundations/accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="../components/button.html">Button</a>
+        <a class="doc-navlink" href="../components/text-field.html">Text field</a>
+        <a class="doc-navlink" href="../components/select.html">Select</a>
+        <a class="doc-navlink" href="../components/switch.html">Switch</a>
+        <a class="doc-navlink" href="../components/checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="../components/slider.html">Slider</a>
+        <a class="doc-navlink" href="../components/date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="../components/card.html">Card</a>
+        <a class="doc-navlink" href="../components/list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="../components/chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="../components/avatar.html">Avatar</a>
+        <a class="doc-navlink" href="../components/progress.html">Progress</a>
+        <a class="doc-navlink" href="../components/gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="../components/chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="../components/dialog.html">Dialog</a>
+        <a class="doc-navlink" href="../components/snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="../components/banner.html">Banner</a>
+        <a class="doc-navlink" href="../components/tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="../components/empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="../components/tabs.html">Tabs</a>
+        <a class="doc-navlink" href="../components/navigation.html">Navigation</a>
+        <a class="doc-navlink" href="../components/milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink is-active" href="forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="theming.html">Theming</a>
+        <a class="doc-navlink" href="motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Patterns <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Forms &amp; validation</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Pattern · Input</span>
+          <h1 class="doc-title">Forms &amp; validation</h1>
+          <p class="doc-lead">Ledger asks for very little — a weight, a goal, a date. Every field should feel like a quiet, confident conversation. This guide covers how to <strong style="color:var(--text-hi)">compose a field</strong>, <strong style="color:var(--text-hi)">when to validate</strong>, and how to surface errors so a form stays calm and forgiving rather than scolding.</p>
+        </div>
+
+        <!-- ANATOMY -->
+        <section class="doc-section">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-layers"></use></svg> Anatomy of a field</h2>
+          <p class="doc-section-lead">A field is three parts stacked in a single <code class="doc-td-name">.au-field</code> column: a <strong>label</strong>, the <strong>control</strong>, and <strong>help text</strong>. The help slot is permanent — it holds a hint by default and swaps to an error message in place, so the layout never jumps.</p>
+
+          <div class="doc-anatomy">
+            <div class="au-field pat-anatomy-field">
+              <label class="au-label" for="an-weight">Goal weight <span class="au-req" aria-hidden="true">*</span></label>
+              <div class="au-input-wrap">
+                <svg class="au-icon"><use href="#i-target"></use></svg>
+                <input class="au-input au-numeral" id="an-weight" value="73.0" inputmode="decimal">
+                <span class="au-input-affix">kg</span>
+              </div>
+              <span class="au-help"><svg class="au-icon" style="width:14px"><use href="#i-info"></use></svg> A realistic first target — you can raise it later.</span>
+            </div>
+            <span class="doc-anatomy-marker" style="top:16%;left:11%">1</span>
+            <span class="doc-anatomy-marker" style="top:44%;left:9%">2</span>
+            <span class="doc-anatomy-marker" style="bottom:20%;left:11%">3</span>
+          </div>
+          <div class="doc-legend">
+            <ul>
+              <li><span class="doc-legend-num">1</span> <strong style="color:var(--text-hi)">Label</strong> — always visible, never a placeholder. A gold asterisk marks a required field.</li>
+              <li><span class="doc-legend-num">2</span> <strong style="color:var(--text-hi)">Control</strong> — the <code>.au-input-wrap</code> carries the icon, input and a unit affix; it owns the focus ring.</li>
+              <li><span class="doc-legend-num">3</span> <strong style="color:var(--text-hi)">Help</strong> — one line of guidance that becomes the error message when validation fails.</li>
+            </ul>
+          </div>
+
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-field"&gt;
+  &lt;label class="au-label" for="goal"&gt;Goal weight &lt;span class="au-req"&gt;*&lt;/span&gt;&lt;/label&gt;
+  &lt;div class="au-input-wrap"&gt;
+    &lt;svg class="au-icon"&gt;&lt;use href="#i-target"/&gt;&lt;/svg&gt;
+    &lt;input class="au-input au-numeral" id="goal" inputmode="decimal"&gt;
+    &lt;span class="au-input-affix"&gt;kg&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;span class="au-help"&gt;A realistic first target — you can raise it later.&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- STATES -->
+        <section class="doc-section">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-sparkles"></use></svg> Field states</h2>
+          <p class="doc-section-lead">Add a state modifier to the <code class="doc-td-name">.au-field</code> wrapper — <code>.is-error</code> or <code>.is-success</code> — and both the control border and the help text follow. Error is coral; success is a restrained teal tick, used sparingly.</p>
+
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">forms/states</span>
+              <div class="doc-example-tools"><button class="au-icon-btn au-icon-btn--sm" data-theme-toggle aria-label="Toggle theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button></div>
+            </div>
+            <div class="doc-canvas doc-canvas--start" style="gap:var(--space-6)">
+              <!-- default -->
+              <div class="au-field" style="width:220px">
+                <label class="au-label">Start weight</label>
+                <div class="au-input-wrap"><input class="au-input au-numeral" value="80.0"><span class="au-input-affix">kg</span></div>
+                <span class="au-help">Your weight when you began.</span>
+              </div>
+              <!-- error -->
+              <div class="au-field is-error" style="width:220px">
+                <label class="au-label">Goal weight <span class="au-req" aria-hidden="true">*</span></label>
+                <div class="au-input-wrap"><input class="au-input au-numeral" value="180" aria-invalid="true"><span class="au-input-affix">kg</span></div>
+                <span class="au-help is-error"><svg class="au-icon"><use href="#i-alert-circle"></use></svg> Must be below your start weight.</span>
+              </div>
+              <!-- success -->
+              <div class="au-field is-success" style="width:220px">
+                <label class="au-label">Goal weight <span class="au-req" aria-hidden="true">*</span></label>
+                <div class="au-input-wrap"><input class="au-input au-numeral" value="73.0"><span class="au-input-affix">kg</span></div>
+                <span class="au-help" style="color:var(--good-text)"><svg class="au-icon" style="width:14px"><use href="#i-check"></use></svg> Looks good.</span>
+              </div>
+              <!-- disabled -->
+              <div class="au-field is-disabled" style="width:220px">
+                <label class="au-label">Units</label>
+                <div class="au-input-wrap"><input class="au-input" value="Kilograms" disabled></div>
+                <span class="au-help">Locked while a goal is active.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-field is-error"&gt;
+  &lt;label class="au-label"&gt;Goal weight &lt;span class="au-req"&gt;*&lt;/span&gt;&lt;/label&gt;
+  &lt;div class="au-input-wrap"&gt;
+    &lt;input class="au-input" value="180" aria-invalid="true"&gt;
+    &lt;span class="au-input-affix"&gt;kg&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;span class="au-help is-error"&gt;
+    &lt;svg class="au-icon"&gt;&lt;use href="#i-alert-circle"/&gt;&lt;/svg&gt; Must be below your start weight.
+  &lt;/span&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- VALIDATION TIMING -->
+        <section class="doc-section">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-clock"></use></svg> When to validate</h2>
+          <div class="doc-prose">
+            <p>Timing is the difference between a form that helps and one that nags. Aurora forms follow one rule: <strong>never show an error for a field the person is still working on.</strong></p>
+            <ul>
+              <li><strong>Validate on blur</strong>, once the field is complete and focus has moved on — not on every keystroke.</li>
+              <li>Once a field <em>is</em> in error, <strong>forgive on input</strong>: re-check as they type and clear the error the moment it's valid, so the correction feels instant.</li>
+              <li><strong>Never block typing.</strong> Constrain with <code>inputmode</code> and accept-then-validate; don't reject characters mid-entry.</li>
+              <li>Save the full sweep — and the <a href="#summary" style="color:var(--brand)">error summary</a> — for the submit attempt.</li>
+              <li>Use <strong>success styling sparingly</strong>. A green tick on every field is noise; reserve it for values worth confirming, like a matched password or an available handle.</li>
+            </ul>
+          </div>
+
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-clock"></use></svg>
+            <div class="doc-callout-body"><strong>The forgiveness curve.</strong> Validate <em>late</em> and clear <em>early</em>. A person mistypes their goal, tabs away, sees the coral hint, fixes one digit — and the error vanishes before they finish. Errors that appear at the first keystroke train people to distrust the form.</div>
+          </div>
+        </section>
+
+        <!-- REQUIRED -->
+        <section class="doc-section">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-flag"></use></svg> Required markers</h2>
+          <div class="doc-prose">
+            <p>Mark <strong>required</strong> fields, not optional ones — in a short form most fields are required, so flagging the exceptions is quieter. Use the coral asterisk from <code>.au-req</code> and pair it with an accessible cue: give the input <code>required aria-required="true"</code> so it isn't colour-alone.</p>
+            <p>When only one or two fields are optional, append a muted <strong>“Optional”</strong> to their label instead of asterisking everything else.</p>
+          </div>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">forms/required</span></div>
+            <div class="doc-canvas doc-canvas--start" style="gap:var(--space-6)">
+              <div class="au-field" style="width:220px">
+                <label class="au-label">Goal weight <span class="au-req" aria-hidden="true">*</span></label>
+                <div class="au-input-wrap"><input class="au-input au-numeral" value="73.0" required aria-required="true"><span class="au-input-affix">kg</span></div>
+              </div>
+              <div class="au-field" style="width:220px">
+                <label class="au-label">Nickname <span class="au-text-lo" style="font-weight:var(--weight-regular)">Optional</span></label>
+                <div class="au-input-wrap"><input class="au-input" placeholder="e.g. Summer cut"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ERROR SUMMARY -->
+        <section class="doc-section" id="summary">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-alert-triangle"></use></svg> Error summary</h2>
+          <p class="doc-section-lead">When a submit fails, lead with a single summary at the top of the form. It confirms what went wrong, counts the problems, and links straight to each field. Give it <code>role="alert"</code> and move focus to it so screen readers announce the failure once.</p>
+
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">forms/error-summary</span></div>
+            <div class="doc-canvas doc-canvas--stack">
+              <div class="pat-form">
+                <div class="au-banner au-banner--bad" role="alert" tabindex="-1">
+                  <svg class="au-icon"><use href="#i-alert-triangle"></use></svg>
+                  <div class="au-banner-body">
+                    <div class="au-banner-title">Two fields need attention</div>
+                    <div class="au-banner-text au-stack au-stack-2" style="margin-top:var(--space-2)">
+                      <a class="pat-summary-link" href="#es-goal">Goal weight must be below your start weight</a>
+                      <a class="pat-summary-link" href="#es-date">Target date can't be in the past</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-banner au-banner--bad" role="alert" tabindex="-1"&gt;
+  &lt;svg class="au-icon"&gt;&lt;use href="#i-alert-triangle"/&gt;&lt;/svg&gt;
+  &lt;div class="au-banner-body"&gt;
+    &lt;div class="au-banner-title"&gt;Two fields need attention&lt;/div&gt;
+    &lt;a href="#goal"&gt;Goal weight must be below your start weight&lt;/a&gt;
+    &lt;a href="#date"&gt;Target date can't be in the past&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- WORKED EXAMPLE -->
+        <section class="doc-section">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-target"></use></svg> Worked example — Edit goal</h2>
+          <p class="doc-section-lead">Every idea above in one place: a labelled control per row, a segmented unit switch, a live error on two fields, and a primary action pinned to the bottom. This is exactly the sheet Ledger shows when someone taps <strong>Edit goal</strong>.</p>
+
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">forms/edit-goal</span>
+              <div class="doc-example-tools"><button class="au-icon-btn au-icon-btn--sm" data-theme-toggle aria-label="Toggle theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button></div>
+            </div>
+            <div class="doc-canvas doc-canvas--stack" style="padding:var(--space-8)">
+              <form class="au-card au-card--pad-lg pat-form" onsubmit="return false">
+                <div class="au-row-flex au-between" style="margin-bottom:var(--space-6)">
+                  <div>
+                    <div class="au-eyebrow"><svg class="au-icon" style="width:13px"><use href="#i-target"></use></svg> Goal</div>
+                    <h3 class="au-h3" style="margin-top:var(--space-2)">Edit your goal</h3>
+                  </div>
+                  <span class="au-chip au-chip--brand"><svg class="au-icon"><use href="#i-flame"></use></svg> 12-day streak</span>
+                </div>
+
+                <div class="au-banner au-banner--bad" role="alert" style="margin-bottom:var(--space-6)">
+                  <svg class="au-icon"><use href="#i-alert-triangle"></use></svg>
+                  <div class="au-banner-body">
+                    <div class="au-banner-title">Two fields need attention</div>
+                    <div class="au-banner-text au-stack au-stack-2" style="margin-top:var(--space-2)">
+                      <a class="pat-summary-link" href="#es-goal">Goal weight must be below your start weight</a>
+                      <a class="pat-summary-link" href="#es-date">Target date can't be in the past</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pat-fieldrow">
+                  <div class="au-field">
+                    <label class="au-label" for="eg-start">Start weight</label>
+                    <div class="au-input-wrap"><svg class="au-icon"><use href="#i-flag"></use></svg><input class="au-input au-numeral" id="eg-start" value="80.0" inputmode="decimal"><span class="au-input-affix">kg</span></div>
+                    <span class="au-help">Locked once tracking begins.</span>
+                  </div>
+                  <div class="au-field is-error">
+                    <label class="au-label" for="es-goal">Goal weight <span class="au-req" aria-hidden="true">*</span></label>
+                    <div class="au-input-wrap"><svg class="au-icon"><use href="#i-target"></use></svg><input class="au-input au-numeral" id="es-goal" value="82.0" inputmode="decimal" aria-invalid="true"><span class="au-input-affix">kg</span></div>
+                    <span class="au-help is-error"><svg class="au-icon"><use href="#i-alert-circle"></use></svg> Must be below 80.0 kg.</span>
+                  </div>
+                </div>
+
+                <div class="au-field is-error" style="margin-top:var(--space-5)">
+                  <label class="au-label" for="es-date">Target date <span class="au-req" aria-hidden="true">*</span></label>
+                  <div class="au-input-wrap"><svg class="au-icon"><use href="#i-calendar"></use></svg><input class="au-input au-numeral" id="es-date" value="2026 / 05 / 30" aria-invalid="true"></div>
+                  <span class="au-help is-error"><svg class="au-icon"><use href="#i-alert-circle"></use></svg> That date is in the past — pick a day after today.</span>
+                </div>
+
+                <div class="au-field" style="margin-top:var(--space-5)">
+                  <label class="au-label">Units</label>
+                  <div class="au-segmented" role="tablist" aria-label="Weight units">
+                    <button type="button" class="is-active is-brand" aria-selected="true">Kilograms</button>
+                    <button type="button" aria-selected="false">Pounds</button>
+                    <button type="button" aria-selected="false">Stone</button>
+                  </div>
+                  <span class="au-help au-mt-2">Changing units converts your history automatically.</span>
+                </div>
+
+                <div class="au-row-flex au-gap-3" style="margin-top:var(--space-7)">
+                  <button class="au-btn au-btn--outlined au-fill" type="button">Cancel</button>
+                  <button class="au-btn au-btn--primary au-fill" type="submit"><svg class="au-icon"><use href="#i-check"></use></svg> Save goal</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- DO / DON'T -->
+        <section class="doc-section">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-check-circle"></use></svg> Do &amp; don't</h2>
+          <div class="doc-dodont">
+            <div class="doc-guide doc-guide--do">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-check"></use></svg> Do</div>
+              <div class="doc-guide-body">
+                <div class="au-field is-error" style="width:240px">
+                  <label class="au-label">Goal weight</label>
+                  <div class="au-input-wrap"><input class="au-input au-numeral" value="180"><span class="au-input-affix">kg</span></div>
+                  <span class="au-help is-error"><svg class="au-icon"><use href="#i-alert-circle"></use></svg> Must be below your start weight.</span>
+                </div>
+              </div>
+              <div class="doc-guide-note">Say what's wrong <em>and</em> how to fix it, right under the field.</div>
+            </div>
+            <div class="doc-guide doc-guide--dont">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-x"></use></svg> Don't</div>
+              <div class="doc-guide-body">
+                <div class="au-field is-error" style="width:240px">
+                  <label class="au-label">Goal weight</label>
+                  <div class="au-input-wrap"><input class="au-input au-numeral" value="180"><span class="au-input-affix">kg</span></div>
+                  <span class="au-help is-error"><svg class="au-icon"><use href="#i-alert-circle"></use></svg> Invalid input.</span>
+                </div>
+              </div>
+              <div class="doc-guide-note">Don't use vague, generic errors — “invalid” tells the person nothing.</div>
+            </div>
+          </div>
+          <div class="doc-dodont">
+            <div class="doc-guide doc-guide--do">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-check"></use></svg> Do</div>
+              <div class="doc-guide-body">
+                <div class="au-field" style="width:240px">
+                  <label class="au-label">Goal weight</label>
+                  <div class="au-input-wrap"><input class="au-input au-numeral" value="73.0"><span class="au-input-affix">kg</span></div>
+                  <span class="au-help">A realistic first target.</span>
+                </div>
+              </div>
+              <div class="doc-guide-note">Keep the label visible above the field at all times.</div>
+            </div>
+            <div class="doc-guide doc-guide--dont">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-x"></use></svg> Don't</div>
+              <div class="doc-guide-body">
+                <div class="au-field" style="width:240px">
+                  <div class="au-input-wrap"><input class="au-input" placeholder="Goal weight"></div>
+                </div>
+              </div>
+              <div class="doc-guide-note">Don't rely on a placeholder as the label — it vanishes on the first keystroke.</div>
+            </div>
+          </div>
+        </section>
+
+        <div class="doc-callout">
+          <svg class="au-icon"><use href="#i-info"></use></svg>
+          <div class="doc-callout-body"><strong>Accessibility.</strong> Tie help and error text to the input with <code>aria-describedby</code>, set <code>aria-invalid="true"</code> on failure, and never signal state with colour alone — every error pairs the coral with an <code>alert-circle</code> icon and a sentence. Move focus to the summary on submit, and to the first invalid field when its link is followed.</div>
+        </div>
+
+        <!-- PAGER -->
+        <nav class="doc-pager">
+          <a href="../components/milestone-badge.html"><small>Previous</small><span>Milestone badge</span></a>
+          <a class="doc-pager-next" href="data-entry.html"><small>Next</small><span>Data entry</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

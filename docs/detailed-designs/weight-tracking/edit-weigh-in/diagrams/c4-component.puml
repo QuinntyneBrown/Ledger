@@ -1,0 +1,28 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Edit or delete a weigh-in
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+Container_Boundary(web, "Ledger Web App") {
+  Component(sheet, "EditWeighInSheet", "Angular component", "Edits the value or deletes the entry, with undo")
+  Component(client, "WeighInsApi", "Angular HTTP service", "Typed weigh-ins client in ledger/api")
+}
+Container_Boundary(api, "Ledger API") {
+  Component(ctrl, "WeighInsController", "ASP.NET Core controller", "Exposes /api/v1/weigh-ins/{id} endpoints")
+  Component(editHandler, "EditWeighInCommandHandler", "MediatR handler", "Updates the value and sets UpdatedAt")
+  Component(delHandler, "DeleteWeighInCommandHandler", "MediatR handler", "Removes the entry")
+  Component(entity, "WeighIn", "Domain entity", "Owns UserId, Date, WeightKg, and Note")
+  ComponentDb(db, "Ledger Database", "SQL Server", "Persists weigh-ins scoped to the owner")
+}
+
+Rel(member, sheet, "Edits or deletes using", "HTTPS")
+Rel(sheet, client, "Builds the typed command")
+Rel(client, ctrl, "Calls PUT or DELETE /api/v1/weigh-ins/{id}", "JSON/HTTPS")
+Rel(ctrl, editHandler, "Sends EditWeighInCommand")
+Rel(ctrl, delHandler, "Sends DeleteWeighInCommand")
+Rel(editHandler, entity, "Loads and updates the owner's entry per L2-067")
+Rel(delHandler, entity, "Loads and removes the owner's entry per L2-067")
+Rel(editHandler, db, "Persists in one unit of work", "EF Core")
+Rel(delHandler, db, "Persists in one unit of work", "EF Core")
+@enduml

@@ -1,0 +1,50 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Set a goal
+
+enum GoalDirection {
+  Loss
+  Gain
+}
+
+class Goal {
+  +Guid Id
+  +Guid UserId
+  +decimal StartWeightKg
+  +decimal GoalWeightKg
+  +DateOnly TargetDate
+  +DateTime CreatedAt
+  +GoalDirection Direction
+  +ChangeTarget(goalWeightKg: decimal, targetDate: DateOnly, currentWeightKg: decimal, today: DateOnly): void
+}
+
+class SetGoalCommand {
+  +decimal GoalWeightKg
+  +DateOnly TargetDate
+}
+
+class SetGoalCommandHandler {
+  +Handle(command: SetGoalCommand, ct: CancellationToken): Task<Result>
+}
+
+class WeighIn {
+  +Guid Id
+  +Guid UserId
+  +DateOnly Date
+  +decimal WeightKg
+}
+
+SetGoalCommandHandler ..> SetGoalCommand : handles
+SetGoalCommandHandler --> Goal : loads / mutates
+SetGoalCommandHandler ..> WeighIn : reads current weight
+Goal --> GoalDirection : has
+@enduml

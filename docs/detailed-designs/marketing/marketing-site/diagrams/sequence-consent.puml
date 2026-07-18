@@ -1,0 +1,46 @@
+@startuml
+title UML sequence behaviour — Present and honor the consent choice
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle { BorderColor #344054 FontColor #101828 }
+skinparam package  { BorderColor #667085 FontColor #101828 BackgroundColor #F9FAFB }
+actor "Visitor" as actor
+box "Delivery — Marketing Site host" #FFF4E5
+  participant "Site Delivery" as host
+end box
+box "Frontend — Marketing Site" #E0F2FE
+  participant "LandingPage" as landing
+  participant "ConsentBanner" as banner
+  participant "ConsentStore" as store
+  participant "AnalyticsLoader" as loader
+end box
+box "External — Analytics provider" #FFF4E5
+  participant "Analytics provider" as analytics
+end box
+actor -> host : Request the site root
+host --> landing : Return pre-rendered HTML
+landing -> store : Read the recorded consent choice
+store --> landing : Stored choice or none
+alt First visit, no recorded choice, jurisdiction requires a notice
+  landing -> banner : Present the cookie/consent notice per L2-061
+  actor -> banner : Choose accept or reject
+  banner -> store : Record the choice per L2-061
+  alt Consent granted
+    banner -> loader : Enable non-essential analytics per L2-061
+    loader -> analytics : Load analytics scripts
+    analytics --> loader : Ready
+  else Consent declined
+    banner -> banner : Set no non-essential cookies per L2-061
+  end
+else Choice already recorded
+  landing -> loader : Apply the stored choice
+  opt Prior consent granted
+    loader -> analytics : Load analytics scripts
+    analytics --> loader : Ready
+  end
+end
+landing --> actor : Present the landing page honoring the choice
+@enduml

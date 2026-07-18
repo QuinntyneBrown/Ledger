@@ -1,0 +1,49 @@
+@startuml
+title UML sequence behaviour — Resolve a near-simultaneous same-day conflict
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle { BorderColor #344054 FontColor #101828 }
+skinparam package  { BorderColor #667085 FontColor #101828 BackgroundColor #F9FAFB }
+actor "Member" as actor
+box "Frontend — Ledger Web App (device A)" #E0F2FE
+  participant "WeighInsApi" as clientA
+  participant "RealtimeService" as rtA
+end box
+box "Frontend — Ledger Web App (device B)" #E0F2FE
+  participant "WeighInsApi" as clientB
+  participant "RealtimeService" as rtB
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "WeighInsController" as controller
+  participant "LedgerHub" as hub
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "EditWeighInCommandHandler" as handler
+  participant "WeighIn" as entity
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+
+actor -> clientA : Edit today's entry to value X on device A
+actor -> clientB : Edit the same day to value Y on device B
+clientA -> controller : PUT /api/v1/weigh-ins/{date} value X
+clientB -> controller : PUT /api/v1/weigh-ins/{date} value Y
+note over controller, db : The unique userId+date key serializes both writes per L2-016
+controller -> handler : Send EditWeighInCommand (value X)
+handler -> entity : Apply the edit and stamp server timestamp T1
+handler -> db : Upsert the day's entry (value X, UpdatedAt = T1)
+db --> handler : Committed
+controller -> handler : Send EditWeighInCommand (value Y)
+handler -> entity : Apply the edit and stamp server timestamp T2 (T2 > T1)
+handler -> db : Upsert the day's entry (value Y, UpdatedAt = T2)
+db --> handler : Committed — last write wins by server timestamp per L2-056
+handler -> hub : Publish WeighInChangedEvent with the authoritative value Y
+hub -> rtB : Deliver the authoritative value Y per L2-067
+rtB --> actor : Device B shows value Y
+hub -> rtA : Deliver the authoritative value Y per L2-067
+rtA --> actor : Device A replaces stale value X with the authoritative value Y per L2-056
+@enduml

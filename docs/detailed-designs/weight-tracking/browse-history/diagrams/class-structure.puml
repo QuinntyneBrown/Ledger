@@ -1,0 +1,71 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Browse weigh-in history
+
+enum HistorySort {
+  Newest
+  Oldest
+  BiggestDrop
+}
+
+class WeighInsController {
+  +GetHistory(query: GetHistoryQuery): Task<IActionResult>
+}
+
+class GetHistoryQuery {
+  +Guid UserId
+  +HistorySort Sort
+  +int Page
+  +int PageSize
+}
+
+class GetHistoryQueryHandler {
+  +Handle(query: GetHistoryQuery): Task<HistoryPageResult>
+}
+
+class HistoryPageResult {
+  +int TotalCount
+  +int Page
+  +bool HasMore
+  +MonthGroup[] Months
+}
+
+class MonthGroup {
+  +YearMonth Month
+  +decimal NetChangeKg
+  +WeighInRow[] Entries
+}
+
+class WeighInRow {
+  +Guid Id
+  +DateOnly Date
+  +string Weekday
+  +decimal WeightKg
+  +decimal DeltaKg
+}
+
+class WeighIn {
+  +Guid Id
+  +Guid UserId
+  +DateOnly Date
+  +decimal WeightKg
+  +string Note
+}
+
+WeighInsController ..> GetHistoryQuery : sends
+GetHistoryQueryHandler ..> GetHistoryQuery : handles
+GetHistoryQueryHandler --> HistoryPageResult : returns
+GetHistoryQueryHandler --> WeighIn : reads paged
+GetHistoryQuery --> HistorySort : selects
+HistoryPageResult *-- MonthGroup : groups
+MonthGroup *-- WeighInRow : contains
+@enduml

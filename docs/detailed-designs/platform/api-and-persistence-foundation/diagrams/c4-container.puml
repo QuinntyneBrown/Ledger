@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — API and persistence foundation
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+System_Ext(monitor, "Monitoring and orchestrator", "Probes liveness and readiness and scrapes metrics")
+System_Boundary(ledger, "Ledger") {
+  Container(web, "Ledger Web App", "Angular 21 SPA", "Member-facing responsive web app")
+  Container(api, "Ledger API", "ASP.NET Core, MediatR", "CQRS application and domain logic; hosts the SignalR hub")
+  ContainerDb(db, "Ledger Database", "SQL Server", "Members, goals, weigh-ins, milestones")
+  Container(backplane, "SignalR Backplane", "<TO SUPPLY>", "Scale-out backplane for real-time across instances")
+}
+Rel(member, web, "Uses", "HTTPS")
+Rel(web, api, "Calls versioned /api/v1", "JSON/HTTPS")
+Rel(api, db, "Reads and writes in one unit of work", "EF Core")
+Rel(api, backplane, "Publishes and subscribes real-time events", "<TO SUPPLY>")
+Rel(monitor, api, "Probes liveness and readiness, scrapes metrics per L2-083", "HTTPS")
+@enduml

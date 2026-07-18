@@ -1,0 +1,53 @@
+@startuml
+title UML sequence behaviour — Filter and sort history
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle { BorderColor #344054 FontColor #101828 }
+skinparam package  { BorderColor #667085 FontColor #101828 BackgroundColor #F9FAFB }
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "HistoryPage" as page
+  participant "WeighInsApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "WeighInsController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "GetHistoryQueryHandler" as handler
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+actor -> page : Select Newest, Oldest, or Biggest drop per L2-031
+page -> client : Build GetHistoryQuery with the chosen sort (page 1)
+client -> controller : HTTPS GET /api/v1/weigh-ins?sort=BiggestDrop&page=1
+controller -> controller : Authenticate and authorize the owner
+controller -> handler : Send GetHistoryQuery
+handler -> db : Read the first page over the userId+date index per L2-076
+db --> handler : Ordered page (empty or populated)
+alt Result set is empty
+  handler --> controller : Empty page
+  controller --> client : 200 empty result
+  client --> page : Show the empty state per L2-031
+else Results present
+  handler -> handler : Order by largest favorable day-over-day change for Biggest drop per L2-031
+  handler --> controller : Sorted, month-grouped page
+  controller --> client : 200 sorted page
+  client --> page : Reorder the list; persist the selection for the session per L2-031
+end
+page --> actor : Present the sorted history
+opt Entry edited or deleted from a row per L2-032
+  page -> client : Re-request the affected page
+  client -> controller : HTTPS GET /api/v1/weigh-ins
+  controller -> handler : Send GetHistoryQuery
+  handler -> db : Re-read the indexed page per L2-076
+  db --> handler : Updated page
+  handler -> handler : Recompute the month net change and grouping per L2-032
+  handler --> controller : Regrouped page
+  controller --> client : 200 updated page
+  client --> page : Month delta and grouping update immediately per L2-032
+end
+@enduml

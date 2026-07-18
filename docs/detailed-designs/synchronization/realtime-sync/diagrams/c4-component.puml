@@ -1,0 +1,33 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Real-time sync across devices
+
+Person(member, "Member", "Uses Ledger on more than one device")
+Container_Boundary(web, "Ledger Web App") {
+  Component(rt, "RealtimeService", "Angular SignalR client in ledger/api", "Holds the hub connection, exposes RxJS change streams, reconnects, and triggers reconcile")
+  Component(syncClient, "SyncApi", "Angular HTTP service in ledger/api", "Pulls changes missed while disconnected, since a watermark")
+}
+Container_Boundary(api, "Ledger API") {
+  Component(hub, "LedgerHub", "ASP.NET Core SignalR hub", "Authenticated hub; groups each connection by user id per L2-067")
+  Component(notifWeighIn, "WeighInChangedNotificationHandler", "MediatR notification handler", "Handles WeighInChangedEvent and pushes it to the hub")
+  Component(notifGoal, "GoalChangedNotificationHandler", "MediatR notification handler", "Handles GoalChangedEvent and pushes it to the hub")
+  Component(notifier, "SignalRRealtimeNotifier", "Infrastructure adapter for IRealtimeNotifier", "Sends to the user group through IHubContext<LedgerHub>")
+  Component(syncCtrl, "SyncController", "ASP.NET Core controller", "Exposes /api/v1/sync/changes")
+  Component(queryH, "GetChangesSinceQueryHandler", "MediatR handler", "Reads the owner-scoped change feed after a watermark")
+  ComponentDb(db, "Ledger Database", "SQL Server", "Weigh-ins, goals, and the SyncChange feed")
+}
+Container(backplane, "Realtime Backplane", "SignalR scale-out backplane <TO SUPPLY>", "Relays hub messages across API instances per L2-077")
+
+Rel(member, rt, "Signs in on each device")
+Rel(rt, hub, "Subscribes over an authenticated connection", "WebSocket (SignalR)")
+Rel(hub, rt, "Delivers change events to the member's group per L2-067")
+Rel(notifWeighIn, notifier, "Pushes the WeighIn change through")
+Rel(notifGoal, notifier, "Pushes the Goal change through")
+Rel(notifier, hub, "Sends to Group(user id) through IHubContext")
+Rel(hub, backplane, "Fans out across instances per L2-077")
+Rel(rt, syncClient, "Requests reconcile on reconnect")
+Rel(syncClient, syncCtrl, "Calls /api/v1/sync/changes?since=", "JSON/HTTPS")
+Rel(syncCtrl, queryH, "Sends GetChangesSinceQuery")
+Rel(queryH, db, "Reads the owner-scoped change feed after the watermark", "EF Core")
+@enduml

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profile — Ledger</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+</head>
+<body class="app-body">
+
+  <div class="app-frame">
+    <!-- status bar -->
+    <div class="app-statusbar">
+      <span>9:41</span>
+      <span class="app-statusbar-right">
+        <svg class="au-icon" style="width:15px"><use href="#i-activity"></use></svg>
+        <svg class="au-icon" style="width:15px"><use href="#i-droplet"></use></svg>
+        <span class="au-mono" style="font-size:11px">100%</span>
+      </span>
+    </div>
+
+    <div class="app-screen">
+      <!-- header -->
+      <div class="app-header">
+        <div class="au-row-flex au-gap-2">
+          <a class="au-icon-btn au-icon-btn--sm" href="settings.html" aria-label="Back"><svg class="au-icon"><use href="#i-chevron-left"></use></svg></a>
+          <div class="app-header-title" style="font-size:var(--text-lg)">Profile</div>
+        </div>
+        <button class="au-btn au-btn--text au-btn--sm" type="button" data-toast="Edit profile" data-toast-type="info"><svg class="au-icon"><use href="#i-edit"></use></svg> Edit</button>
+      </div>
+
+      <div class="app-scroll">
+
+        <!-- profile hero -->
+        <div class="au-card au-rise au-rise-1" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:var(--space-3);padding-top:var(--space-7)">
+          <div style="position:relative">
+            <span class="au-avatar au-avatar--lg" style="width:92px;height:92px;font-size:var(--text-3xl)">A</span>
+            <button class="au-icon-btn au-icon-btn--sm" type="button" aria-label="Change photo" style="position:absolute;right:-4px;bottom:-4px;background:var(--brand);color:var(--text-on-gold);border:2px solid var(--surface-1)"><svg class="au-icon"><use href="#i-camera"></use></svg></button>
+          </div>
+          <div>
+            <div class="au-display" style="font-size:var(--text-2xl)">Alex</div>
+            <div class="au-mono au-text-mid" style="font-size:var(--text-sm)">alex@email.com</div>
+          </div>
+          <div class="au-row-flex au-gap-2 au-wrap" style="justify-content:center">
+            <span class="au-chip"><svg class="au-icon"><use href="#i-calendar"></use></svg> Member since Jul 2025</span>
+            <span class="au-chip"><svg class="au-icon"><use href="#i-ruler"></use></svg> 176 cm</span>
+          </div>
+        </div>
+
+        <!-- journey stats -->
+        <div class="app-section-title"><h2>Your journey</h2><a href="../trends/trends.html">Trends</a></div>
+        <div class="dash-stats au-rise au-rise-2">
+          <div class="au-card dash-ministat au-card--pad-sm">
+            <span class="au-stat-label">Start</span>
+            <span class="au-stat-value" style="font-size:var(--text-xl)">80.0</span>
+            <span class="au-caption">kg</span>
+          </div>
+          <div class="au-card dash-ministat au-card--pad-sm">
+            <span class="au-stat-label">Current</span>
+            <span class="au-stat-value" style="font-size:var(--text-xl);color:var(--brand)">74.9</span>
+            <span class="au-caption">kg</span>
+          </div>
+          <div class="au-card dash-ministat au-card--pad-sm">
+            <span class="au-stat-label">Goal</span>
+            <span class="au-stat-value" style="font-size:var(--text-xl)">73.0</span>
+            <span class="au-caption">kg</span>
+          </div>
+        </div>
+        <div class="au-card au-card--pad-sm au-rise au-rise-2" style="margin-top:var(--space-3);display:flex;align-items:center;gap:var(--space-3)">
+          <span class="au-chip au-chip--good"><svg class="au-icon"><use href="#i-trending-down"></use></svg> −5.1 kg lost</span>
+          <span class="au-caption au-fill">73% of the way to your goal — 1.9 kg to go.</span>
+        </div>
+
+        <!-- account details -->
+        <div class="set-group au-rise au-rise-3" style="margin-top:var(--space-7)">
+          <div class="set-group-title">Account details</div>
+          <div class="au-card au-card--flush">
+            <div class="set-row">
+              <span class="set-row-icon"><svg class="au-icon" style="width:20px"><use href="#i-user"></use></svg></span>
+              <div class="set-row-main">
+                <div class="set-row-desc">Name</div>
+                <div class="set-row-label">Alex</div>
+              </div>
+              <button class="au-icon-btn au-icon-btn--sm" type="button" aria-label="Edit name"><svg class="au-icon"><use href="#i-edit"></use></svg></button>
+            </div>
+            <div class="set-row">
+              <span class="set-row-icon"><svg class="au-icon" style="width:20px"><use href="#i-mail"></use></svg></span>
+              <div class="set-row-main">
+                <div class="set-row-desc">Email</div>
+                <div class="set-row-label">alex@email.com</div>
+              </div>
+              <button class="au-icon-btn au-icon-btn--sm" type="button" aria-label="Edit email"><svg class="au-icon"><use href="#i-edit"></use></svg></button>
+            </div>
+            <div class="set-row">
+              <span class="set-row-icon"><svg class="au-icon" style="width:20px"><use href="#i-ruler"></use></svg></span>
+              <div class="set-row-main">
+                <div class="set-row-desc">Height · BMI 24.2</div>
+                <div class="set-row-label">176 cm</div>
+              </div>
+              <button class="au-icon-btn au-icon-btn--sm" type="button" aria-label="Edit height"><svg class="au-icon"><use href="#i-edit"></use></svg></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- security -->
+        <div class="set-group au-rise au-rise-4">
+          <div class="set-group-title">Security</div>
+          <div class="au-card au-card--flush">
+            <a class="set-row au-row--interactive" href="change-password.html" style="border-radius:0;color:var(--text-hi);text-decoration:none">
+              <span class="set-row-icon"><svg class="au-icon" style="width:20px"><use href="#i-lock"></use></svg></span>
+              <div class="set-row-main">
+                <div class="set-row-label">Change password</div>
+                <div class="set-row-desc">Last updated 3 months ago</div>
+              </div>
+              <svg class="au-icon au-text-lo" style="width:18px"><use href="#i-chevron-right"></use></svg>
+            </a>
+            <a class="set-row au-row--interactive" href="../auth/login.html" style="border-radius:0;border-top:1px solid var(--divider);color:var(--text-hi);text-decoration:none">
+              <span class="set-row-icon"><svg class="au-icon" style="width:20px"><use href="#i-logout"></use></svg></span>
+              <div class="set-row-main">
+                <div class="set-row-label">Sign out</div>
+                <div class="set-row-desc">Sign out on this device</div>
+              </div>
+              <svg class="au-icon au-text-lo" style="width:18px"><use href="#i-chevron-right"></use></svg>
+            </a>
+          </div>
+        </div>
+
+        <div style="height:var(--space-4)"></div>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV — Profile active -->
+    <nav class="au-bottomnav app-bottomnav">
+      <a class="app-rail-brand" href="../dashboard/dashboard.html"><span class="app-rail-mark"></span>Ledger</a>
+      <a class="au-navitem" href="../dashboard/dashboard.html"><svg class="au-icon"><use href="#i-home"></use></svg>Home</a>
+      <a class="au-navitem" href="../trends/trends.html"><svg class="au-icon"><use href="#i-activity"></use></svg>Trends</a>
+      <button class="app-navfab" data-dialog-open="quickWeigh" aria-label="Log weight"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      <a class="au-navitem" href="../milestones/milestones.html"><svg class="au-icon"><use href="#i-trophy"></use></svg>Badges</a>
+      <a class="au-navitem is-active" href="account.html"><svg class="au-icon"><use href="#i-user"></use></svg>Profile</a>
+    </nav>
+  </div>
+
+  <!-- QUICK WEIGH-IN SHEET (hidden) -->
+  <div class="au-sheet-scrim" id="quickWeigh" hidden>
+    <div class="au-sheet" role="dialog" aria-modal="true" aria-label="Log today's weight">
+      <div class="au-sheet-grip"></div>
+      <div class="au-row-flex au-between" style="margin-bottom:var(--space-2)">
+        <div><div class="au-eyebrow">Today</div><div style="font-family:var(--font-mono);color:var(--text-lo);font-size:var(--text-sm)">Wed, Jul 18</div></div>
+        <button class="au-icon-btn" data-dialog-close aria-label="Close"><svg class="au-icon"><use href="#i-x"></use></svg></button>
+      </div>
+      <div class="weigh-stepper" style="margin:var(--space-6) 0">
+        <button class="weigh-stepper-btn" aria-label="Decrease"><svg class="au-icon"><use href="#i-minus"></use></svg></button>
+        <div class="au-bignum-field">
+          <span class="au-bignum" style="width:auto">74.8</span>
+          <span class="au-bignum-unit">kg</span>
+        </div>
+        <button class="weigh-stepper-btn" aria-label="Increase"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      </div>
+      <button class="au-btn au-btn--primary au-btn--lg au-btn--block" data-dialog-close data-toast="Weight logged — 74.8 kg" data-toast-action="Undo">
+        <svg class="au-icon"><use href="#i-check"></use></svg> Log weight
+      </button>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,108 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Earn badges
+
+enum BadgeType {
+  FirstEntry
+  SevenDayStreak
+  ThirtyDayStreak
+  LostOneKg
+  LostTwoPointFiveKg
+  LostFiveKgClub
+  GoalReached
+  HundredEntries
+}
+
+class Milestone {
+  +Guid Id
+  +Guid UserId
+  +BadgeType Type
+  +DateTimeOffset EarnedAt
+}
+
+class BadgeDefinition {
+  +BadgeType Type
+  +string Title
+  +string Description
+  +IsSatisfied(context: MilestoneEvaluationContext): bool
+  +Progress(context: MilestoneEvaluationContext): BadgeProgress
+}
+
+class BadgeCatalog {
+  +IReadOnlyList<BadgeDefinition> Definitions
+  +Evaluate(context: MilestoneEvaluationContext): IReadOnlyList<BadgeType>
+}
+
+class MilestoneEvaluationContext {
+  +Guid UserId
+  +IReadOnlyList<WeighIn> WeighIns
+  +Goal Goal
+  +Streak Streak
+  +IReadOnlySet<BadgeType> AlreadyEarned
+}
+
+class Streak {
+  +int Current
+  +int Longest
+}
+
+class BadgeProgress {
+  +double PercentComplete
+  +string Remaining
+}
+
+class EvaluateMilestonesCommand {
+  +Guid UserId
+}
+
+class EvaluateMilestonesCommandHandler {
+  +Handle(command: EvaluateMilestonesCommand): Task<IReadOnlyList<Milestone>>
+}
+
+class GetBadgesQuery {
+  +Guid UserId
+}
+
+class GetBadgesQueryHandler {
+  +Handle(query: GetBadgesQuery): Task<BadgesView>
+}
+
+class BadgesView {
+  +IReadOnlyList<BadgeView> Badges
+  +BadgeView NextBadge
+  +int EarnedCount
+  +int Total
+}
+
+class BadgeView {
+  +BadgeType Type
+  +string Title
+  +bool Earned
+  +DateTimeOffset? EarnedAt
+  +BadgeProgress Progress
+}
+
+BadgeCatalog "1" *-- "8" BadgeDefinition : holds
+BadgeDefinition --> BadgeType : identifies
+BadgeDefinition ..> BadgeProgress : computes
+Milestone --> BadgeType : records
+MilestoneEvaluationContext --> Streak : reads
+EvaluateMilestonesCommandHandler ..> EvaluateMilestonesCommand : handles
+EvaluateMilestonesCommandHandler --> BadgeCatalog : evaluates with
+EvaluateMilestonesCommandHandler ..> MilestoneEvaluationContext : builds
+EvaluateMilestonesCommandHandler --> Milestone : awards
+GetBadgesQueryHandler ..> GetBadgesQuery : handles
+GetBadgesQueryHandler --> BadgeCatalog : reads
+GetBadgesQueryHandler --> BadgesView : builds
+BadgesView "1" *-- "8" BadgeView : lists
+BadgeView --> BadgeProgress : shows
+@enduml

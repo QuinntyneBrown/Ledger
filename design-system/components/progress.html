@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Progress — Aurora Design System</title>
+  <meta name="description" content="Determinate bars, an indeterminate spinner, shimmering skeletons, and the compact conic ring — Aurora's vocabulary for showing that something is loading or advancing.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+</head>
+<body class="doc-body">
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation">
+      <svg class="au-icon"><use href="#i-menu"></use></svg>
+    </button>
+    <a class="doc-brand" href="../index.html">
+      <span class="doc-brandmark"></span>
+      <span class="doc-brand-name">Aurora<small>Design System</small></span>
+    </a>
+    <nav class="doc-header-nav">
+      <a href="../foundations/getting-started.html">Foundations</a>
+      <a href="button.html" class="is-active">Components</a>
+      <a href="../patterns/forms-validation.html">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <!-- ============ CANONICAL SIDEBAR (shared across all DS pages) ============ -->
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="../foundations/getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="../foundations/color.html">Color</a>
+        <a class="doc-navlink" href="../foundations/typography.html">Typography</a>
+        <a class="doc-navlink" href="../foundations/spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="../foundations/elevation.html">Elevation</a>
+        <a class="doc-navlink" href="../foundations/shape.html">Shape</a>
+        <a class="doc-navlink" href="../foundations/iconography.html">Iconography</a>
+        <a class="doc-navlink" href="../foundations/motion.html">Motion</a>
+        <a class="doc-navlink" href="../foundations/accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="button.html">Button</a>
+        <a class="doc-navlink" href="text-field.html">Text field</a>
+        <a class="doc-navlink" href="select.html">Select</a>
+        <a class="doc-navlink" href="switch.html">Switch</a>
+        <a class="doc-navlink" href="checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="slider.html">Slider</a>
+        <a class="doc-navlink" href="date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="card.html">Card</a>
+        <a class="doc-navlink" href="list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="avatar.html">Avatar</a>
+        <a class="doc-navlink is-active" href="progress.html">Progress</a>
+        <a class="doc-navlink" href="gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="dialog.html">Dialog</a>
+        <a class="doc-navlink" href="snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="banner.html">Banner</a>
+        <a class="doc-navlink" href="tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="tabs.html">Tabs</a>
+        <a class="doc-navlink" href="navigation.html">Navigation</a>
+        <a class="doc-navlink" href="milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="../patterns/forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="../patterns/data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="../patterns/data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="../patterns/theming.html">Theming</a>
+        <a class="doc-navlink" href="../patterns/motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Components <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Progress</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-activity"></use></svg> Data display</span>
+          <h1 class="doc-title">Progress</h1>
+          <p class="doc-lead">Four ways to say “working on it.” Use a <strong style="color:var(--text-hi)">determinate bar</strong> when you know how far along you are, a <strong style="color:var(--text-hi)">spinner</strong> when you don’t, and <strong style="color:var(--text-hi)">skeletons</strong> to hold a layout while its data loads.</p>
+        </div>
+
+        <div class="doc-tabbar" data-tabs>
+          <button class="doc-tab is-active" data-tab="overview">Overview</button>
+          <button class="doc-tab" data-tab="examples">Examples</button>
+          <button class="doc-tab" data-tab="api">Tokens &amp; API</button>
+        </div>
+
+        <!-- ===== OVERVIEW ===== -->
+        <section data-tabpanel="overview">
+          <div class="doc-canvas doc-canvas--stack" style="border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:var(--space-7);padding:var(--space-8);gap:var(--space-6)">
+            <div style="width:100%;max-width:360px;margin:0 auto">
+              <div class="au-row-flex au-between" style="margin-bottom:var(--space-2)">
+                <span class="au-caption">To goal weight</span>
+                <span class="au-mono au-caption">72%</span>
+              </div>
+              <div class="au-progress"><div class="au-progress-bar" style="width:72%"></div></div>
+            </div>
+            <div class="au-row-flex au-gap-4" style="justify-content:center">
+              <span class="au-spinner"></span>
+              <span class="au-spinner au-spinner--lg"></span>
+              <div class="au-ring" style="--_pct:75;position:relative"><span>75%</span></div>
+            </div>
+          </div>
+
+          <div class="doc-prose">
+            <h2 class="doc-section-title">When to use each</h2>
+            <ul>
+              <li><strong>Bar</strong> (<code>.au-progress</code>) — a determinate task with a known percentage: import, upload, “X of Y logged.” The fill is the aurora gradient by default.</li>
+              <li><strong>Spinner</strong> (<code>.au-spinner</code>) — a short, indeterminate wait where a percentage is unknown. Use <code>--lg</code> for a full-view load.</li>
+              <li><strong>Skeleton</strong> (<code>.au-skeleton</code>) — a shimmering placeholder that mirrors the shape of the content that is loading, so the layout doesn’t jump.</li>
+              <li><strong>Ring</strong> (<code>.au-ring</code>) — a tiny CSS-only radial for an inline sub-goal or streak. For the hero dial, use the <a href="gauge.html">Gauge</a>.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Anatomy of the bar</h2>
+          <div class="doc-anatomy">
+            <div style="width:320px">
+              <div class="au-progress" style="height:12px"><div class="au-progress-bar" style="width:64%"></div></div>
+            </div>
+            <span class="doc-anatomy-marker" style="top:38%;left:20%">1</span>
+            <span class="doc-anatomy-marker" style="top:38%;left:64%">2</span>
+          </div>
+          <div class="doc-legend">
+            <ul>
+              <li><span class="doc-legend-num">1</span> <strong style="color:var(--text-hi)">Fill</strong> — the aurora gradient, width ∝ value, animated on change.</li>
+              <li><span class="doc-legend-num">2</span> <strong style="color:var(--text-hi)">Track</strong> — the remaining path in a muted <code>--surface-3</code>.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Do &amp; don’t</h2>
+          <div class="doc-dodont">
+            <div class="doc-guide doc-guide--do">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-check"></use></svg> Do</div>
+              <div class="doc-guide-body">
+                <div style="width:180px"><div class="au-progress"><div class="au-progress-bar" style="width:40%"></div></div></div>
+              </div>
+              <div class="doc-guide-note">Use a bar when the percentage is known.</div>
+            </div>
+            <div class="doc-guide doc-guide--dont">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-x"></use></svg> Don’t</div>
+              <div class="doc-guide-body">
+                <div style="width:180px"><div class="au-progress"><div class="au-progress-bar" style="width:8%"></div></div></div>
+              </div>
+              <div class="doc-guide-note">Don’t fake a bar for an unknown wait — use a spinner.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== EXAMPLES ===== -->
+        <section data-tabpanel="examples" hidden>
+          <!-- Bars -->
+          <h2 class="doc-section-title">Determinate bars</h2>
+          <p class="doc-section-lead">The default fill is the aurora gradient; add <code class="doc-td-name">.au-progress--brand</code> for a solid gold bar.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">progress/bars</span>
+              <div class="doc-example-tools"><button class="au-icon-btn au-icon-btn--sm" data-theme-toggle aria-label="Toggle theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button></div>
+            </div>
+            <div class="doc-canvas doc-canvas--stack" style="gap:var(--space-5)">
+              <div style="width:100%;max-width:420px;margin:0 auto"><div class="au-progress"><div class="au-progress-bar" style="width:25%"></div></div></div>
+              <div style="width:100%;max-width:420px;margin:0 auto"><div class="au-progress"><div class="au-progress-bar" style="width:60%"></div></div></div>
+              <div style="width:100%;max-width:420px;margin:0 auto"><div class="au-progress au-progress--brand"><div class="au-progress-bar" style="width:88%"></div></div></div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-progress"&gt;
+  &lt;div class="au-progress-bar" style="width:60%"&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- solid gold --&gt;
+&lt;div class="au-progress au-progress--brand"&gt;
+  &lt;div class="au-progress-bar" style="width:88%"&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+
+          <!-- Spinners -->
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Spinners</h2>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">progress/spinner</span></div>
+            <div class="doc-canvas" style="gap:var(--space-8)">
+              <span class="au-spinner"></span>
+              <span class="au-spinner au-spinner--lg"></span>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;span class="au-spinner"&gt;&lt;/span&gt;
+&lt;span class="au-spinner au-spinner--lg"&gt;&lt;/span&gt;</code></pre>
+          </div>
+
+          <!-- Skeleton card -->
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Skeleton loading card</h2>
+          <p class="doc-section-lead">Mirror the final layout with <code class="doc-td-name">--circle</code> and <code class="doc-td-name">--text</code> placeholders so nothing shifts when data arrives.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">progress/skeleton</span></div>
+            <div class="doc-canvas doc-canvas--stack">
+              <div class="au-card" style="width:100%;max-width:360px;margin:0 auto">
+                <div class="au-row-flex au-gap-3" style="margin-bottom:var(--space-4)">
+                  <span class="au-skeleton au-skeleton--circle" style="width:44px;height:44px;flex:none"></span>
+                  <div style="flex:1">
+                    <span class="au-skeleton au-skeleton--text" style="width:55%;display:block"></span>
+                    <span class="au-skeleton au-skeleton--text" style="width:35%;display:block"></span>
+                  </div>
+                </div>
+                <span class="au-skeleton" style="width:100%;height:72px;display:block;margin-bottom:var(--space-4)"></span>
+                <span class="au-skeleton au-skeleton--text" style="width:90%;display:block"></span>
+                <span class="au-skeleton au-skeleton--text" style="width:70%;display:block"></span>
+              </div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-card"&gt;
+  &lt;span class="au-skeleton au-skeleton--circle"
+        style="width:44px;height:44px"&gt;&lt;/span&gt;
+  &lt;span class="au-skeleton au-skeleton--text" style="width:55%"&gt;&lt;/span&gt;
+  &lt;span class="au-skeleton" style="height:72px"&gt;&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+
+          <!-- Rings -->
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Compact ring</h2>
+          <p class="doc-section-lead">A CSS-only conic ring for inline sub-goals. Set the percentage on <code class="doc-td-name">--_pct</code>.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">progress/ring</span></div>
+            <div class="doc-canvas" style="gap:var(--space-6)">
+              <div class="au-ring" style="--_pct:33;position:relative"><span>33%</span></div>
+              <div class="au-ring" style="--_pct:66;position:relative"><span>66%</span></div>
+              <div class="au-ring" style="--_pct:100;position:relative"><span>100%</span></div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-ring" style="--_pct:66"&gt;&lt;span&gt;66%&lt;/span&gt;&lt;/div&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- ===== API ===== -->
+        <section data-tabpanel="api" hidden>
+          <h2 class="doc-section-title">Classes</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Class</th><th>Element</th><th>Role</th></tr></thead>
+              <tbody>
+                <tr><td><code>.au-progress</code></td><td>div</td><td>The track. Set height inline if you want it thicker.</td></tr>
+                <tr><td><code>.au-progress-bar</code></td><td>div</td><td>The fill; drive its <code>width</code> as a percentage.</td></tr>
+                <tr><td><code>.au-progress--brand</code></td><td>modifier</td><td>Swaps the aurora gradient for a solid gold fill.</td></tr>
+                <tr><td><code>.au-spinner</code></td><td>span</td><td>Indeterminate ring spinner.</td></tr>
+                <tr><td><code>.au-spinner--lg</code></td><td>modifier</td><td>44px variant for full-view loads.</td></tr>
+                <tr><td><code>.au-skeleton</code></td><td>span/div</td><td>Shimmering placeholder block.</td></tr>
+                <tr><td><code>.au-skeleton--text</code> / <code>--circle</code></td><td>modifier</td><td>Text-line height / circular shape presets.</td></tr>
+                <tr><td><code>.au-ring</code></td><td>div</td><td>CSS-only conic ring; set <code>--_pct</code>.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-8)">Tokens consumed</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Token</th><th>Applied to</th></tr></thead>
+              <tbody>
+                <tr><td><code>--aurora</code></td><td>Default bar fill.</td></tr>
+                <tr><td><code>--brand</code></td><td>Solid bar, spinner accent, ring fill.</td></tr>
+                <tr><td><code>--surface-3</code></td><td>Bar track, spinner base, ring remainder.</td></tr>
+                <tr><td><code>--border</code></td><td>Skeleton shimmer sweep.</td></tr>
+                <tr><td><code>--dur-slow · --ease-standard</code></td><td>Bar width transition.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-info"></use></svg>
+            <div class="doc-callout-body"><strong>Accessibility.</strong> Give a determinate bar <code>role="progressbar"</code> with <code>aria-valuenow/min/max</code>; give a spinner <code>role="status"</code> and an <code>aria-label</code> like “Loading”. Skeletons are decorative — mark their container <code>aria-hidden="true"</code> and expose a single polite “loading” message instead. All animation collapses under <code>prefers-reduced-motion</code>.</div>
+          </div>
+        </section>
+
+        <!-- Pager -->
+        <nav class="doc-pager">
+          <a href="avatar.html"><small>Previous</small><span>Avatar</span></a>
+          <a class="doc-pager-next" href="gauge.html"><small>Next</small><span>Gauge</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

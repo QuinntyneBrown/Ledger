@@ -1,0 +1,55 @@
+@startuml
+title UML sequence behaviour — Load the dashboard
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle { BorderColor #344054 FontColor #101828 }
+skinparam package  { BorderColor #667085 FontColor #101828 BackgroundColor #F9FAFB }
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "DashboardPage" as page
+  participant "DashboardApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "DashboardController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "GetDashboardQueryHandler" as handler
+  participant "WeightAnalytics" as analytics
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+  participant "Error tracking" as errors
+end box
+actor -> page : Open the dashboard
+page -> page : Show skeleton placeholders per L2-041
+page -> client : Request the dashboard summary
+client -> controller : HTTPS GET /api/v1/dashboard
+controller -> controller : Authenticate and scope to the owner
+controller -> handler : Send GetDashboardQuery
+handler -> db : Read the owner's goal, weigh-ins, and milestones
+alt Read fails
+  db --> handler : Failure
+  handler --> controller : Failure result
+  controller -> errors : Capture the failure with context per L2-084
+  controller --> client : Problem envelope with no stack trace
+  client --> page : Error result
+  page --> actor : Present a non-destructive error state with retry per L2-041
+else Only the baseline entry exists
+  db --> handler : Goal and baseline weigh-in only
+  handler --> controller : Empty dashboard view
+  controller --> client : 200 OK
+  client --> page : Empty result
+  page --> actor : Present the encouraging first weigh-in prompt per L2-041
+else Data available
+  db --> handler : Goal, weigh-ins, and milestones
+  handler -> analytics : Compute percent-to-goal, weekly figures, streak, and 30-day change
+  analytics --> handler : Computed figures
+  handler --> controller : Dashboard view
+  controller --> client : 200 OK
+  client --> page : Dashboard view
+  page --> actor : Render the hero dial %-to-goal, mini-stats, 30-day sparkline, and next milestone per L2-038, L2-039, L2-040
+end
+@enduml

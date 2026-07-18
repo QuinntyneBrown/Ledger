@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Configure preferences
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+System(ledger, "Ledger", "Weight-tracking web application")
+
+Rel(member, ledger, "Sets unit, theme, and week-start preferences", "HTTPS")
+Rel(ledger, member, "Applies preferences on the member's other devices per L2-048", "WebSocket")
+@enduml

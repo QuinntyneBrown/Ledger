@@ -1,0 +1,109 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — View the dashboard
+
+class GetDashboardQuery {
+  +Guid OwnerId
+}
+
+class GetDashboardQueryHandler {
+  +Handle(query: GetDashboardQuery): Task<DashboardView>
+}
+
+class DashboardView {
+  +string Greeting
+  +DateOnly Today
+  +bool HasLoggedToday
+  +HeroSummary Hero
+  +MiniStats Stats
+  +TrendSnapshot Trend
+  +NextMilestone Milestone
+}
+
+class HeroSummary {
+  +decimal CurrentWeightKg
+  +decimal StartWeightKg
+  +decimal GoalWeightKg
+  +int PercentToGoal
+  +decimal RemainingKg
+  +string PaceLine
+  +DateOnly? ProjectedDate
+}
+
+class MiniStats {
+  +decimal? ThisWeekChangeKg
+  +decimal? AvgPerWeekKg
+  +int CurrentStreakDays
+}
+
+class TrendSnapshot {
+  +IReadOnlyList<SparklinePoint> Last30Days
+  +decimal ThirtyDayChangeKg
+  +bool OnTrack
+}
+
+class SparklinePoint {
+  +DateOnly Date
+  +decimal WeightKg
+}
+
+class NextMilestone {
+  +string Type
+  +int PercentComplete
+  +decimal RemainingKg
+}
+
+class WeightAnalytics {
+  +PercentToGoal(start: decimal, current: decimal, goal: decimal): int
+  +ThisWeekChange(entries: IReadOnlyList<WeighIn>): decimal
+  +AvgPerWeek(entries: IReadOnlyList<WeighIn>): decimal
+  +CurrentStreak(entries: IReadOnlyList<WeighIn>): int
+  +ThirtyDayChange(entries: IReadOnlyList<WeighIn>): decimal
+}
+
+interface IErrorTracker {
+  +Capture(error: Exception, context: RequestContext): void
+}
+
+class Goal {
+  +decimal StartWeightKg
+  +decimal GoalWeightKg
+  +DateOnly TargetDate
+}
+
+class WeighIn {
+  +Guid Id
+  +Guid UserId
+  +DateOnly Date
+  +decimal WeightKg
+}
+
+class Milestone {
+  +string Type
+  +decimal ThresholdKg
+  +DateOnly? EarnedAt
+}
+
+GetDashboardQueryHandler ..> GetDashboardQuery : handles
+GetDashboardQueryHandler --> DashboardView : builds
+GetDashboardQueryHandler ..> WeightAnalytics : computes with
+GetDashboardQueryHandler --> Goal : reads
+GetDashboardQueryHandler --> WeighIn : reads
+GetDashboardQueryHandler --> Milestone : reads nearest pending
+GetDashboardQueryHandler ..> IErrorTracker : reports failures per L2-084
+WeightAnalytics ..> WeighIn : reads dated weights
+DashboardView *-- HeroSummary
+DashboardView *-- MiniStats
+DashboardView *-- TrendSnapshot
+DashboardView *-- NextMilestone
+TrendSnapshot *-- SparklinePoint
+@enduml

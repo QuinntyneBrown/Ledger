@@ -1,0 +1,53 @@
+@startuml
+title UML sequence behaviour — Export and erase data: delete account
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "DataAndPrivacyPage" as page
+  participant "AccountApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "AccountController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "DeleteAccountCommandHandler" as handler
+  participant "User" as entity
+  participant "AuditLogger" as audit
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+
+actor -> page : Request account deletion and confirm
+page -> client : Build typed request
+client -> controller : HTTPS POST /api/v1/account/delete
+controller -> controller : Authenticate and resolve owner per L2-067
+controller -> handler : Send DeleteAccountCommand
+handler -> db : Load owner account and dependent records
+db --> handler : Account graph
+handler -> entity : Erase or irreversibly anonymize personal data per L2-054
+entity --> handler : Anonymized or erased
+handler -> db : Persist erasure; retain only minimum non-PII per L2-070
+db --> handler : Commit
+handler -> handler : Revoke active sessions and refresh tokens per L2-054
+handler -> audit : Record account deletion per L2-072
+audit -> db : Write audit record
+db --> audit : Commit
+handler --> controller : Success
+controller --> client : 200 OK; session ended
+client --> page : Signed out
+page --> actor : Confirm account removed; sign-in no longer succeeds per L2-054
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Real-time sync across devices
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger on more than one device")
+System_Boundary(ledger, "Ledger") {
+  System(app, "Ledger", "Responsive weight-tracking web application with real-time sync")
+}
+
+Rel(member, app, "Logs weigh-ins and goals on one device and reads them live on the others through", "HTTPS / WebSocket")
+Rel(app, member, "Pushes each change to the member's own authenticated sessions only per L2-067")
+@enduml

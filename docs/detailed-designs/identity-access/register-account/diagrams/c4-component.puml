@@ -1,0 +1,36 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Register an account
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+Container_Boundary(web, "Ledger Web App") {
+  Component(page, "RegisterPage", "Angular component", "Presents the sign-up form and password strength meter")
+  Component(client, "AuthApi", "Angular HTTP service", "Typed client in ledger/api for the auth endpoints")
+}
+Container_Boundary(api, "Ledger API") {
+  Component(ctrl, "AuthController", "ASP.NET Core controller", "Exposes /api/v1/auth registration and verification endpoints")
+  Component(regHandler, "RegisterCommandHandler", "MediatR handler", "Creates the unverified account and issues a verification token")
+  Component(verHandler, "VerifyEmailCommandHandler", "MediatR handler", "Marks the account verified for a valid token")
+  Component(user, "User", "Domain entity", "Owns identity, password hash, and verification state")
+  Component(hasher, "IPasswordHasher", "Application service", "Produces a salted one-way hash per L2-002")
+  Component(sender, "IEmailSender", "Application service", "Sends the verification email via the provider")
+  Component(limiter, "IRateLimiter", "Application service", "Throttles registration and verification per L2-071")
+  ComponentDb(db, "Ledger Database", "SQL Server", "Persists members and verification tokens")
+}
+System_Ext(email, "Email provider", "Sends verification, reset, and notification email via SMTP")
+
+Rel(member, page, "Submits the sign-up form", "HTTPS")
+Rel(page, client, "Builds the typed request")
+Rel(client, ctrl, "Calls /api/v1/auth/register and /verify-email", "JSON/HTTPS")
+Rel(ctrl, limiter, "Checks the request quota per L2-071")
+Rel(ctrl, regHandler, "Sends RegisterCommand")
+Rel(ctrl, verHandler, "Sends VerifyEmailCommand")
+Rel(regHandler, hasher, "Hashes the password per L2-002")
+Rel(regHandler, user, "Creates in the unverified state")
+Rel(regHandler, sender, "Requests the verification email")
+Rel(verHandler, user, "Marks verified per L2-003")
+Rel(regHandler, db, "Persists in one unit of work", "EF Core")
+Rel(verHandler, db, "Loads and updates the token and account", "EF Core")
+Rel(sender, email, "Sends the verification email via", "SMTP")
+@enduml

@@ -1,0 +1,56 @@
+@startuml
+title UML sequence behaviour — Manage profile: upload avatar
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "ProfilePage" as page
+  participant "AccountApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "ProfileController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "UploadAvatarCommandHandler" as handler
+  participant "User" as entity
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+
+actor -> page : Choose avatar image
+page -> page : Pre-check type jpeg/png/webp and size <= 5 MB per L2-044
+page -> client : Build multipart request
+client -> controller : HTTPS POST /api/v1/profile/avatar
+controller -> controller : Authenticate and resolve owner per L2-067
+controller -> handler : Send UploadAvatarCommand
+handler -> handler : Validate content type and size <= 5 MB server-side per L2-068
+alt valid image
+  handler -> handler : Strip unsafe metadata and scan content per L2-044
+  handler -> entity : Set avatar reference on User
+  entity --> handler : Updated state
+  handler -> db : Store image and record avatar reference in one unit of work
+  db --> handler : Commit
+  handler --> controller : Avatar reference
+  controller --> client : 200 OK with avatar URL served over HTTPS
+  client --> page : Updated avatar
+  page --> actor : Show new avatar
+else invalid type or too large
+  handler --> controller : Validation failure
+  controller --> client : 400 ProblemDetails with clear message
+  client --> page : Rejection reason
+  page --> actor : Show error; keep initials placeholder per L2-044
+end
+@enduml

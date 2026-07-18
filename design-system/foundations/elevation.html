@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Elevation — Aurora Design System</title>
+  <meta name="description" content="Aurora's elevation system: four layered shadows, brand and good glows, glass blur and the top highlight that give depth in the dark.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+  <style>
+    /* page-scoped: elevation demo tiles */
+    .elev-tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-2); min-height: 128px; justify-content: flex-end; }
+    .elev-name { font-weight: var(--weight-semibold); }
+    .elev-token { font-family: var(--font-mono); font-size: var(--text-2xs); color: var(--text-lo); }
+    .elev-stage { padding: var(--space-9); border-radius: var(--radius-lg); background: radial-gradient(circle at 30% 20%, var(--ink-750), var(--ink-900) 70%); }
+  </style>
+</head>
+<body class="doc-body">
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation">
+      <svg class="au-icon"><use href="#i-menu"></use></svg>
+    </button>
+    <a class="doc-brand" href="../index.html">
+      <span class="doc-brandmark"></span>
+      <span class="doc-brand-name">Aurora<small>Design System</small></span>
+    </a>
+    <nav class="doc-header-nav">
+      <a href="getting-started.html" class="is-active">Foundations</a>
+      <a href="../components/button.html">Components</a>
+      <a href="../patterns/forms-validation.html">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <!-- ============ CANONICAL SIDEBAR ============ -->
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="color.html">Color</a>
+        <a class="doc-navlink" href="typography.html">Typography</a>
+        <a class="doc-navlink" href="spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink is-active" href="elevation.html">Elevation</a>
+        <a class="doc-navlink" href="shape.html">Shape</a>
+        <a class="doc-navlink" href="iconography.html">Iconography</a>
+        <a class="doc-navlink" href="motion.html">Motion</a>
+        <a class="doc-navlink" href="accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="../components/button.html">Button</a>
+        <a class="doc-navlink" href="../components/text-field.html">Text field</a>
+        <a class="doc-navlink" href="../components/select.html">Select</a>
+        <a class="doc-navlink" href="../components/switch.html">Switch</a>
+        <a class="doc-navlink" href="../components/checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="../components/slider.html">Slider</a>
+        <a class="doc-navlink" href="../components/date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="../components/card.html">Card</a>
+        <a class="doc-navlink" href="../components/list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="../components/chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="../components/avatar.html">Avatar</a>
+        <a class="doc-navlink" href="../components/progress.html">Progress</a>
+        <a class="doc-navlink" href="../components/gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="../components/chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="../components/dialog.html">Dialog</a>
+        <a class="doc-navlink" href="../components/snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="../components/banner.html">Banner</a>
+        <a class="doc-navlink" href="../components/tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="../components/empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="../components/tabs.html">Tabs</a>
+        <a class="doc-navlink" href="../components/navigation.html">Navigation</a>
+        <a class="doc-navlink" href="../components/milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="../patterns/forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="../patterns/data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="../patterns/data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="../patterns/theming.html">Theming</a>
+        <a class="doc-navlink" href="../patterns/motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Foundations <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Elevation</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Foundations</span>
+          <h1 class="doc-title">Elevation</h1>
+          <p class="doc-lead">Depth in the dark is delicate. Aurora layers a soft ambient shadow with a tighter contact shadow, then adds a faint <strong style="color:var(--text-hi)">top highlight</strong> so raised surfaces catch light like glass. Reserve <strong>glow</strong> for the brand and success moments.</p>
+        </div>
+
+        <!-- Shadow scale -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">Shadow scale</h2>
+          <p class="doc-section-lead">Four levels. Every step pairs a wide, low-opacity ambient shadow with a small contact shadow — the higher the level, the further and softer the object floats.</p>
+          <div class="elev-stage">
+            <div class="au-grid au-grid-2" style="gap:var(--space-6)">
+              <div class="elev-tile" style="box-shadow:var(--shadow-1)"><span class="elev-name">Level 1</span><span class="elev-token">--shadow-1 · resting cards, chips</span></div>
+              <div class="elev-tile" style="box-shadow:var(--shadow-2)"><span class="elev-name">Level 2</span><span class="elev-token">--shadow-2 · toasts, tooltips, thumbs</span></div>
+              <div class="elev-tile" style="box-shadow:var(--shadow-3)"><span class="elev-name">Level 3</span><span class="elev-token">--shadow-3 · popovers, raised cards, FAB</span></div>
+              <div class="elev-tile" style="box-shadow:var(--shadow-4)"><span class="elev-name">Level 4</span><span class="elev-token">--shadow-4 · dialogs, sheets, drawers</span></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Highlight top -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">The top highlight</h2>
+          <p class="doc-section-lead">A 1px inset light line along the top edge, applied with every card shadow. It is what separates an Aurora surface from a flat rectangle — subtle, but the whole product feels crafted because of it.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">elevation/highlight-top</span></div>
+            <div class="doc-canvas">
+              <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-6);width:200px;box-shadow:var(--shadow-2)">
+                <div class="au-caption">No highlight</div>
+                <div style="height:32px;border-radius:var(--radius-sm);background:var(--surface-3);margin-top:var(--space-3)"></div>
+              </div>
+              <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-6);width:200px;box-shadow:var(--shadow-2),var(--highlight-top)">
+                <div class="au-caption" style="color:var(--brand-strong)">+ highlight-top</div>
+                <div style="height:32px;border-radius:var(--radius-sm);background:var(--surface-3);margin-top:var(--space-3)"></div>
+              </div>
+            </div>
+          </div>
+          <div class="doc-prose">
+            <p>The default <code>.au-card</code> already composes <code>var(--shadow-1), var(--highlight-top)</code>. When you set a custom <code>box-shadow</code>, remember to append <code>var(--highlight-top)</code> to keep the surface consistent.</p>
+          </div>
+        </section>
+
+        <!-- Glow -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">Glow</h2>
+          <p class="doc-section-lead">Coloured light, used sparingly. <code>--shadow-glow-brand</code> haloes the primary button and brand mark; <code>--shadow-glow-good</code> celebrates a positive result — a goal reached, a streak kept.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">elevation/glow</span></div>
+            <div class="doc-canvas" style="gap:var(--space-8)">
+              <button class="au-btn au-btn--primary">Primary · brand glow</button>
+              <div class="au-medal" style="width:64px;height:64px"><svg class="au-icon"><use href="#i-trophy"></use></svg></div>
+              <div style="width:120px;height:64px;border-radius:var(--radius-lg);background:var(--surface-1);border:1px solid var(--good-subtle);box-shadow:var(--shadow-glow-good);display:grid;place-items:center;color:var(--good-text)"><svg class="au-icon"><use href="#i-check-circle"></use></svg></div>
+            </div>
+          </div>
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-alert-triangle"></use></svg>
+            <div class="doc-callout-body">Glow is an <strong>accent, not an elevation</strong>. One glowing element per view. Overuse and the brand light stops meaning "this is the thing to act on".</div>
+          </div>
+        </section>
+
+        <!-- Glass -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">Glass</h2>
+          <p class="doc-section-lead"><code>.au-card--glass</code> blurs whatever sits behind it (<code>--blur-glass</code> · 18px) and rides on a translucent surface. It is how sticky headers, the app status bar and floating panels stay legible over scrolling content.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">elevation/glass</span></div>
+            <div class="doc-canvas" style="position:relative;overflow:hidden">
+              <div aria-hidden="true" style="position:absolute;inset:0;background:var(--aurora);opacity:0.5"></div>
+              <div class="au-card au-card--glass au-card--raised" style="position:relative;max-width:320px">
+                <div class="au-row-flex au-gap-3" style="margin-bottom:var(--space-2)"><svg class="au-icon" style="color:var(--brand)"><use href="#i-sparkles"></use></svg><strong>Frosted panel</strong></div>
+                <p class="au-caption" style="line-height:var(--leading-relaxed)">Backdrop blur keeps text readable over any colour beneath. Used for the sticky doc header and the app status bar.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- When to use which -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">Choosing a level</h2>
+          <p class="doc-section-lead">Elevation communicates hierarchy: the higher a surface floats, the more it interrupts. Match the level to how much the element should command attention.</p>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Token</th><th>Level</th><th>Use for</th></tr></thead>
+              <tbody>
+                <tr><td><code>--shadow-1</code></td><td>Resting</td><td>Cards, list rows, chips — content that sits in the page flow.</td></tr>
+                <tr><td><code>--shadow-2</code></td><td>Hover / small float</td><td>Toasts, tooltips, slider thumbs, segmented active state.</td></tr>
+                <tr><td><code>--shadow-3</code></td><td>Raised</td><td>Popovers, menus, the FAB, cards lifting on hover.</td></tr>
+                <tr><td><code>--shadow-4</code></td><td>Overlay</td><td>Dialogs, bottom sheets, drawers — modal surfaces above a scrim.</td></tr>
+                <tr><td><code>--shadow-glow-brand</code></td><td>Accent</td><td>The primary button and brand mark only.</td></tr>
+                <tr><td><code>--shadow-glow-good</code></td><td>Celebration</td><td>Milestones and positive confirmations.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Pager -->
+        <nav class="doc-pager">
+          <a href="spacing.html"><small>Previous</small><span>Spacing &amp; layout</span></a>
+          <a class="doc-pager-next" href="shape.html"><small>Next</small><span>Shape</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

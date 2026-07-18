@@ -1,0 +1,61 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Configure preferences
+
+enum WeightUnit {
+  Kg
+  Lbs
+}
+
+enum ThemePreference {
+  Light
+  Dark
+  System
+}
+
+enum WeekStart {
+  Sunday
+  Monday
+}
+
+class Preferences {
+  +Guid UserId
+  +WeightUnit Unit
+  +ThemePreference Theme
+  +WeekStart WeekStartsOn
+  +ChangeUnit(unit: WeightUnit): void
+  +ChangeTheme(theme: ThemePreference): void
+  +ChangeWeekStart(start: WeekStart): void
+}
+
+class ChangePreferenceCommand {
+  +Guid UserId
+  +WeightUnit? Unit
+  +ThemePreference? Theme
+  +WeekStart? WeekStartsOn
+}
+
+class ChangePreferenceCommandHandler {
+  +Handle(command: ChangePreferenceCommand): Task<Result>
+}
+
+class PreferencesController {
+  +Change(command: ChangePreferenceCommand): Task<IActionResult>
+}
+
+PreferencesController ..> ChangePreferenceCommand : sends
+ChangePreferenceCommandHandler ..> ChangePreferenceCommand : handles
+ChangePreferenceCommandHandler --> Preferences : loads / mutates
+Preferences --> WeightUnit : has
+Preferences --> ThemePreference : has
+Preferences --> WeekStart : has
+@enduml

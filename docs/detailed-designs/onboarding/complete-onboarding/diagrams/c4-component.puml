@@ -1,0 +1,32 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Complete onboarding
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+
+Container_Boundary(web, "Ledger Web App") {
+  Component(wizard, "OnboardingWizard", "Angular component", "Four-step wizard: unit, current weight, goal weight, target date")
+  Component(guard, "onboardingGuard", "Angular route guard", "Redirects a member without a goal into onboarding")
+  Component(client, "OnboardingApi", "Angular HTTP service", "Typed client in ledger/api")
+}
+Container_Boundary(api, "Ledger API") {
+  Component(ctrl, "OnboardingController", "ASP.NET Core controller", "Exposes /api/v1/onboarding endpoints")
+  Component(statusH, "GetOnboardingStatusQueryHandler", "MediatR handler", "Reports goal presence and any saved draft")
+  Component(completeH, "CompleteOnboardingCommandHandler", "MediatR handler", "Commits the baseline goal and seed weigh-in")
+  Component(goal, "Goal", "Domain entity", "Baseline start weight, goal weight, and target date")
+  Component(weighin, "WeighIn", "Domain entity", "Seed weigh-in dated today")
+  ComponentDb(db, "Ledger Database", "SQL Server", "Persists goals, weigh-ins, drafts, and preferences")
+}
+
+Rel(member, wizard, "Completes onboarding in", "HTTPS")
+Rel(guard, client, "Requests onboarding status")
+Rel(wizard, client, "Submits completion and reads the saved draft")
+Rel(client, ctrl, "Calls", "JSON/HTTPS")
+Rel(ctrl, statusH, "Sends GetOnboardingStatusQuery")
+Rel(ctrl, completeH, "Sends CompleteOnboardingCommand")
+Rel(completeH, goal, "Creates the baseline")
+Rel(completeH, weighin, "Seeds today's entry")
+Rel(statusH, db, "Reads goal and draft", "EF Core")
+Rel(completeH, db, "Persists in one unit of work", "EF Core")
+@enduml

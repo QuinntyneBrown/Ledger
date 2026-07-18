@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spacing &amp; layout — Aurora Design System</title>
+  <meta name="description" content="Aurora's 4px spacing rhythm, container maxima, grid utilities and responsive breakpoints.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+  <style>
+    /* page-scoped: spacing scale rows */
+    .space-row { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-2) 0; border-bottom: 1px solid var(--divider); }
+    .space-row:last-child { border-bottom: none; }
+    .space-key { width: 88px; flex: none; font-family: var(--font-mono); font-size: var(--text-xs); color: var(--text-hi); }
+    .space-px { width: 52px; flex: none; font-family: var(--font-mono); font-size: var(--text-2xs); color: var(--text-lo); text-align: right; }
+    .space-bar { height: 18px; border-radius: var(--radius-xs); background: var(--aurora); box-shadow: var(--shadow-glow-brand); }
+    .box-nested { border: 1px dashed var(--border-strong); border-radius: var(--radius-md); color: var(--text-lo); font-family: var(--font-mono); font-size: var(--text-2xs); text-align: center; padding: var(--space-3); }
+  </style>
+</head>
+<body class="doc-body">
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation">
+      <svg class="au-icon"><use href="#i-menu"></use></svg>
+    </button>
+    <a class="doc-brand" href="../index.html">
+      <span class="doc-brandmark"></span>
+      <span class="doc-brand-name">Aurora<small>Design System</small></span>
+    </a>
+    <nav class="doc-header-nav">
+      <a href="getting-started.html" class="is-active">Foundations</a>
+      <a href="../components/button.html">Components</a>
+      <a href="../patterns/forms-validation.html">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <!-- ============ CANONICAL SIDEBAR ============ -->
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="color.html">Color</a>
+        <a class="doc-navlink" href="typography.html">Typography</a>
+        <a class="doc-navlink is-active" href="spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="elevation.html">Elevation</a>
+        <a class="doc-navlink" href="shape.html">Shape</a>
+        <a class="doc-navlink" href="iconography.html">Iconography</a>
+        <a class="doc-navlink" href="motion.html">Motion</a>
+        <a class="doc-navlink" href="accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="../components/button.html">Button</a>
+        <a class="doc-navlink" href="../components/text-field.html">Text field</a>
+        <a class="doc-navlink" href="../components/select.html">Select</a>
+        <a class="doc-navlink" href="../components/switch.html">Switch</a>
+        <a class="doc-navlink" href="../components/checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="../components/slider.html">Slider</a>
+        <a class="doc-navlink" href="../components/date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="../components/card.html">Card</a>
+        <a class="doc-navlink" href="../components/list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="../components/chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="../components/avatar.html">Avatar</a>
+        <a class="doc-navlink" href="../components/progress.html">Progress</a>
+        <a class="doc-navlink" href="../components/gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="../components/chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="../components/dialog.html">Dialog</a>
+        <a class="doc-navlink" href="../components/snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="../components/banner.html">Banner</a>
+        <a class="doc-navlink" href="../components/tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="../components/empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="../components/tabs.html">Tabs</a>
+        <a class="doc-navlink" href="../components/navigation.html">Navigation</a>
+        <a class="doc-navlink" href="../components/milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="../patterns/forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="../patterns/data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="../patterns/data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="../patterns/theming.html">Theming</a>
+        <a class="doc-navlink" href="../patterns/motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Foundations <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Spacing &amp; layout</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Foundations</span>
+          <h1 class="doc-title">Spacing &amp; layout</h1>
+          <p class="doc-lead">Every gap, pad and margin is a multiple of <strong style="color:var(--text-hi)">4px</strong>. One rhythm makes layouts feel composed rather than arranged, keeps optical alignment honest, and means designers and engineers reach for the same twelve values.</p>
+        </div>
+
+        <!-- Scale -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">The 4px scale</h2>
+          <p class="doc-section-lead">Twelve steps from a 4px hairline gap to a 96px section break. Steps compress early (fine control in dense UI) and stride later (breathing room between regions).</p>
+
+          <div class="doc-table-wrap" style="padding:var(--space-4) var(--space-5)">
+            <div class="space-row"><span class="space-key">--space-1</span><span class="space-px">4px</span><span class="space-bar" style="width:var(--space-1)"></span></div>
+            <div class="space-row"><span class="space-key">--space-2</span><span class="space-px">8px</span><span class="space-bar" style="width:var(--space-2)"></span></div>
+            <div class="space-row"><span class="space-key">--space-3</span><span class="space-px">12px</span><span class="space-bar" style="width:var(--space-3)"></span></div>
+            <div class="space-row"><span class="space-key">--space-4</span><span class="space-px">16px</span><span class="space-bar" style="width:var(--space-4)"></span></div>
+            <div class="space-row"><span class="space-key">--space-5</span><span class="space-px">20px</span><span class="space-bar" style="width:var(--space-5)"></span></div>
+            <div class="space-row"><span class="space-key">--space-6</span><span class="space-px">24px</span><span class="space-bar" style="width:var(--space-6)"></span></div>
+            <div class="space-row"><span class="space-key">--space-7</span><span class="space-px">32px</span><span class="space-bar" style="width:var(--space-7)"></span></div>
+            <div class="space-row"><span class="space-key">--space-8</span><span class="space-px">40px</span><span class="space-bar" style="width:var(--space-8)"></span></div>
+            <div class="space-row"><span class="space-key">--space-9</span><span class="space-px">48px</span><span class="space-bar" style="width:var(--space-9)"></span></div>
+            <div class="space-row"><span class="space-key">--space-10</span><span class="space-px">64px</span><span class="space-bar" style="width:var(--space-10)"></span></div>
+            <div class="space-row"><span class="space-key">--space-11</span><span class="space-px">80px</span><span class="space-bar" style="width:var(--space-11)"></span></div>
+            <div class="space-row"><span class="space-key">--space-12</span><span class="space-px">96px</span><span class="space-bar" style="width:var(--space-12)"></span></div>
+          </div>
+
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-info"></use></svg>
+            <div class="doc-callout-body">Reach for <strong>--space-2 / -3</strong> inside a control, <strong>--space-4 / -6</strong> for card padding and stacks, and <strong>--space-9 / -10</strong> between page sections. If a value is not on the scale, it is a bug.</div>
+          </div>
+        </section>
+
+        <!-- Containers -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">Containers</h2>
+          <p class="doc-section-lead">Three maxima cap line length and frame the two products. The app is deliberately narrow — Ledger is mobile-first — while the docs breathe wider.</p>
+
+          <div class="au-stack au-stack-4">
+            <div class="box-nested" style="max-width:var(--container-max)">--container-max · 1280px — the docs &amp; marketing shell</div>
+            <div class="box-nested" style="max-width:var(--reading-max)">--reading-max · 68ch — long-form prose column</div>
+            <div class="box-nested" style="max-width:var(--app-max)">--app-max · 460px — the Ledger app frame</div>
+          </div>
+
+          <div class="doc-table-wrap" style="margin-top:var(--space-6)">
+            <table class="doc-table">
+              <thead><tr><th>Token</th><th>Value</th><th>Applied to</th></tr></thead>
+              <tbody>
+                <tr><td><code>--container-max</code></td><td>1280px</td><td>Docs landing, wide marketing sections.</td></tr>
+                <tr><td><code>--reading-max</code></td><td>68ch</td><td>Prose columns — caps measure for readability.</td></tr>
+                <tr><td><code>--app-max</code></td><td>460px</td><td>The mobile-first Ledger app frame.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Grid utilities -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">Grid utilities</h2>
+          <p class="doc-section-lead">A tiny, purposeful set. <code>.au-grid</code> is a gap-4 grid by default; add <code>--grid-2/3</code> for equal columns, or compose your own with <code>grid-template-columns</code>.</p>
+
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">layout/au-grid-3</span></div>
+            <div class="doc-canvas doc-canvas--stack">
+              <div class="au-grid au-grid-3">
+                <div class="box-nested" style="padding:var(--space-6);color:var(--text-mid)">1</div>
+                <div class="box-nested" style="padding:var(--space-6);color:var(--text-mid)">2</div>
+                <div class="box-nested" style="padding:var(--space-6);color:var(--text-mid)">3</div>
+              </div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code><span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"au-grid au-grid-3"</span><span class="tok-tag">&gt;</span> … <span class="tok-tag">&lt;/div&gt;</span>
+<span class="tok-comment">/* also: au-row-flex · au-between · au-stack · au-stack-4 · au-fill · au-wrap */</span></code></pre>
+          </div>
+        </section>
+
+        <!-- Breakpoints -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">Responsive breakpoints</h2>
+          <p class="doc-section-lead">Three ranges. The docs sidebar collapses to a drawer below tablet; the app runs mobile-width everywhere, centred in a frame on desktop.</p>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Range</th><th>Width</th><th>Behaviour</th></tr></thead>
+              <tbody>
+                <tr><td class="doc-td-name"><svg class="au-icon" style="width:16px;height:16px;display:inline;vertical-align:-3px;color:var(--text-lo)"><use href="#i-scale"></use></svg> Mobile</td><td><code>≤ 520px</code></td><td>Single column, full-bleed cards, bottom nav, sheets slide up from the base.</td></tr>
+                <tr><td class="doc-td-name"><svg class="au-icon" style="width:16px;height:16px;display:inline;vertical-align:-3px;color:var(--text-lo)"><use href="#i-grid"></use></svg> Tablet</td><td><code>521 – 960px</code></td><td>Docs sidebar becomes an off-canvas drawer; two-column grids relax to one.</td></tr>
+                <tr><td class="doc-td-name"><svg class="au-icon" style="width:16px;height:16px;display:inline;vertical-align:-3px;color:var(--text-lo)"><use href="#i-layers"></use></svg> Desktop</td><td><code>&gt; 960px</code></td><td>Persistent 276px docs sidebar, on-this-page rail, full multi-column layouts.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-info"></use></svg>
+            <div class="doc-callout-body">Design <strong>mobile-first</strong>: author the narrow layout, then add breathing room and columns as space allows. The app never widens past <code>--app-max</code> — extra desktop space becomes frame, not stretched content.</div>
+          </div>
+        </section>
+
+        <!-- Pager -->
+        <nav class="doc-pager">
+          <a href="typography.html"><small>Previous</small><span>Typography</span></a>
+          <a class="doc-pager-next" href="elevation.html"><small>Next</small><span>Elevation</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+@startuml
+title UML sequence behaviour — Load month-grouped history
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle { BorderColor #344054 FontColor #101828 }
+skinparam package  { BorderColor #667085 FontColor #101828 BackgroundColor #F9FAFB }
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "HistoryPage" as page
+  participant "WeighInsApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "WeighInsController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "GetHistoryQueryHandler" as handler
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+actor -> page : Open the history screen per L2-030
+page -> client : Build typed GetHistoryQuery (page 1)
+client -> controller : HTTPS GET /api/v1/weigh-ins?page=1&sort=Newest
+controller -> controller : Authenticate and authorize the owner
+controller -> handler : Send GetHistoryQuery
+handler -> db : Read one bounded page over the userId+date index per L2-076
+db --> handler : One page of entries
+handler -> handler : Group by month; compute per-month net change per L2-030
+handler --> controller : Month-grouped page with the total count
+controller --> client : 200 first screenful within budget per L2-033
+client --> page : Render sticky month headers and rows per L2-030
+page --> actor : Present the first page
+opt Member activates a row
+  actor -> page : Open the row's edit affordance per L2-032
+  page -> page : Open the edit sheet (edit-weigh-in slice) per L2-032
+end
+loop Member scrolls near the bottom
+  actor -> page : Scroll to request more per L2-033
+  page -> client : Build GetHistoryQuery (next page)
+  client -> controller : HTTPS GET /api/v1/weigh-ins?page=n
+  controller -> handler : Send GetHistoryQuery
+  handler -> db : Read the next bounded page over the index per L2-033
+  db --> handler : Next page of entries
+  handler --> controller : Next month-grouped page in stable order per L2-033
+  controller --> client : 200 next page
+  client --> page : Append rows without blocking interaction per L2-033
+end
+@enduml

@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Web app shell
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+System_Boundary(ledger, "Ledger") {
+  Container(web, "Ledger Web App", "Angular 21 SPA", "Member-facing responsive web app; hosts the shell, guard, theme, and navigation frame")
+  Container(api, "Ledger API", "ASP.NET Core, MediatR", "CQRS application and domain logic; hosts the SignalR hub")
+  ContainerDb(db, "Ledger Database", "SQL Server", "Members, goals, weigh-ins, milestones")
+}
+Rel(member, web, "Uses", "HTTPS")
+Rel(web, api, "Requests session state and stored preferences", "JSON/HTTPS")
+Rel(api, web, "Serves under CSP, CORS, and CSRF protections per L2-073", "HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+@enduml

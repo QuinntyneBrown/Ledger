@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shape — Aurora Design System</title>
+  <meta name="description" content="Aurora's radius scale from a 4px hairline to full pills and circles, with guidance on which corner belongs to which surface.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+  <style>
+    /* page-scoped: radius tiles */
+    .radius-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: var(--space-4); }
+    .radius-tile { border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; background: var(--surface-1); }
+    .radius-demo { height: 96px; margin: var(--space-4) var(--space-4) 0; background: var(--aurora-soft); border: 1.5px solid var(--brand); }
+    .radius-meta { padding: var(--space-3) var(--space-4) var(--space-4); }
+    .radius-name { font-weight: var(--weight-semibold); font-size: var(--text-sm); }
+    .radius-val { font-family: var(--font-mono); font-size: var(--text-2xs); color: var(--text-lo); }
+  </style>
+</head>
+<body class="doc-body">
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation">
+      <svg class="au-icon"><use href="#i-menu"></use></svg>
+    </button>
+    <a class="doc-brand" href="../index.html">
+      <span class="doc-brandmark"></span>
+      <span class="doc-brand-name">Aurora<small>Design System</small></span>
+    </a>
+    <nav class="doc-header-nav">
+      <a href="getting-started.html" class="is-active">Foundations</a>
+      <a href="../components/button.html">Components</a>
+      <a href="../patterns/forms-validation.html">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <!-- ============ CANONICAL SIDEBAR ============ -->
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="color.html">Color</a>
+        <a class="doc-navlink" href="typography.html">Typography</a>
+        <a class="doc-navlink" href="spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="elevation.html">Elevation</a>
+        <a class="doc-navlink is-active" href="shape.html">Shape</a>
+        <a class="doc-navlink" href="iconography.html">Iconography</a>
+        <a class="doc-navlink" href="motion.html">Motion</a>
+        <a class="doc-navlink" href="accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="../components/button.html">Button</a>
+        <a class="doc-navlink" href="../components/text-field.html">Text field</a>
+        <a class="doc-navlink" href="../components/select.html">Select</a>
+        <a class="doc-navlink" href="../components/switch.html">Switch</a>
+        <a class="doc-navlink" href="../components/checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="../components/slider.html">Slider</a>
+        <a class="doc-navlink" href="../components/date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="../components/card.html">Card</a>
+        <a class="doc-navlink" href="../components/list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="../components/chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="../components/avatar.html">Avatar</a>
+        <a class="doc-navlink" href="../components/progress.html">Progress</a>
+        <a class="doc-navlink" href="../components/gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="../components/chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="../components/dialog.html">Dialog</a>
+        <a class="doc-navlink" href="../components/snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="../components/banner.html">Banner</a>
+        <a class="doc-navlink" href="../components/tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="../components/empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="../components/tabs.html">Tabs</a>
+        <a class="doc-navlink" href="../components/navigation.html">Navigation</a>
+        <a class="doc-navlink" href="../components/milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="../patterns/forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="../patterns/data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="../patterns/data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="../patterns/theming.html">Theming</a>
+        <a class="doc-navlink" href="../patterns/motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Foundations <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Shape</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Foundations</span>
+          <h1 class="doc-title">Shape</h1>
+          <p class="doc-lead">Corners carry personality. Aurora rounds generously — soft, friendly, calm — and scales the radius with the surface: tight on small controls, sweeping on sheets. <strong style="color:var(--text-hi)">Actions are fully pill-shaped</strong>, a signature you can spot at a glance.</p>
+        </div>
+
+        <!-- Radius scale -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">The radius scale</h2>
+          <p class="doc-section-lead">Six fixed radii plus pill and circle. Larger elements take a larger radius so the visual "roundness" reads consistently regardless of size.</p>
+          <div class="radius-grid">
+            <div class="radius-tile"><div class="radius-demo" style="border-radius:var(--radius-xs)"></div><div class="radius-meta"><div class="radius-name">Extra-small</div><div class="radius-val">--radius-xs · 4px</div></div></div>
+            <div class="radius-tile"><div class="radius-demo" style="border-radius:var(--radius-sm)"></div><div class="radius-meta"><div class="radius-name">Small</div><div class="radius-val">--radius-sm · 8px</div></div></div>
+            <div class="radius-tile"><div class="radius-demo" style="border-radius:var(--radius-md)"></div><div class="radius-meta"><div class="radius-name">Medium</div><div class="radius-val">--radius-md · 12px</div></div></div>
+            <div class="radius-tile"><div class="radius-demo" style="border-radius:var(--radius-lg)"></div><div class="radius-meta"><div class="radius-name">Large</div><div class="radius-val">--radius-lg · 16px</div></div></div>
+            <div class="radius-tile"><div class="radius-demo" style="border-radius:var(--radius-xl)"></div><div class="radius-meta"><div class="radius-name">Extra-large</div><div class="radius-val">--radius-xl · 22px</div></div></div>
+            <div class="radius-tile"><div class="radius-demo" style="border-radius:var(--radius-2xl)"></div><div class="radius-meta"><div class="radius-name">2X-large</div><div class="radius-val">--radius-2xl · 30px</div></div></div>
+            <div class="radius-tile"><div class="radius-demo" style="border-radius:var(--radius-pill)"></div><div class="radius-meta"><div class="radius-name">Pill</div><div class="radius-val">--radius-pill · 999px</div></div></div>
+            <div class="radius-tile"><div class="radius-demo" style="border-radius:var(--radius-circle);aspect-ratio:1;height:auto;width:96px;margin-inline:auto"></div><div class="radius-meta"><div class="radius-name">Circle</div><div class="radius-val">--radius-circle · 50%</div></div></div>
+          </div>
+        </section>
+
+        <!-- In practice -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">Shape in practice</h2>
+          <p class="doc-section-lead">The radius is one of the fastest ways to read what a thing is. Pills say "press me"; a 12px corner says "type here"; a big 22–30px corner says "this surface just arrived".</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">shape/in-context</span></div>
+            <div class="doc-canvas" style="gap:var(--space-6)">
+              <button class="au-btn au-btn--primary">Pill action</button>
+              <div class="au-input-wrap" style="width:160px"><input class="au-input" placeholder="md input" aria-label="example input"></div>
+              <span class="au-chip au-chip--brand">Pill chip</span>
+              <div class="au-avatar">AB</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Usage guidance -->
+        <section class="doc-section">
+          <h2 class="doc-section-title">Which corner, where</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Radius</th><th>Belongs to</th></tr></thead>
+              <tbody>
+                <tr><td><code>--radius-xs</code></td><td>Tags, code chips, tiny inline swatches, checkbox boxes.</td></tr>
+                <tr><td><code>--radius-sm</code></td><td>Nav links, menu items, brand mark, small hover fills.</td></tr>
+                <tr><td><code>--radius-md</code></td><td class="doc-td-name">Inputs, selects, banners, code blocks — the workhorse.</td></tr>
+                <tr><td><code>--radius-lg</code></td><td class="doc-td-name">Cards and panels — the default content container.</td></tr>
+                <tr><td><code>--radius-xl</code></td><td>Dialogs, the FAB, hero surfaces.</td></tr>
+                <tr><td><code>--radius-2xl</code></td><td>Bottom sheets — the big rounded top edge as it slides up.</td></tr>
+                <tr><td><code>--radius-pill</code></td><td class="doc-td-name">All buttons, chips, segmented controls, progress tracks.</td></tr>
+                <tr><td><code>--radius-circle</code></td><td>Avatars, icon buttons, the gauge, dots and toggles.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="doc-dodont">
+            <div class="doc-guide doc-guide--do">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-check"></use></svg> Do</div>
+              <div class="doc-guide-body">
+                <div class="au-card au-card--pad-sm" style="width:180px"><div class="au-input-wrap" style="min-height:40px"><input class="au-input" placeholder="Nested input" aria-label="nested"></div></div>
+              </div>
+              <div class="doc-guide-note">Nest a smaller radius inside a larger one so corners stay concentric (md input inside an lg card).</div>
+            </div>
+            <div class="doc-guide doc-guide--dont">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-x"></use></svg> Don't</div>
+              <div class="doc-guide-body">
+                <div style="width:180px;border:1px solid var(--border);border-radius:var(--radius-xs);padding:var(--space-3)"><div style="min-height:40px;border:1.5px solid var(--border-strong);border-radius:var(--radius-2xl)"></div></div>
+              </div>
+              <div class="doc-guide-note">Don't invert the nesting — a big radius inside a sharp container looks like a mistake, not a choice.</div>
+            </div>
+          </div>
+
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-info"></use></svg>
+            <div class="doc-callout-body">When one rounded element sits inside another, keep them <strong>concentric</strong>: inner radius ≈ outer radius − padding. Aurora's defaults already line up (md inside lg with space-6 padding).</div>
+          </div>
+        </section>
+
+        <!-- Pager -->
+        <nav class="doc-pager">
+          <a href="elevation.html"><small>Previous</small><span>Elevation</span></a>
+          <a class="doc-pager-next" href="iconography.html"><small>Next</small><span>Iconography</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

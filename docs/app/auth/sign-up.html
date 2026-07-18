@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Create account — Ledger</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+  <style>
+    a.au-btn { text-decoration: none; }
+    a.au-btn:hover { text-decoration: none; }
+    .au-pw-toggle { display: grid; place-items: center; width: 34px; height: 34px; margin-right: -6px; border: none; background: transparent; color: var(--text-lo); border-radius: var(--radius-sm); cursor: pointer; flex: none; transition: background var(--dur-fast), color var(--dur-fast); }
+    .au-pw-toggle:hover { background: var(--surface-3); }
+    .au-pw-toggle .au-icon { width: 20px; height: 20px; }
+    .pw-meter { display: flex; gap: 4px; margin-top: var(--space-1); }
+    .pw-meter i { flex: 1; height: 4px; border-radius: var(--radius-pill); background: var(--surface-3); }
+    .pw-meter i.on { background: var(--good); }
+  </style>
+</head>
+<body class="auth-body">
+
+  <div class="auth-card au-card au-card--pad-lg au-rise au-rise-1">
+    <div class="auth-logo">
+      <div class="auth-mark"></div>
+      <div>
+        <div class="auth-title">Create your account</div>
+        <div class="auth-sub">Start tracking in under a minute</div>
+      </div>
+    </div>
+
+    <form class="au-stack au-stack-4" onsubmit="return false">
+      <!-- Name -->
+      <div class="au-field">
+        <label class="au-label" for="name">Full name</label>
+        <div class="au-input-wrap">
+          <svg class="au-icon"><use href="#i-user"></use></svg>
+          <input id="name" class="au-input" type="text" value="Alex Rivera" placeholder="Your name" autocomplete="name">
+        </div>
+      </div>
+
+      <!-- Email (field-level error: already in use) -->
+      <div class="au-field is-error">
+        <label class="au-label" for="email">Email</label>
+        <div class="au-input-wrap">
+          <svg class="au-icon"><use href="#i-mail"></use></svg>
+          <input id="email" class="au-input" type="email" value="alex@email.com" placeholder="you@email.com" autocomplete="email" inputmode="email">
+        </div>
+        <p class="au-help is-error"><svg class="au-icon"><use href="#i-alert-circle"></use></svg> That email is already in use. <a href="login.html" style="color:var(--brand);font-weight:var(--weight-semibold)">Sign in instead?</a></p>
+      </div>
+
+      <!-- Password with strength hint -->
+      <div class="au-field">
+        <label class="au-label" for="password">Password</label>
+        <div class="au-input-wrap">
+          <svg class="au-icon"><use href="#i-lock"></use></svg>
+          <input id="password" class="au-input" type="password" value="aurora123!" placeholder="Create a password" autocomplete="new-password">
+          <button type="button" class="au-pw-toggle" data-pw-toggle aria-label="Show password">
+            <svg class="au-icon"><use href="#i-eye"></use></svg>
+          </button>
+        </div>
+        <div class="pw-meter" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+        <p class="au-help">Strong — at least 8 characters with a number and symbol.</p>
+      </div>
+
+      <!-- Terms -->
+      <label class="au-check au-mt-2" style="align-items:flex-start">
+        <input type="checkbox" checked>
+        <span class="au-box"><svg class="au-icon"><use href="#i-check"></use></svg></span>
+        <span class="au-text-mid" style="line-height:var(--leading-snug)">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</span>
+      </label>
+
+      <a class="au-btn au-btn--primary au-btn--lg au-btn--block au-mt-2" href="../onboarding/welcome.html">Create account</a>
+    </form>
+
+    <p class="auth-alt">Already have an account? <a href="login.html">Sign in</a></p>
+  </div>
+
+  <script>
+    document.querySelectorAll("[data-pw-toggle]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var input = btn.closest(".au-input-wrap").querySelector("input");
+        var use = btn.querySelector("use");
+        var showing = input.type === "text";
+        input.type = showing ? "password" : "text";
+        use.setAttribute("href", showing ? "#i-eye" : "#i-eye-off");
+        btn.setAttribute("aria-label", showing ? "Show password" : "Hide password");
+      });
+    });
+  </script>
+</body>
+</html>

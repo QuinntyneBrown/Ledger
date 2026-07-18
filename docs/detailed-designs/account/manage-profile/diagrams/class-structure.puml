@@ -1,0 +1,61 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Manage profile
+
+class User {
+  +Guid Id
+  +string Name
+  +string Email
+  +bool EmailVerified
+  +double HeightCm
+  +string AvatarUrl
+  +DateTime MemberSince
+  +Rename(name: string): void
+  +ChangeEmail(email: string): void
+  +SetHeight(cm: double): void
+  +SetAvatar(url: string): void
+}
+
+class UpdateProfileCommand {
+  +Guid UserId
+  +string Name
+  +string Email
+  +double HeightCm
+}
+
+class UpdateProfileCommandHandler {
+  +Handle(command: UpdateProfileCommand): Task<Result>
+}
+
+class UploadAvatarCommand {
+  +Guid UserId
+  +string ContentType
+  +long SizeBytes
+  +Stream Content
+}
+
+class UploadAvatarCommandHandler {
+  +Handle(command: UploadAvatarCommand): Task<Result>
+}
+
+class ProfileController {
+  +Update(command: UpdateProfileCommand): Task<IActionResult>
+  +UploadAvatar(file: IFormFile): Task<IActionResult>
+}
+
+ProfileController ..> UpdateProfileCommand : sends
+ProfileController ..> UploadAvatarCommand : sends
+UpdateProfileCommandHandler ..> UpdateProfileCommand : handles
+UpdateProfileCommandHandler --> User : loads / mutates
+UploadAvatarCommandHandler ..> UploadAvatarCommand : handles
+UploadAvatarCommandHandler --> User : sets avatar on
+@enduml

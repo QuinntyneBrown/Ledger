@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — API and persistence foundation
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+System(ledger, "Ledger", "Responsive weight-tracking web application")
+System_Ext(monitor, "Monitoring and orchestrator", "Probes liveness and readiness and scrapes metrics")
+
+Rel(member, ledger, "Uses via browser", "HTTPS")
+Rel(monitor, ledger, "Probes health and scrapes metrics per L2-083", "HTTPS")
+@enduml

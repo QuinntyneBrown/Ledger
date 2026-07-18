@@ -1,0 +1,58 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Backdate a weigh-in
+
+class WeighInsController {
+  +Log(command: LogWeighInCommand): Task<IActionResult>
+}
+
+class LogWeighInCommand {
+  +Guid UserId
+  +DateOnly Date
+  +decimal WeightKg
+  +string Note
+}
+
+class LogWeighInCommandValidator {
+  +LogWeighInCommandValidator()
+}
+note bottom of LogWeighInCommandValidator
+  Rejects Date after the member's local today per L2-017
+  Rejects weight outside 20.0-500.0 kg per L2-015
+end note
+
+class LogWeighInCommandHandler {
+  +Handle(command: LogWeighInCommand): Task<WeighInDto>
+}
+
+class WeighIn {
+  +Guid Id
+  +Guid UserId
+  +DateOnly Date
+  +decimal WeightKg
+  +string Note
+  +DateTime CreatedAt
+  +DateTime UpdatedAt
+  +UpdateWeight(weightKg: decimal, note: string): void
+}
+
+class BackdateWeighInPage <<Angular>> {
+  +selectableDays(month: YearMonth): DateOnly[]
+  +submit(date: DateOnly, weightKg: decimal, note: string): void
+}
+
+WeighInsController ..> LogWeighInCommand : sends
+LogWeighInCommandValidator ..> LogWeighInCommand : validates
+LogWeighInCommandHandler ..> LogWeighInCommand : handles
+LogWeighInCommandHandler --> WeighIn : inserts / updates
+BackdateWeighInPage ..> LogWeighInCommand : builds
+@enduml

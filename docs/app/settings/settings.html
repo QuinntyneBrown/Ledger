@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Settings — Ledger</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+</head>
+<body class="app-body">
+
+  <div class="app-frame">
+    <!-- status bar -->
+    <div class="app-statusbar">
+      <span>9:41</span>
+      <span class="app-statusbar-right">
+        <svg class="au-icon" style="width:15px"><use href="#i-activity"></use></svg>
+        <svg class="au-icon" style="width:15px"><use href="#i-droplet"></use></svg>
+        <span class="au-mono" style="font-size:11px">100%</span>
+      </span>
+    </div>
+
+    <div class="app-screen">
+      <!-- header -->
+      <div class="app-header">
+        <div class="au-row-flex au-gap-2">
+          <a class="au-icon-btn au-icon-btn--sm" href="../dashboard/dashboard.html" aria-label="Back"><svg class="au-icon"><use href="#i-chevron-left"></use></svg></a>
+          <div class="app-header-title" style="font-size:var(--text-lg)">Settings</div>
+        </div>
+        <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+      </div>
+
+      <div class="app-scroll">
+
+        <!-- ===== PREFERENCES ===== -->
+        <div class="set-group au-rise au-rise-1">
+          <div class="set-group-title">Preferences</div>
+          <div class="au-card au-card--flush">
+            <!-- units -->
+            <div class="set-row">
+              <span class="set-row-icon"><svg class="au-icon" style="width:20px"><use href="#i-scale"></use></svg></span>
+              <div class="set-row-main">
+                <div class="set-row-label">Units</div>
+                <div class="set-row-desc">Weight display unit</div>
+              </div>
+              <div class="au-segmented" role="group" aria-label="Units">
+                <button class="is-active is-brand" type="button">kg</button>
+                <button type="button">lbs</button>
+              </div>
+            </div>
+            <!-- theme -->
+            <div class="set-row">
+              <span class="set-row-icon"><svg class="au-icon" style="width:20px"><use href="#i-moon"></use></svg></span>
+              <div class="set-row-main">
+                <div class="set-row-label">Theme</div>
+                <div class="set-row-desc">Light, Dark, or match system</div>
+              </div>
+              <button class="au-row-flex au-gap-2" type="button" style="background:none;border:none;cursor:pointer">
+                <span class="set-row-value">System</span>
+                <svg class="au-icon au-text-lo" style="width:18px"><use href="#i-chevron-right"></use></svg>
+              </button>
+            </div>
+            <!-- week starts -->
+            <div class="set-row">
+              <span class="set-row-icon"><svg class="au-icon" style="width:20px"><use href="#i-calendar"></use></svg></span>
+              <div class="set-row-main">
+                <div class="set-row-label">Week starts on</div>
+                <div class="set-row-desc">Affects weekly averages</div>
+              </div>
+              <button class="au-row-flex au-gap-2" type="button" style="background:none;border:none;cursor:pointer">
+                <span class="set-row-value">Monday</span>
+                <svg class="au-icon au-text-lo" style="width:18px"><use href="#i-chevron-right"></use></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== REMINDERS ===== -->
+        <div class="set-group au-rise au-rise-2">
+          <div class="set-group-title">Reminders</div>
+          <div class="au-card au-card--flush">
+            <!-- daily reminder -->
+            <div class="set-row">
+              <span class="set-row-icon"><svg class="au-icon" style="width:20px"><use href="#i-bell"></use></svg></span>
+              <div class="set-row-main">
+                <div class="set-row-label">Daily weigh-in reminder</div>
+                <div class="set-row-desc">A gentle nudge each morning</div>
+              </div>
+              <label class="au-switch" aria-label="Daily weigh-in reminder">
+                <input type="checkbox" checked>
+                <span class="au-switch-track"></span>
+                <span class="au-switch-thumb"></span>
+              </label>
+            </div>
+            <!-- reminder time -->
+            <button class="set-row" type="button" data-dialog-open="timeDialog" style="width:100%;text-align:left;background:none;border:none;border-top:1px solid var(--divider);cursor:pointer">
+              <span class="set-row-icon"><svg class="au-icon" style="width:20px"><use href="#i-clock"></use></svg></span>
+              <div class="set-row-main">
+                <div class="set-row-label">Reminder time</div>
+                <div class="set-row-desc">When to send your nudge</div>
+              </div>
+              <span class="au-row-flex au-gap-2">
+                <span class="set-row-value">8:00 AM</span>
+                <svg class="au-icon au-text-lo" style="width:18px"><use href="#i-chevron-right"></use></svg>
+              </span>
+            </button>
+            <!-- quiet hours -->
+            <div class="set-row">
+              <span class="set-row-icon"><svg class="au-icon" style="width:20px"><use href="#i-moon"></use></svg></span>
+              <div class="set-row-main">
+                <div class="set-row-label">Quiet hours</div>
+                <div class="set-row-desc">Mute reminders 10 PM – 7 AM</div>
+              </div>
+              <label class="au-switch" aria-label="Quiet hours">
+                <input type="checkbox">
+                <span class="au-switch-track"></span>
+                <span class="au-switch-thumb"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== ACCOUNT ===== -->
+        <div class="set-group au-rise au-rise-3">
+          <div class="set-group-title">Account</div>
+          <div class="au-card au-card--flush">
+            <a class="set-row au-row--interactive" href="account.html" style="border-radius:0;color:var(--text-hi);text-decoration:none">
+              <span class="set-row-icon"><svg class="au-icon" style="width:20px"><use href="#i-user"></use></svg></span>
+              <div class="set-row-main">
+                <div class="set-row-label">Profile</div>
+                <div class="set-row-desc">Name, email, height</div>
+              </div>
+              <svg class="au-icon au-text-lo" style="width:18px"><use href="#i-chevron-right"></use></svg>
+            </a>
+            <a class="set-row au-row--interactive" href="change-password.html" style="border-radius:0;border-top:1px solid var(--divider);color:var(--text-hi);text-decoration:none">
+              <span class="set-row-icon"><svg class="au-icon" style="width:20px"><use href="#i-lock"></use></svg></span>
+              <div class="set-row-main">
+                <div class="set-row-label">Change password</div>
+                <div class="set-row-desc">Update your credentials</div>
+              </div>
+              <svg class="au-icon au-text-lo" style="width:18px"><use href="#i-chevron-right"></use></svg>
+            </a>
+            <button class="set-row au-row--interactive" type="button" data-toast="Preparing your export…" data-toast-type="info" style="width:100%;text-align:left;background:none;border:none;border-top:1px solid var(--divider);border-radius:0;cursor:pointer">
+              <span class="set-row-icon"><svg class="au-icon" style="width:20px"><use href="#i-download"></use></svg></span>
+              <div class="set-row-main">
+                <div class="set-row-label">Export data</div>
+                <div class="set-row-desc">Download all entries as CSV</div>
+              </div>
+              <svg class="au-icon au-text-lo" style="width:20px"><use href="#i-download"></use></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- ===== DANGER ===== -->
+        <div class="set-group au-rise au-rise-4">
+          <div class="set-group-title">Danger zone</div>
+          <div class="au-card au-card--flush">
+            <!-- delete -->
+            <div class="set-row">
+              <span class="set-row-icon" style="background:var(--bad-subtle);color:var(--bad-text)"><svg class="au-icon" style="width:20px"><use href="#i-trash"></use></svg></span>
+              <div class="set-row-main">
+                <div class="set-row-label" style="color:var(--bad-text)">Delete all data</div>
+                <div class="set-row-desc">Permanently erase every entry</div>
+              </div>
+              <button class="au-btn au-btn--danger au-btn--sm" type="button" data-dialog-open="deleteDialog">Delete</button>
+            </div>
+            <!-- sign out -->
+            <div class="set-row">
+              <span class="set-row-icon"><svg class="au-icon" style="width:20px"><use href="#i-logout"></use></svg></span>
+              <div class="set-row-main">
+                <div class="set-row-label">Sign out</div>
+                <div class="set-row-desc">alex@email.com</div>
+              </div>
+              <button class="au-btn au-btn--outlined au-btn--sm" type="button" data-dialog-open="signOutDialog">Sign out</button>
+            </div>
+          </div>
+        </div>
+
+        <p class="au-caption" style="text-align:center;margin-top:var(--space-6)">Ledger · v1.0.0</p>
+        <div style="height:var(--space-4)"></div>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV — Profile active -->
+    <nav class="au-bottomnav app-bottomnav">
+      <a class="app-rail-brand" href="../dashboard/dashboard.html"><span class="app-rail-mark"></span>Ledger</a>
+      <a class="au-navitem" href="../dashboard/dashboard.html"><svg class="au-icon"><use href="#i-home"></use></svg>Home</a>
+      <a class="au-navitem" href="../trends/trends.html"><svg class="au-icon"><use href="#i-activity"></use></svg>Trends</a>
+      <button class="app-navfab" data-dialog-open="quickWeigh" aria-label="Log weight"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      <a class="au-navitem" href="../milestones/milestones.html"><svg class="au-icon"><use href="#i-trophy"></use></svg>Badges</a>
+      <a class="au-navitem is-active" href="account.html"><svg class="au-icon"><use href="#i-user"></use></svg>Profile</a>
+    </nav>
+  </div>
+
+  <!-- ===== REMINDER TIME DIALOG (hidden) ===== -->
+  <div class="au-scrim" id="timeDialog" hidden>
+    <div class="au-dialog au-dialog--sm" role="dialog" aria-modal="true" aria-labelledby="timeTitle">
+      <div class="au-dialog-icon"><svg class="au-icon"><use href="#i-clock"></use></svg></div>
+      <div class="au-dialog-title" id="timeTitle">Reminder time</div>
+      <div class="au-dialog-body">When should Ledger nudge you to weigh in?</div>
+      <div class="au-row-flex au-center au-gap-3" style="margin:var(--space-6) 0">
+        <div class="au-bignum-field">
+          <span class="au-bignum" style="font-size:var(--text-4xl);width:auto">8:00</span>
+        </div>
+        <div class="au-segmented" role="group" aria-label="AM or PM">
+          <button class="is-active is-brand" type="button">AM</button>
+          <button type="button">PM</button>
+        </div>
+      </div>
+      <div class="au-dialog-actions">
+        <button class="au-btn au-btn--outlined" type="button" data-dialog-close>Cancel</button>
+        <button class="au-btn au-btn--primary" type="button" data-dialog-close data-toast="Reminder set for 8:00 AM">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DELETE ALL DATA DIALOG (hidden) ===== -->
+  <div class="au-scrim" id="deleteDialog" hidden>
+    <div class="au-dialog" role="dialog" aria-modal="true" aria-labelledby="deleteTitle">
+      <div class="au-dialog-icon is-danger"><svg class="au-icon"><use href="#i-alert-triangle"></use></svg></div>
+      <div class="au-dialog-title" id="deleteTitle">Delete all data?</div>
+      <div class="au-dialog-body">This permanently erases every weigh-in, goal, and milestone. <strong style="color:var(--text-hi)">This cannot be undone.</strong></div>
+      <div class="au-field" style="margin-top:var(--space-6)">
+        <label class="au-label" for="del-confirm">Type <span class="au-mono" style="color:var(--bad-text)">DELETE</span> to confirm</label>
+        <div class="au-input-wrap">
+          <input class="au-input" id="del-confirm" type="text" placeholder="DELETE" autocomplete="off">
+        </div>
+      </div>
+      <div class="au-dialog-actions">
+        <button class="au-btn au-btn--outlined" type="button" data-dialog-close>Cancel</button>
+        <button class="au-btn au-btn--danger-solid is-disabled" type="button" aria-disabled="true"><svg class="au-icon"><use href="#i-trash"></use></svg> Delete everything</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SIGN OUT DIALOG (hidden) ===== -->
+  <div class="au-scrim" id="signOutDialog" hidden>
+    <div class="au-dialog au-dialog--sm" role="dialog" aria-modal="true" aria-labelledby="signOutTitle">
+      <div class="au-dialog-icon"><svg class="au-icon"><use href="#i-logout"></use></svg></div>
+      <div class="au-dialog-title" id="signOutTitle">Sign out?</div>
+      <div class="au-dialog-body">You'll need to sign back in to log weigh-ins. Your data stays saved.</div>
+      <div class="au-dialog-actions">
+        <button class="au-btn au-btn--outlined" type="button" data-dialog-close>Cancel</button>
+        <a class="au-btn au-btn--primary" href="../auth/login.html">Sign out</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK WEIGH-IN SHEET (hidden) -->
+  <div class="au-sheet-scrim" id="quickWeigh" hidden>
+    <div class="au-sheet" role="dialog" aria-modal="true" aria-label="Log today's weight">
+      <div class="au-sheet-grip"></div>
+      <div class="au-row-flex au-between" style="margin-bottom:var(--space-2)">
+        <div><div class="au-eyebrow">Today</div><div style="font-family:var(--font-mono);color:var(--text-lo);font-size:var(--text-sm)">Wed, Jul 18</div></div>
+        <button class="au-icon-btn" data-dialog-close aria-label="Close"><svg class="au-icon"><use href="#i-x"></use></svg></button>
+      </div>
+      <div class="weigh-stepper" style="margin:var(--space-6) 0">
+        <button class="weigh-stepper-btn" aria-label="Decrease"><svg class="au-icon"><use href="#i-minus"></use></svg></button>
+        <div class="au-bignum-field">
+          <span class="au-bignum" style="width:auto">74.8</span>
+          <span class="au-bignum-unit">kg</span>
+        </div>
+        <button class="weigh-stepper-btn" aria-label="Increase"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      </div>
+      <button class="au-btn au-btn--primary au-btn--lg au-btn--block" data-dialog-close data-toast="Weight logged — 74.8 kg" data-toast-action="Undo">
+        <svg class="au-icon"><use href="#i-check"></use></svg> Log weight
+      </button>
+    </div>
+  </div>
+
+</body>
+</html>

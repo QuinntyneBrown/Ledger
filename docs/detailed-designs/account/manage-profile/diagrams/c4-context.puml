@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Manage profile
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+System(ledger, "Ledger", "Weight-tracking web application")
+System_Ext(email, "Email provider", "Sends verification, reset, and notification email via SMTP")
+
+Rel(member, ledger, "Views and edits profile, sets avatar", "HTTPS")
+Rel(ledger, email, "Sends verification email on email change per L2-043", "SMTP")
+@enduml

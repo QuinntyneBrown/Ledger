@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your profile — Ledger</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+</head>
+<body class="app-body">
+
+  <div class="app-frame">
+    <!-- status bar -->
+    <div class="app-statusbar">
+      <span>9:41</span>
+      <span class="app-statusbar-right">
+        <svg class="au-icon" style="width:15px"><use href="#i-activity"></use></svg>
+        <svg class="au-icon" style="width:15px"><use href="#i-droplet"></use></svg>
+        <span class="au-mono" style="font-size:11px">100%</span>
+      </span>
+    </div>
+
+    <div class="app-screen">
+      <div class="app-scroll" style="display:flex;flex-direction:column;min-height:100%;padding-top:var(--space-2)">
+
+        <!-- top row: back + progress (all steps done) -->
+        <div class="au-row-flex au-gap-3">
+          <a class="au-icon-btn au-icon-btn--sm" href="wizard.html" aria-label="Back"><svg class="au-icon"><use href="#i-chevron-left"></use></svg></a>
+          <div class="onb-progress au-fill">
+            <i class="is-done"></i>
+            <i class="is-done"></i>
+            <i class="is-done"></i>
+            <i class="is-done"></i>
+          </div>
+          <span class="au-mono au-text-lo" style="font-size:var(--text-xs)">4/4</span>
+        </div>
+
+        <div class="onb-step" style="padding-bottom:var(--space-4)">
+          <div class="onb-step-num">LAST STEP</div>
+          <h1 class="onb-step-title">Set up your profile</h1>
+          <p class="onb-step-sub">Just for you — your data stays private on your device.</p>
+        </div>
+
+        <!-- avatar picker -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);margin-bottom:var(--space-7)">
+          <div style="position:relative">
+            <span class="au-avatar au-avatar--lg" style="width:88px;height:88px;font-size:var(--text-2xl)">A</span>
+            <span class="au-icon-btn au-icon-btn--sm" aria-hidden="true" style="position:absolute;right:-4px;bottom:-4px;background:var(--brand);color:var(--text-on-gold);border:2px solid var(--canvas)"><svg class="au-icon"><use href="#i-camera"></use></svg></span>
+          </div>
+          <button class="au-btn au-btn--text au-btn--sm" type="button"><svg class="au-icon"><use href="#i-camera"></use></svg> Change photo</button>
+        </div>
+
+        <div class="au-stack au-stack-4">
+          <!-- name -->
+          <div class="au-field">
+            <label class="au-label" for="pf-name">Name <span class="au-req">*</span></label>
+            <div class="au-input-wrap">
+              <svg class="au-icon"><use href="#i-user"></use></svg>
+              <input class="au-input" id="pf-name" type="text" value="Alex" placeholder="Your name">
+            </div>
+          </div>
+
+          <!-- height (optional, for BMI) -->
+          <div class="au-field">
+            <label class="au-label" for="pf-height">Height <span class="au-text-lo" style="font-weight:var(--weight-regular)">· optional</span></label>
+            <div class="au-input-wrap">
+              <svg class="au-icon"><use href="#i-ruler"></use></svg>
+              <input class="au-input" id="pf-height" type="text" inputmode="numeric" value="176" placeholder="Height">
+              <span class="au-input-affix">cm</span>
+            </div>
+            <p class="au-help"><svg class="au-icon" style="width:14px"><use href="#i-info"></use></svg> Lets Ledger show your BMI alongside weight.</p>
+          </div>
+        </div>
+
+        <!-- finish -->
+        <div class="au-stack au-stack-3" style="margin-top:auto;padding-top:var(--space-7)">
+          <a class="au-btn au-btn--primary au-btn--lg au-btn--block" href="../dashboard/dashboard.html"><svg class="au-icon"><use href="#i-check"></use></svg> Finish setup</a>
+          <a class="au-btn au-btn--text au-btn--block" href="../dashboard/dashboard.html">Skip for now</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

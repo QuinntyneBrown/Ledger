@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Milestone badge — Aurora Design System</title>
+  <meta name="description" content="Aurora's milestone badge: the reward tile that celebrates a Ledger achievement — a gemstone medal with a name and description, in earned and locked states.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+</head>
+<body class="doc-body">
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation"><svg class="au-icon"><use href="#i-menu"></use></svg></button>
+    <a class="doc-brand" href="../index.html"><span class="doc-brandmark"></span><span class="doc-brand-name">Aurora<small>Design System</small></span></a>
+    <nav class="doc-header-nav">
+      <a href="../foundations/getting-started.html">Foundations</a>
+      <a href="button.html" class="is-active">Components</a>
+      <a href="../patterns/forms-validation.html">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="../foundations/getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="../foundations/color.html">Color</a>
+        <a class="doc-navlink" href="../foundations/typography.html">Typography</a>
+        <a class="doc-navlink" href="../foundations/spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="../foundations/elevation.html">Elevation</a>
+        <a class="doc-navlink" href="../foundations/shape.html">Shape</a>
+        <a class="doc-navlink" href="../foundations/iconography.html">Iconography</a>
+        <a class="doc-navlink" href="../foundations/motion.html">Motion</a>
+        <a class="doc-navlink" href="../foundations/accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="button.html">Button</a>
+        <a class="doc-navlink" href="text-field.html">Text field</a>
+        <a class="doc-navlink" href="select.html">Select</a>
+        <a class="doc-navlink" href="switch.html">Switch</a>
+        <a class="doc-navlink" href="checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="slider.html">Slider</a>
+        <a class="doc-navlink" href="date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="card.html">Card</a>
+        <a class="doc-navlink" href="list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="avatar.html">Avatar</a>
+        <a class="doc-navlink" href="progress.html">Progress</a>
+        <a class="doc-navlink" href="gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="dialog.html">Dialog</a>
+        <a class="doc-navlink" href="snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="banner.html">Banner</a>
+        <a class="doc-navlink" href="tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="tabs.html">Tabs</a>
+        <a class="doc-navlink" href="navigation.html">Navigation</a>
+        <a class="doc-navlink is-active" href="milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="../patterns/forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="../patterns/data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="../patterns/data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="../patterns/theming.html">Theming</a>
+        <a class="doc-navlink" href="../patterns/motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Components <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Milestone badge</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-award"></use></svg> Feedback &amp; navigation · Reward</span>
+          <h1 class="doc-title">Milestone badge</h1>
+          <p class="doc-lead">Ledger&rsquo;s reward tile. A gemstone <strong style="color:var(--text-hi)">medal</strong> celebrates an achievement &mdash; a first weigh-in, a streak, a goal reached &mdash; and sits alongside the ones still <strong style="color:var(--text-hi)">locked</strong> to hint at what&rsquo;s next. It&rsquo;s the moment the numbers turn into encouragement.</p>
+        </div>
+
+        <div class="doc-tabbar" data-tabs>
+          <button class="doc-tab is-active" data-tab="overview">Overview</button>
+          <button class="doc-tab" data-tab="examples">Examples</button>
+          <button class="doc-tab" data-tab="api">Tokens &amp; API</button>
+        </div>
+
+        <!-- ===== OVERVIEW ===== -->
+        <section data-tabpanel="overview">
+          <div class="doc-canvas" style="border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:var(--space-7);padding:var(--space-8);gap:var(--space-5)">
+            <div class="au-badge-tile" style="width:180px">
+              <div class="au-medal"><svg class="au-icon"><use href="#i-trophy"></use></svg></div>
+              <div class="au-badge-name">Goal crushed</div>
+              <div class="au-badge-desc">Reached 73.0 kg</div>
+            </div>
+            <div class="au-badge-tile" style="width:180px">
+              <div class="au-medal au-medal--good"><svg class="au-icon"><use href="#i-flame"></use></svg></div>
+              <div class="au-badge-name">On a roll</div>
+              <div class="au-badge-desc">7-day logging streak</div>
+            </div>
+            <div class="au-badge-tile" style="width:180px">
+              <div class="au-medal au-medal--violet"><svg class="au-icon"><use href="#i-target"></use></svg></div>
+              <div class="au-badge-name">Halfway there</div>
+              <div class="au-badge-desc">50% of the way to goal</div>
+            </div>
+          </div>
+
+          <div class="doc-prose">
+            <h2 class="doc-section-title">When to use it</h2>
+            <p>Use a milestone badge to mark a <strong>meaningful, earned moment</strong> &mdash; not routine activity. Badges reward the habits Ledger is trying to build: showing up, trending down, reaching the goal. Grant them rarely enough that each one still feels good.</p>
+            <ul>
+              <li>Show <strong>earned</strong> badges at full saturation; keep <strong>locked</strong> ones dimmed but visible so people can see what&rsquo;s ahead.</li>
+              <li>Reserve the three medal tints for <strong>tiers</strong> or categories &mdash; gold for goals, teal for consistency, violet for progress.</li>
+              <li>Pair the award moment with a <a href="snackbar.html">snackbar</a> or celebratory <a href="dialog.html">dialog</a>; the tile is where it lives afterward.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Anatomy</h2>
+          <div class="doc-anatomy">
+            <div class="au-badge-tile" style="width:200px">
+              <div class="au-medal"><svg class="au-icon"><use href="#i-scale"></use></svg></div>
+              <div class="au-badge-name">Badge name</div>
+              <div class="au-badge-desc">What was achieved</div>
+            </div>
+            <span class="doc-anatomy-marker" style="top:20%;left:34%">1</span>
+            <span class="doc-anatomy-marker" style="bottom:34%;right:30%">2</span>
+            <span class="doc-anatomy-marker" style="bottom:18%;right:30%">3</span>
+          </div>
+          <div class="doc-legend">
+            <ul>
+              <li><span class="doc-legend-num">1</span> <strong style="color:var(--text-hi)">Medal</strong> — a radial gemstone with a glow; its icon names the feat.</li>
+              <li><span class="doc-legend-num">2</span> <strong style="color:var(--text-hi)">Name</strong> — a short, encouraging title.</li>
+              <li><span class="doc-legend-num">3</span> <strong style="color:var(--text-hi)">Description</strong> — the achievement, in a muted line.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Do &amp; don&rsquo;t</h2>
+          <div class="doc-dodont">
+            <div class="doc-guide doc-guide--do">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-check"></use></svg> Do</div>
+              <div class="doc-guide-body">
+                <div class="au-badge-tile is-locked" style="width:150px;background:transparent;border:none">
+                  <div class="au-medal"><svg class="au-icon"><use href="#i-lock"></use></svg></div>
+                  <div class="au-badge-name">Unstoppable</div>
+                  <div class="au-badge-desc">30-day streak</div>
+                </div>
+              </div>
+              <div class="doc-guide-note">Keep locked badges visible but dimmed so the next goal is always in sight.</div>
+            </div>
+            <div class="doc-guide doc-guide--dont">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-x"></use></svg> Don&rsquo;t</div>
+              <div class="doc-guide-body">
+                <div class="au-row-flex au-gap-2">
+                  <div class="au-medal" style="width:44px;height:44px"><svg class="au-icon" style="width:20px;height:20px"><use href="#i-star"></use></svg></div>
+                  <div class="au-medal au-medal--good" style="width:44px;height:44px"><svg class="au-icon" style="width:20px;height:20px"><use href="#i-star"></use></svg></div>
+                  <div class="au-medal au-medal--violet" style="width:44px;height:44px"><svg class="au-icon" style="width:20px;height:20px"><use href="#i-star"></use></svg></div>
+                  <div class="au-medal" style="width:44px;height:44px"><svg class="au-icon" style="width:20px;height:20px"><use href="#i-star"></use></svg></div>
+                </div>
+              </div>
+              <div class="doc-guide-note">Don&rsquo;t hand out badges for everything &mdash; a wall of identical medals cheapens each one.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== EXAMPLES ===== -->
+        <section data-tabpanel="examples" hidden>
+          <h2 class="doc-section-title">Badge shelf</h2>
+          <p class="doc-section-lead">The app&rsquo;s milestones screen: earned tiles at full strength, locked tiles dimmed to preview what&rsquo;s next.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">badge/shelf</span></div>
+            <div class="doc-canvas">
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);width:100%;max-width:600px">
+                <div class="au-badge-tile">
+                  <div class="au-medal"><svg class="au-icon"><use href="#i-scale"></use></svg></div>
+                  <div class="au-badge-name">Getting started</div>
+                  <div class="au-badge-desc">First weigh-in logged</div>
+                </div>
+                <div class="au-badge-tile">
+                  <div class="au-medal au-medal--good"><svg class="au-icon"><use href="#i-flame"></use></svg></div>
+                  <div class="au-badge-name">On a roll</div>
+                  <div class="au-badge-desc">7-day streak</div>
+                </div>
+                <div class="au-badge-tile">
+                  <div class="au-medal au-medal--violet"><svg class="au-icon"><use href="#i-trending-down"></use></svg></div>
+                  <div class="au-badge-name">First kilo</div>
+                  <div class="au-badge-desc">Down 1.0 kg</div>
+                </div>
+                <div class="au-badge-tile is-locked">
+                  <div class="au-medal"><svg class="au-icon"><use href="#i-lock"></use></svg></div>
+                  <div class="au-badge-name">Unstoppable</div>
+                  <div class="au-badge-desc">30-day streak</div>
+                </div>
+                <div class="au-badge-tile is-locked">
+                  <div class="au-medal"><svg class="au-icon"><use href="#i-lock"></use></svg></div>
+                  <div class="au-badge-name">High five</div>
+                  <div class="au-badge-desc">Down 5.0 kg</div>
+                </div>
+                <div class="au-badge-tile is-locked">
+                  <div class="au-medal"><svg class="au-icon"><use href="#i-lock"></use></svg></div>
+                  <div class="au-badge-name">Goal crushed</div>
+                  <div class="au-badge-desc">Reach your goal</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-badge-tile"&gt;
+  &lt;div class="au-medal"&gt;&lt;svg class="au-icon"&gt;&lt;use href="#i-scale"/&gt;&lt;/svg&gt;&lt;/div&gt;
+  &lt;div class="au-badge-name"&gt;Getting started&lt;/div&gt;
+  &lt;div class="au-badge-desc"&gt;First weigh-in logged&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- locked --&gt;
+&lt;div class="au-badge-tile is-locked"&gt;
+  &lt;div class="au-medal"&gt;&lt;svg class="au-icon"&gt;&lt;use href="#i-lock"/&gt;&lt;/svg&gt;&lt;/div&gt;
+  &lt;div class="au-badge-name"&gt;Goal crushed&lt;/div&gt;
+  &lt;div class="au-badge-desc"&gt;Reach your goal&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Medal tints</h2>
+          <p class="doc-section-lead">Three gemstone finishes &mdash; the default gold, plus <code class="doc-td-name">--good</code> teal and <code class="doc-td-name">--violet</code> &mdash; for tiers or categories.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">badge/medals</span></div>
+            <div class="doc-canvas" style="gap:var(--space-7)">
+              <div class="au-stack au-center au-stack-3"><div class="au-medal"><svg class="au-icon"><use href="#i-trophy"></use></svg></div><span class="au-caption">.au-medal</span></div>
+              <div class="au-stack au-center au-stack-3"><div class="au-medal au-medal--good"><svg class="au-icon"><use href="#i-flame"></use></svg></div><span class="au-caption">--good</span></div>
+              <div class="au-stack au-center au-stack-3"><div class="au-medal au-medal--violet"><svg class="au-icon"><use href="#i-target"></use></svg></div><span class="au-caption">--violet</span></div>
+              <div class="au-stack au-center au-stack-3" style="opacity:0.55;filter:grayscale(0.8)"><div class="au-medal" style="background:var(--surface-3);color:var(--text-lo);box-shadow:none"><svg class="au-icon"><use href="#i-lock"></use></svg></div><span class="au-caption">locked</span></div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-medal"&gt;…&lt;/div&gt;              &lt;!-- gold (default) --&gt;
+&lt;div class="au-medal au-medal--good"&gt;…&lt;/div&gt;    &lt;!-- teal --&gt;
+&lt;div class="au-medal au-medal--violet"&gt;…&lt;/div&gt;  &lt;!-- violet --&gt;</code></pre>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Just earned</h2>
+          <p class="doc-section-lead">On the moment of unlock, present the badge inside a celebratory dialog.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">badge/earned</span></div>
+            <div class="doc-canvas">
+              <div class="au-dialog" style="animation:none;text-align:center;box-shadow:var(--shadow-2)">
+                <div class="au-badge-tile" style="background:transparent;border:none;padding-bottom:0">
+                  <div class="au-medal"><svg class="au-icon"><use href="#i-trophy"></use></svg></div>
+                  <div class="au-badge-name" style="font-size:var(--text-lg)">Goal crushed!</div>
+                  <div class="au-badge-desc">You reached 73.0 kg &mdash; 5.4 kg down from where you started.</div>
+                </div>
+                <div class="au-dialog-actions"><button class="au-btn au-btn--outlined">Nice</button><button class="au-btn au-btn--primary"><svg class="au-icon"><use href="#i-share"></use></svg> Share</button></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== API ===== -->
+        <section data-tabpanel="api" hidden>
+          <h2 class="doc-section-title">Structure &amp; classes</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Class</th><th>Element</th><th>Role</th></tr></thead>
+              <tbody>
+                <tr><td><code>.au-badge-tile</code></td><td>div</td><td>The card: medal, name and description, centered.</td></tr>
+                <tr><td><code>.au-badge-tile.is-locked</code></td><td>modifier</td><td>Dims and desaturates an unearned badge.</td></tr>
+                <tr><td><code>.au-medal</code></td><td>div</td><td>The gemstone medal (default gold radial with a brand glow).</td></tr>
+                <tr><td><code>.au-medal--good</code></td><td>modifier</td><td>Teal finish — for consistency / on-track tiers.</td></tr>
+                <tr><td><code>.au-medal--violet</code></td><td>modifier</td><td>Violet finish — for progress tiers.</td></tr>
+                <tr><td><code>.au-badge-name</code></td><td>div</td><td>The badge title.</td></tr>
+                <tr><td><code>.au-badge-desc</code></td><td>div</td><td>The achievement, in muted text.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-8)">Tokens consumed</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Token</th><th>Applied to</th></tr></thead>
+              <tbody>
+                <tr><td><code>--gold-200 / --gold-500 / --gold-700</code></td><td>Default medal radial gradient.</td></tr>
+                <tr><td><code>--teal-* / --violet-*</code></td><td>The <code>--good</code> and <code>--violet</code> medal finishes.</td></tr>
+                <tr><td><code>--shadow-glow-brand</code></td><td>The medal&rsquo;s luminous halo.</td></tr>
+                <tr><td><code>--surface-3 · --text-lo</code></td><td>The flattened look of a locked medal.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-info"></use></svg>
+            <div class="doc-callout-body"><strong>Accessibility.</strong> The medal icon is decorative, so the name and description must fully convey the achievement and its state &mdash; add &ldquo;Locked&rdquo; to the description (or an <code>aria-label</code>) rather than relying on the dimmed look. Don&rsquo;t signal earned-versus-locked with color alone; the lock icon and copy carry it too.</div>
+          </div>
+        </section>
+
+        <nav class="doc-pager">
+          <a href="navigation.html"><small>Previous</small><span>Navigation</span></a>
+          <a class="doc-pager-next" href="../patterns/forms-validation.html"><small>Next</small><span>Forms &amp; validation</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

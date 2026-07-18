@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Export and erase data
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+System(ledger, "Ledger", "Weight-tracking web application")
+System_Ext(email, "Email provider", "Sends verification, reset, and notification email via SMTP")
+
+Rel(member, ledger, "Exports data, deletes all data, deletes account", "HTTPS")
+Rel(ledger, email, "Notifies when a large export is ready per L2-052", "SMTP")
+@enduml

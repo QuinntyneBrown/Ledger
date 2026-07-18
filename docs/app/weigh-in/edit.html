@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Edit entry — Ledger</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+</head>
+<body class="app-body">
+
+  <div class="app-frame">
+    <div class="app-statusbar">
+      <span>9:41</span>
+      <span class="app-statusbar-right">
+        <svg class="au-icon" style="width:15px"><use href="#i-activity"></use></svg>
+        <svg class="au-icon" style="width:15px"><use href="#i-droplet"></use></svg>
+        <span class="au-mono" style="font-size:11px">100%</span>
+      </span>
+    </div>
+
+    <div class="app-screen">
+      <div class="app-header">
+        <a class="au-icon-btn" href="../trends/log-history.html" aria-label="Back to history"><svg class="au-icon"><use href="#i-arrow-left"></use></svg></a>
+        <div class="app-header-title" style="font-size:var(--text-base)">Edit entry</div>
+        <button class="au-icon-btn" data-dialog-open="confirmDelete" aria-label="Delete entry"><svg class="au-icon"><use href="#i-trash"></use></svg></button>
+      </div>
+
+      <div class="app-scroll">
+        <!-- read-only date -->
+        <div class="au-field">
+          <label class="au-label">
+            <svg class="au-icon" style="width:16px;height:16px"><use href="#i-calendar"></use></svg> Date
+          </label>
+          <div class="au-input-wrap is-disabled" aria-disabled="true">
+            <input class="au-input au-mono" value="Sat, Jul 12 2026" readonly>
+            <svg class="au-icon"><use href="#i-lock"></use></svg>
+          </div>
+          <p class="au-help">The date can't be changed — delete and re-add to move an entry.</p>
+        </div>
+
+        <!-- pre-filled value -->
+        <div style="text-align:center;margin-top:var(--space-6)">
+          <div class="au-eyebrow" style="justify-content:center">Recorded weight</div>
+        </div>
+        <div class="weigh-stepper" style="margin:var(--space-4) 0 var(--space-3)">
+          <button class="weigh-stepper-btn" aria-label="Decrease by 0.1"><svg class="au-icon"><use href="#i-minus"></use></svg></button>
+          <div class="au-bignum-field">
+            <span class="au-bignum" style="width:auto">75.4</span>
+            <span class="au-bignum-unit">kg</span>
+          </div>
+          <button class="weigh-stepper-btn" aria-label="Increase by 0.1"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+        </div>
+        <p class="au-caption" style="text-align:center">Was <span class="au-mono">75.6 kg</span> — you're editing this reading</p>
+
+        <hr class="au-hairline">
+
+        <!-- note -->
+        <div class="au-field">
+          <label class="au-label" for="note">
+            <svg class="au-icon" style="width:16px;height:16px"><use href="#i-edit"></use></svg> Note
+          </label>
+          <div class="au-input-wrap">
+            <input class="au-input" id="note" type="text" value="Weekend weigh-in, before breakfast">
+          </div>
+        </div>
+
+        <!-- actions -->
+        <button class="au-btn au-btn--primary au-btn--lg au-btn--block au-mt-6"
+                data-toast="Entry updated — 75.4 kg" data-toast-type="success">
+          <svg class="au-icon"><use href="#i-check"></use></svg> Save changes
+        </button>
+        <button class="au-btn au-btn--danger au-btn--block" style="margin-top:var(--space-3)" data-dialog-open="confirmDelete">
+          <svg class="au-icon"><use href="#i-trash"></use></svg> Delete entry
+        </button>
+      </div>
+    </div>
+
+    <nav class="au-bottomnav app-bottomnav">
+      <a class="app-rail-brand" href="../dashboard/dashboard.html"><span class="app-rail-mark"></span>Ledger</a>
+      <a class="au-navitem" href="../dashboard/dashboard.html"><svg class="au-icon"><use href="#i-home"></use></svg>Home</a>
+      <a class="au-navitem" href="../trends/trends.html"><svg class="au-icon"><use href="#i-activity"></use></svg>Trends</a>
+      <button class="app-navfab" data-dialog-open="quickWeigh" aria-label="Log weight"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      <a class="au-navitem" href="../milestones/milestones.html"><svg class="au-icon"><use href="#i-trophy"></use></svg>Badges</a>
+      <a class="au-navitem" href="../settings/account.html"><svg class="au-icon"><use href="#i-user"></use></svg>Profile</a>
+    </nav>
+  </div>
+
+  <!-- DELETE CONFIRM DIALOG (type to confirm) -->
+  <div class="au-scrim" id="confirmDelete" hidden>
+    <div class="au-dialog au-dialog--sm" role="dialog" aria-modal="true" aria-labelledby="delTitle">
+      <div class="au-dialog-icon is-danger"><svg class="au-icon"><use href="#i-trash"></use></svg></div>
+      <div class="au-dialog-title" id="delTitle">Delete this entry?</div>
+      <p class="au-dialog-body">You're about to remove <strong class="au-mono" style="color:var(--text-hi)">75.4 kg · Jul 12</strong>. This can't be undone and will re-average your trend.</p>
+      <div class="au-field" style="margin-top:var(--space-5)">
+        <label class="au-label" for="delConfirm">Type <span class="au-mono" style="color:var(--bad-text)">DELETE</span> to confirm</label>
+        <div class="au-input-wrap">
+          <input class="au-input au-mono" id="delConfirm" type="text" placeholder="DELETE" autocomplete="off">
+        </div>
+      </div>
+      <div class="au-dialog-actions">
+        <button class="au-btn au-btn--outlined" data-dialog-close>Cancel</button>
+        <button class="au-btn au-btn--danger-solid" data-dialog-close data-toast="Entry deleted" data-toast-type="error" data-toast-action="Undo">
+          <svg class="au-icon"><use href="#i-trash"></use></svg> Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK WEIGH-IN SHEET -->
+  <div class="au-sheet-scrim" id="quickWeigh" hidden>
+    <div class="au-sheet" role="dialog" aria-modal="true" aria-label="Log today's weight">
+      <div class="au-sheet-grip"></div>
+      <div class="au-row-flex au-between" style="margin-bottom:var(--space-2)">
+        <div><div class="au-eyebrow">Today</div><div style="font-family:var(--font-mono);color:var(--text-lo);font-size:var(--text-sm)">Wed, Jul 18</div></div>
+        <button class="au-icon-btn" data-dialog-close aria-label="Close"><svg class="au-icon"><use href="#i-x"></use></svg></button>
+      </div>
+      <div class="weigh-stepper" style="margin:var(--space-6) 0">
+        <button class="weigh-stepper-btn" aria-label="Decrease"><svg class="au-icon"><use href="#i-minus"></use></svg></button>
+        <div class="au-bignum-field">
+          <span class="au-bignum" style="width:auto">74.9</span>
+          <span class="au-bignum-unit">kg</span>
+        </div>
+        <button class="weigh-stepper-btn" aria-label="Increase"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      </div>
+      <button class="au-btn au-btn--primary au-btn--lg au-btn--block" data-dialog-close data-toast="Weight logged — 74.9 kg" data-toast-action="Undo">
+        <svg class="au-icon"><use href="#i-check"></use></svg> Log weight
+      </button>
+    </div>
+  </div>
+
+</body>
+</html>

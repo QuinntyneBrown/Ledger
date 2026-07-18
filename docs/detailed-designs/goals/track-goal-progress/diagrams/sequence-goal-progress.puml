@@ -1,0 +1,54 @@
+@startuml
+title UML sequence behaviour — Track goal progress: compute percent, remaining, and chips
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "GoalPage" as page
+  participant "GoalsApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "GoalsController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "GetGoalProgressQueryHandler" as handler
+  participant "Goal" as entity
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+
+actor -> page : Open goal screen
+page -> client : Build typed request
+client -> controller : HTTPS GET /api/v1/goals/progress
+controller -> controller : Authenticate and scope to owner
+controller -> handler : Send GetGoalProgressQuery
+handler -> db : Load owner goal and current weight
+db --> handler : Goal and latest weigh-in
+handler -> entity : PercentComplete(currentWeightKg) clamped 0..100 per L2-021
+entity --> handler : Percent complete
+alt current weight has reached or passed goal per L2-024
+  handler -> entity : IsReached(currentWeightKg)
+  entity --> handler : Reached
+  handler -> handler : Cap progress at 100% and flag completion per L2-024
+else goal not yet reached
+  handler -> entity : RemainingKg(currentWeightKg)
+  entity --> handler : Remaining amount to go per L2-021
+end
+handler --> controller : GoalProgressDto with Start, Now, Goal chips
+controller --> client : 200 with progress snapshot
+client --> page : Progress snapshot
+page --> actor : Render dial, chips, and progress bar
+@enduml

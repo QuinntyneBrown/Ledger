@@ -1,0 +1,118 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — View trends
+
+enum TimeRange {
+  OneWeek
+  OneMonth
+  ThreeMonths
+  SixMonths
+  OneYear
+  All
+}
+
+class GetTrendsQuery {
+  +Guid OwnerId
+  +TimeRange Range
+}
+
+class GetTrendsQueryHandler {
+  +Handle(query: GetTrendsQuery): Task<TrendsView>
+}
+
+class TrendsView {
+  +TimeRange Range
+  +IReadOnlyList<TrendPoint> Series
+  +IReadOnlyList<decimal> MovingAverage
+  +RangeBand Band
+  +decimal GoalWeightKg
+  +IReadOnlyList<Annotation> Annotations
+  +TrendSummary Summary
+  +IReadOnlyList<RecentEntry> RecentEntries
+  +string AccessibleDescription
+}
+
+class TrendPoint {
+  +DateOnly Date
+  +decimal WeightKg
+}
+
+class RangeBand {
+  +decimal MinKg
+  +decimal MaxKg
+}
+
+class Annotation {
+  +DateOnly Date
+  +decimal WeightKg
+  +string Label
+}
+
+class TrendSummary {
+  +decimal CurrentWeightKg
+  +decimal TotalChangeKg
+  +string TrendDirection
+  +decimal RatePerWeekKg
+  +decimal BestWeekKg
+  +decimal? Bmi
+}
+
+class RecentEntry {
+  +DateOnly Date
+  +decimal WeightKg
+  +decimal DeltaKg
+}
+
+class WeightAnalytics {
+  +MovingAverage(entries: IReadOnlyList<WeighIn>, window: int): IReadOnlyList<decimal>
+  +RatePerWeek(entries: IReadOnlyList<WeighIn>): decimal
+  +TotalChange(entries: IReadOnlyList<WeighIn>): decimal
+  +BestWeek(entries: IReadOnlyList<WeighIn>): decimal
+  +Bmi(weightKg: decimal, heightCm: int): decimal
+  +Band(entries: IReadOnlyList<WeighIn>): RangeBand
+}
+
+class WeighIn {
+  +Guid Id
+  +Guid UserId
+  +DateOnly Date
+  +decimal WeightKg
+}
+
+class Goal {
+  +decimal StartWeightKg
+  +decimal GoalWeightKg
+  +DateOnly TargetDate
+}
+
+class Milestone {
+  +string Type
+  +decimal ThresholdKg
+  +DateOnly EarnedAt
+}
+
+GetTrendsQuery --> TimeRange : selects
+GetTrendsQueryHandler ..> GetTrendsQuery : handles
+GetTrendsQueryHandler --> TrendsView : builds
+GetTrendsQueryHandler ..> WeightAnalytics : computes with
+GetTrendsQueryHandler --> WeighIn : reads
+GetTrendsQueryHandler --> Goal : reads goal line
+GetTrendsQueryHandler --> Milestone : reads annotations
+WeightAnalytics ..> WeighIn : reads dated weights
+WeightAnalytics --> RangeBand : produces
+TrendsView --> TimeRange : echoes
+TrendsView *-- TrendPoint
+TrendsView *-- RangeBand
+TrendsView *-- Annotation
+TrendsView *-- TrendSummary
+TrendsView *-- RecentEntry
+@enduml

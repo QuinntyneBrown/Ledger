@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Motion &amp; feedback — Aurora Design System</title>
+  <meta name="description" content="Motion tokens in practice — the dial sweep, chart draw-in, count-up, toast and sheet entrances, staggered rise — and the reduced-motion contract.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+  <style>
+    .pat-motiongrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); }
+    @media (max-width: 640px) { .pat-motiongrid { grid-template-columns: 1fr; } }
+    .pat-motion-card { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface-1); overflow: hidden; }
+    .pat-motion-stage { min-height: 150px; display: grid; place-items: center; padding: var(--space-6); background: radial-gradient(var(--grid-line) 1px, transparent 1px); background-size: 20px 20px; }
+    .pat-motion-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-top: 1px solid var(--divider); }
+    .pat-motion-foot h4 { font-size: var(--text-sm); font-weight: var(--weight-semibold); }
+    .pat-motion-foot p { font-size: var(--text-2xs); color: var(--text-lo); font-family: var(--font-mono); margin-top: 2px; }
+    .pat-riserow { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-2); width: 100%; }
+    .pat-riserow .au-card { padding: var(--space-3); text-align: center; }
+    .pat-riserow .au-stat-value { font-size: var(--text-lg); }
+  </style>
+</head>
+<body class="doc-body">
+
+  <!-- gauge + chart gradients -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <linearGradient id="auroraGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="var(--aurora-start)"></stop>
+      <stop offset="52%" stop-color="var(--aurora-mid)"></stop>
+      <stop offset="100%" stop-color="var(--aurora-end)"></stop>
+    </linearGradient>
+    <linearGradient id="auChartArea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="var(--viz-2)" stop-opacity="0.35"></stop>
+      <stop offset="100%" stop-color="var(--viz-2)" stop-opacity="0"></stop>
+    </linearGradient>
+  </defs></svg>
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation"><svg class="au-icon"><use href="#i-menu"></use></svg></button>
+    <a class="doc-brand" href="../index.html"><span class="doc-brandmark"></span><span class="doc-brand-name">Aurora<small>Design System</small></span></a>
+    <nav class="doc-header-nav">
+      <a href="../foundations/getting-started.html">Foundations</a>
+      <a href="../components/button.html">Components</a>
+      <a href="motion-feedback.html" class="is-active">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <!-- ============ CANONICAL SIDEBAR ============ -->
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="../foundations/getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="../foundations/color.html">Color</a>
+        <a class="doc-navlink" href="../foundations/typography.html">Typography</a>
+        <a class="doc-navlink" href="../foundations/spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="../foundations/elevation.html">Elevation</a>
+        <a class="doc-navlink" href="../foundations/shape.html">Shape</a>
+        <a class="doc-navlink" href="../foundations/iconography.html">Iconography</a>
+        <a class="doc-navlink" href="../foundations/motion.html">Motion</a>
+        <a class="doc-navlink" href="../foundations/accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="../components/button.html">Button</a>
+        <a class="doc-navlink" href="../components/text-field.html">Text field</a>
+        <a class="doc-navlink" href="../components/select.html">Select</a>
+        <a class="doc-navlink" href="../components/switch.html">Switch</a>
+        <a class="doc-navlink" href="../components/checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="../components/slider.html">Slider</a>
+        <a class="doc-navlink" href="../components/date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="../components/card.html">Card</a>
+        <a class="doc-navlink" href="../components/list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="../components/chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="../components/avatar.html">Avatar</a>
+        <a class="doc-navlink" href="../components/progress.html">Progress</a>
+        <a class="doc-navlink" href="../components/gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="../components/chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="../components/dialog.html">Dialog</a>
+        <a class="doc-navlink" href="../components/snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="../components/banner.html">Banner</a>
+        <a class="doc-navlink" href="../components/tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="../components/empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="../components/tabs.html">Tabs</a>
+        <a class="doc-navlink" href="../components/navigation.html">Navigation</a>
+        <a class="doc-navlink" href="../components/milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="theming.html">Theming</a>
+        <a class="doc-navlink is-active" href="motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Patterns <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Motion &amp; feedback</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-zap"></use></svg> Pattern · Motion</span>
+          <h1 class="doc-title">Motion &amp; feedback</h1>
+          <p class="doc-lead">Motion in Ledger is a messenger, never decoration. The dial sweeps because progress is <em>accruing</em>; the chart draws in because a story is unfolding; a toast rises because something just happened. Every animation earns its place by <strong style="color:var(--text-hi)">explaining a change of state</strong> — and every one steps aside when the person asks for calm.</p>
+        </div>
+
+        <!-- MOTION TOKENS -->
+        <section class="doc-section">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-clock"></use></svg> The motion tokens</h2>
+          <p class="doc-section-lead">Two scales do all the work: a set of durations from a tap to the hero sweep, and two signature easings. <code>--ease-standard</code> is the neutral workhorse; <code>--ease-emphasized</code> is the springy curve reserved for entrances and reveals.</p>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Token</th><th>Value</th><th>Used for</th></tr></thead>
+              <tbody>
+                <tr><td><code>--dur-instant</code></td><td>80ms</td><td>Taps, checkbox tick — immediate acknowledgement.</td></tr>
+                <tr><td><code>--dur-fast</code></td><td>140ms</td><td>Hover, color &amp; border transitions, button press.</td></tr>
+                <tr><td><code>--dur-base</code></td><td>220ms</td><td>Switch thumb, scrim fade, count-up steps.</td></tr>
+                <tr><td><code>--dur-slow</code></td><td>360ms</td><td>Dialog, sheet &amp; toast entrance, staggered rise.</td></tr>
+                <tr><td><code>--dur-slower</code></td><td>560ms</td><td>Chart draw-in.</td></tr>
+                <tr><td><code>--dur-dial</code></td><td>1100ms</td><td>The hero gauge sweep — the one indulgent motion.</td></tr>
+                <tr><td><code>--ease-standard</code></td><td>cubic-bezier(.2,0,0,1)</td><td>Default for almost everything.</td></tr>
+                <tr><td><code>--ease-emphasized</code></td><td>cubic-bezier(.16,1,.3,1)</td><td>Springy entrances: sheet, rise, dial, thumb.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- SIGNATURE MOTIONS -->
+        <section class="doc-section">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-sparkles"></use></svg> Signature motions in practice</h2>
+          <p class="doc-section-lead">Each of these ships in the design system. Press <strong>Replay</strong> to watch the entrance again — the same code that runs when a screen first loads.</p>
+
+          <div class="pat-motiongrid">
+            <!-- DIAL SWEEP -->
+            <div class="pat-motion-card">
+              <div class="pat-motion-stage">
+                <div class="au-gauge" data-value="73" data-sweep="360" style="width:132px;height:132px" role="img" aria-label="73 percent to goal">
+                  <svg viewBox="0 0 120 120" width="132" height="132"><circle class="au-gauge-track" cx="60" cy="60" r="52" stroke-width="10"></circle><circle class="au-gauge-arc" cx="60" cy="60" r="52" stroke-width="10"></circle></svg>
+                  <div class="au-gauge-center"><div class="au-gauge-value" style="font-size:var(--text-2xl)">73%</div></div>
+                </div>
+              </div>
+              <div class="pat-motion-foot">
+                <div><h4>Dial sweep</h4><p>--dur-dial · emphasized</p></div>
+                <button class="au-btn au-btn--sm au-btn--outlined" data-replay="gauge"><svg class="au-icon"><use href="#i-refresh"></use></svg> Replay</button>
+              </div>
+            </div>
+
+            <!-- CHART DRAW-IN -->
+            <div class="pat-motion-card">
+              <div class="pat-motion-stage">
+                <svg class="au-chart" viewBox="0 0 260 120" preserveAspectRatio="none" style="height:104px" role="img" aria-label="Weight trend drawing in">
+                  <path class="au-chart-area" d="M0,34 L52,44 L104,38 L156,60 L208,66 L260,82 L260,120 L0,120 Z"></path>
+                  <path class="au-chart-line au-chart-draw" id="motionDraw" d="M0,34 L52,44 L104,38 L156,60 L208,66 L260,82"></path>
+                </svg>
+              </div>
+              <div class="pat-motion-foot">
+                <div><h4>Chart draw-in</h4><p>--dur-slower · standard</p></div>
+                <button class="au-btn au-btn--sm au-btn--outlined" data-replay="draw"><svg class="au-icon"><use href="#i-refresh"></use></svg> Replay</button>
+              </div>
+            </div>
+
+            <!-- COUNT-UP -->
+            <div class="pat-motion-card">
+              <div class="pat-motion-stage">
+                <div class="au-stat" style="text-align:center;align-items:center">
+                  <span class="au-stat-value" style="font-size:var(--text-5xl)"><span id="motionCount" data-countup="74.9" data-decimals="1">0.0</span><small>kg</small></span>
+                  <span class="au-stat-label" style="justify-content:center">current weight</span>
+                </div>
+              </div>
+              <div class="pat-motion-foot">
+                <div><h4>Count-up</h4><p>--dur-base · ease-out</p></div>
+                <button class="au-btn au-btn--sm au-btn--outlined" data-replay="count"><svg class="au-icon"><use href="#i-refresh"></use></svg> Replay</button>
+              </div>
+            </div>
+
+            <!-- STAGGERED RISE -->
+            <div class="pat-motion-card">
+              <div class="pat-motion-stage">
+                <div class="pat-riserow" id="motionRise">
+                  <div class="au-card au-rise au-rise-1"><span class="au-stat-value">12</span><span class="au-caption">days</span></div>
+                  <div class="au-card au-rise au-rise-2"><span class="au-stat-value">−0.4</span><span class="au-caption">wk</span></div>
+                  <div class="au-card au-rise au-rise-3"><span class="au-stat-value">73%</span><span class="au-caption">goal</span></div>
+                  <div class="au-card au-rise au-rise-4"><span class="au-stat-value">1.9</span><span class="au-caption">to go</span></div>
+                </div>
+              </div>
+              <div class="pat-motion-foot">
+                <div><h4>Staggered rise</h4><p>.au-rise · 60ms cascade</p></div>
+                <button class="au-btn au-btn--sm au-btn--outlined" data-replay="rise"><svg class="au-icon"><use href="#i-refresh"></use></svg> Replay</button>
+              </div>
+            </div>
+
+            <!-- TOAST -->
+            <div class="pat-motion-card">
+              <div class="pat-motion-stage">
+                <div class="au-toast au-toast--success" style="animation:none;width:min(280px,100%)">
+                  <svg class="au-icon au-toast-icon"><use href="#i-check-circle"></use></svg>
+                  <span class="au-toast-msg">Weight logged — 74.8 kg</span>
+                  <button class="au-toast-action">Undo</button>
+                </div>
+              </div>
+              <div class="pat-motion-foot">
+                <div><h4>Toast entrance</h4><p>--dur-slow · slide-up</p></div>
+                <button class="au-btn au-btn--sm au-btn--outlined" data-toast="Weight logged — 74.8 kg" data-toast-action="Undo"><svg class="au-icon"><use href="#i-refresh"></use></svg> Trigger</button>
+              </div>
+            </div>
+
+            <!-- SHEET / BUTTON PRESS -->
+            <div class="pat-motion-card">
+              <div class="pat-motion-stage">
+                <div class="au-stack au-stack-3 au-center">
+                  <button class="au-btn au-btn--primary" data-dialog-open="motionSheet"><svg class="au-icon"><use href="#i-plus"></use></svg> Open sheet</button>
+                  <button class="au-btn au-btn--tonal">Press me</button>
+                  <span class="au-caption">Sheet slides up · buttons dip on press</span>
+                </div>
+              </div>
+              <div class="pat-motion-foot">
+                <div><h4>Sheet &amp; press</h4><p>--dur-slow · --dur-fast</p></div>
+                <span class="au-tag">live</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- REDUCED MOTION -->
+        <section class="doc-section">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-shield"></use></svg> The reduced-motion contract</h2>
+          <div class="doc-prose">
+            <p>Motion is opt-out at the operating-system level, and Aurora honors it without exception. When <code>prefers-reduced-motion: reduce</code> is set, two things happen automatically:</p>
+            <ul>
+              <li>Every duration token collapses to <strong>1ms</strong>, so transitions resolve instantly instead of animating.</li>
+              <li>The signature entrances — <code>.au-rise</code>, toast, dialog, sheet, scrim and the chart draw-in — have their keyframe animations switched off, and the gauge jumps straight to its final value.</li>
+            </ul>
+            <p>The result: nothing moves, but every final state is identical. No information lives in the animation alone — the dial still shows 73%, the toast still says what happened, the list still appears.</p>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 1ms; --dur-base: 1ms;
+    --dur-slow: 1ms; --dur-slower: 1ms; --dur-dial: 1ms;
+  }
+  .au-rise, .au-toast, .au-dialog, .au-sheet,
+  .au-scrim, .au-chart-draw { animation: none !important; }
+  .au-gauge .au-gauge-arc { transition: none !important; }
+}</code></pre>
+          </div>
+        </section>
+
+        <!-- DO / DON'T -->
+        <section class="doc-section">
+          <h2 class="doc-section-title"><svg class="au-icon au-text-lo" style="width:20px"><use href="#i-check-circle"></use></svg> Do &amp; don't</h2>
+          <div class="doc-dodont">
+            <div class="doc-guide doc-guide--do">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-check"></use></svg> Do</div>
+              <div class="doc-guide-body">
+                <div class="au-toast au-toast--success" style="animation:none;width:250px">
+                  <svg class="au-icon au-toast-icon"><use href="#i-check-circle"></use></svg>
+                  <span class="au-toast-msg">Goal reached</span>
+                </div>
+              </div>
+              <div class="doc-guide-note">Animate a state change — a new entry, a reached goal, a screen arriving.</div>
+            </div>
+            <div class="doc-guide doc-guide--dont">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-x"></use></svg> Don't</div>
+              <div class="doc-guide-body">
+                <div class="au-chip" style="border-color:var(--brand)"><svg class="au-icon" style="animation:au-spin 1.2s linear infinite;color:var(--brand)"><use href="#i-star"></use></svg> Look at me</div>
+              </div>
+              <div class="doc-guide-note">Don't loop decorative motion — a perpetual wiggle carries no meaning and tires the eye.</div>
+            </div>
+          </div>
+          <div class="doc-dodont">
+            <div class="doc-guide doc-guide--do">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-check"></use></svg> Do</div>
+              <div class="doc-guide-body">
+                <span class="au-caption" style="max-width:24ch;text-align:center">Keep it brief. <strong style="color:var(--text-hi)">140–360ms</strong> for UI; save the 1.1s sweep for the one hero moment.</span>
+              </div>
+              <div class="doc-guide-note">Use the shortest duration that still reads — pace to the token scale.</div>
+            </div>
+            <div class="doc-guide doc-guide--dont">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-x"></use></svg> Don't</div>
+              <div class="doc-guide-body">
+                <span class="au-caption" style="max-width:24ch;text-align:center">Don't block the person behind a slow, unskippable transition on every tap.</span>
+              </div>
+              <div class="doc-guide-note">Never make someone wait on animation to use the app.</div>
+            </div>
+          </div>
+        </section>
+
+        <div class="doc-callout">
+          <svg class="au-icon"><use href="#i-info"></use></svg>
+          <div class="doc-callout-body"><strong>Accessibility.</strong> Motion is enhancement, not information. Reduced-motion is respected globally, entrances never trap focus or delay interaction, and looping animation is avoided so it can't trigger vestibular discomfort. If a change matters, it's also conveyed in text and final layout — the animation only makes it feel alive.</div>
+        </div>
+
+        <!-- PAGER -->
+        <nav class="doc-pager">
+          <a href="theming.html"><small>Previous</small><span>Theming</span></a>
+          <a class="doc-pager-next" href="../index.html"><small>Next</small><span>Back to Aurora</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+  <!-- ===== LIVE OVERLAY: sheet for the entrance demo ===== -->
+  <div class="au-sheet-scrim" id="motionSheet" hidden>
+    <div class="au-sheet" role="dialog" aria-modal="true" aria-label="Motion demo sheet">
+      <div class="au-sheet-grip"></div>
+      <div class="au-row-flex au-between" style="margin-bottom:var(--space-4)">
+        <div><div class="au-eyebrow">Motion</div><div class="au-mono au-text-lo" style="font-size:var(--text-sm)">slide-up · emphasized</div></div>
+        <button class="au-icon-btn" data-dialog-close aria-label="Close"><svg class="au-icon"><use href="#i-x"></use></svg></button>
+      </div>
+      <p class="au-text-mid" style="margin-bottom:var(--space-6)">This sheet rose with <code style="font-family:var(--font-mono);color:var(--brand-strong)">au-slide-up</code> over <code style="font-family:var(--font-mono);color:var(--brand-strong)">--dur-slow</code>, and the scrim behind it faded in. Close it to see focus return to the trigger.</p>
+      <button class="au-btn au-btn--primary au-btn--block" data-dialog-close><svg class="au-icon"><use href="#i-check"></use></svg> Got it</button>
+    </div>
+  </div>
+
+  <script>
+    // Replay controls for the motion demos (page-scoped).
+    (function () {
+      function replayCount() {
+        var el = document.getElementById("motionCount");
+        if (!el) return;
+        var target = parseFloat(el.getAttribute("data-countup")) || 0;
+        var decimals = parseInt(el.getAttribute("data-decimals") || "1", 10);
+        var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (reduce) { el.textContent = target.toFixed(decimals); return; }
+        var dur = 1000, start = null;
+        function step(ts) {
+          if (start === null) start = ts;
+          var p = Math.min(1, (ts - start) / dur);
+          var eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = (target * eased).toFixed(decimals);
+          if (p < 1) requestAnimationFrame(step);
+        }
+        el.textContent = "0.0";
+        requestAnimationFrame(step);
+      }
+      function replayDraw() {
+        var p = document.getElementById("motionDraw");
+        if (!p) return;
+        p.classList.remove("au-chart-draw");
+        void p.getBoundingClientRect();          // force reflow so the animation restarts
+        p.classList.add("au-chart-draw");
+      }
+      function replayRise() {
+        var wrap = document.getElementById("motionRise");
+        if (!wrap) return;
+        wrap.querySelectorAll(".au-card").forEach(function (c) {
+          c.classList.remove("au-rise");
+          void c.getBoundingClientRect();
+          c.classList.add("au-rise");
+        });
+      }
+      document.addEventListener("click", function (e) {
+        var btn = e.target.closest("[data-replay]");
+        if (!btn) return;
+        var kind = btn.getAttribute("data-replay");
+        if (kind === "gauge" && window.Aurora) window.Aurora.refreshGauges();
+        else if (kind === "count") replayCount();
+        else if (kind === "draw") replayDraw();
+        else if (kind === "rise") replayRise();
+      });
+    })();
+  </script>
+
+</body>
+</html>

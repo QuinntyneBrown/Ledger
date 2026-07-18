@@ -1,0 +1,49 @@
+@startuml
+title UML sequence behaviour — Broadcast a change to the member's other session
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle { BorderColor #344054 FontColor #101828 }
+skinparam package  { BorderColor #667085 FontColor #101828 BackgroundColor #F9FAFB }
+actor "Member" as actor
+box "Frontend — Ledger Web App (device A)" #E0F2FE
+  participant "WeighInPage" as pageA
+  participant "WeighInsApi" as clientA
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "WeighInsController" as controller
+  participant "LedgerHub" as hub
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "LogWeighInCommandHandler" as handler
+  participant "WeighInChangedNotificationHandler" as notifier
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+  participant "Realtime Backplane" as backplane
+end box
+box "Frontend — Ledger Web App (device B)" #E0F2FE
+  participant "RealtimeService" as rtB
+  participant "Dashboard" as pageB
+end box
+
+actor -> pageA : Log, edit, or delete today's weight on device A
+pageA -> clientA : Build typed request
+clientA -> controller : HTTPS request /api/v1/weigh-ins
+controller -> controller : Authenticate and authorize the owner per L2-067
+controller -> handler : Send LogWeighInCommand
+handler -> db : Upsert one-per-day and append the SyncChange feed in one unit of work per L2-016
+db --> handler : Commit with the server timestamp
+handler -> notifier : Publish WeighInChangedEvent (MediatR)
+handler --> controller : Typed result with the authoritative value
+controller --> clientA : HTTP response or ProblemDetails
+clientA --> pageA : Feature result
+pageA --> actor : Confirm the change on device A
+notifier -> hub : Push to Group(user id) only per L2-067
+hub -> backplane : Fan out across API instances per L2-077
+backplane -> rtB : Deliver WeighInChangedEvent on the member's connection
+rtB -> pageB : Apply the change to dashboard, trends, streaks, and badges per L2-055
+pageB --> actor : Reflect the change on device B without a manual refresh
+@enduml

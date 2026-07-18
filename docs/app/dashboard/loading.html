@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard · loading — Ledger</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+</head>
+<body class="app-body">
+
+  <div class="app-frame">
+    <div class="app-statusbar">
+      <span>9:41</span>
+      <span class="app-statusbar-right">
+        <svg class="au-icon" style="width:15px"><use href="#i-activity"></use></svg>
+        <svg class="au-icon" style="width:15px"><use href="#i-droplet"></use></svg>
+        <span class="au-mono" style="font-size:11px">100%</span>
+      </span>
+    </div>
+
+    <div class="app-screen">
+      <!-- header (skeleton greeting) -->
+      <div class="app-header">
+        <div class="au-row-flex au-gap-3">
+          <span class="au-skeleton au-skeleton--circle" style="width:32px;height:32px"></span>
+          <div>
+            <span class="au-skeleton" style="display:block;width:88px;height:9px;border-radius:var(--radius-pill)"></span>
+            <span class="au-skeleton" style="display:block;width:132px;height:14px;margin-top:6px;border-radius:var(--radius-pill)"></span>
+          </div>
+        </div>
+        <span class="au-skeleton au-skeleton--circle" style="width:40px;height:40px"></span>
+      </div>
+
+      <div class="app-scroll" aria-busy="true" aria-label="Loading your dashboard">
+        <!-- hero dial skeleton -->
+        <section class="dash-hero" aria-hidden="true">
+          <span class="au-skeleton au-skeleton--circle" style="width:216px;height:216px"></span>
+          <div class="dash-hero-meta" style="margin-top:var(--space-5)">
+            <span class="au-skeleton" style="width:104px;height:32px;border-radius:var(--radius-pill)"></span>
+            <span class="au-skeleton" style="width:104px;height:32px;border-radius:var(--radius-pill)"></span>
+          </div>
+          <span class="au-skeleton" style="width:220px;height:12px;margin-top:var(--space-5);border-radius:var(--radius-pill)"></span>
+        </section>
+
+        <!-- mini stats skeleton -->
+        <section class="dash-stats" style="margin-top:var(--space-6)" aria-hidden="true">
+          <div class="au-card dash-ministat au-card--pad-sm">
+            <span class="au-skeleton" style="width:54px;height:9px;border-radius:var(--radius-pill)"></span>
+            <span class="au-skeleton" style="width:40px;height:20px;margin:var(--space-3) 0;border-radius:var(--radius-xs)"></span>
+            <span class="au-skeleton" style="width:22px;height:8px;border-radius:var(--radius-pill)"></span>
+          </div>
+          <div class="au-card dash-ministat au-card--pad-sm">
+            <span class="au-skeleton" style="width:54px;height:9px;border-radius:var(--radius-pill)"></span>
+            <span class="au-skeleton" style="width:40px;height:20px;margin:var(--space-3) 0;border-radius:var(--radius-xs)"></span>
+            <span class="au-skeleton" style="width:22px;height:8px;border-radius:var(--radius-pill)"></span>
+          </div>
+          <div class="au-card dash-ministat au-card--pad-sm">
+            <span class="au-skeleton" style="width:54px;height:9px;border-radius:var(--radius-pill)"></span>
+            <span class="au-skeleton" style="width:40px;height:20px;margin:var(--space-3) 0;border-radius:var(--radius-xs)"></span>
+            <span class="au-skeleton" style="width:22px;height:8px;border-radius:var(--radius-pill)"></span>
+          </div>
+        </section>
+
+        <!-- trend card skeleton -->
+        <div class="app-section-title">
+          <span class="au-skeleton" style="width:96px;height:13px;border-radius:var(--radius-pill)"></span>
+          <span class="au-skeleton" style="width:66px;height:11px;border-radius:var(--radius-pill)"></span>
+        </div>
+        <div class="au-card" aria-hidden="true">
+          <div class="au-row-flex au-between" style="margin-bottom:var(--space-4)">
+            <div>
+              <span class="au-skeleton" style="display:block;width:78px;height:9px;border-radius:var(--radius-pill)"></span>
+              <span class="au-skeleton" style="display:block;width:96px;height:18px;margin-top:8px;border-radius:var(--radius-xs)"></span>
+            </div>
+            <span class="au-skeleton" style="width:72px;height:26px;border-radius:var(--radius-pill)"></span>
+          </div>
+          <span class="au-skeleton" style="display:block;width:100%;height:44px;border-radius:var(--radius-sm)"></span>
+        </div>
+
+        <!-- milestone card skeleton -->
+        <div class="app-section-title">
+          <span class="au-skeleton" style="width:112px;height:13px;border-radius:var(--radius-pill)"></span>
+          <span class="au-skeleton" style="width:60px;height:11px;border-radius:var(--radius-pill)"></span>
+        </div>
+        <div class="au-card" style="display:flex;align-items:center;gap:var(--space-4)" aria-hidden="true">
+          <span class="au-skeleton au-skeleton--circle" style="width:64px;height:64px;flex:none"></span>
+          <div class="au-fill">
+            <span class="au-skeleton" style="display:block;width:120px;height:14px;border-radius:var(--radius-pill)"></span>
+            <span class="au-skeleton" style="display:block;width:180px;height:10px;margin-top:8px;border-radius:var(--radius-pill)"></span>
+          </div>
+        </div>
+
+        <div style="height:var(--space-4)"></div>
+      </div>
+    </div>
+
+    <nav class="au-bottomnav app-bottomnav">
+      <a class="app-rail-brand" href="../dashboard/dashboard.html"><span class="app-rail-mark"></span>Ledger</a>
+      <a class="au-navitem is-active" href="dashboard.html"><svg class="au-icon"><use href="#i-home"></use></svg>Home</a>
+      <a class="au-navitem" href="../trends/trends.html"><svg class="au-icon"><use href="#i-activity"></use></svg>Trends</a>
+      <button class="app-navfab" data-dialog-open="quickWeigh" aria-label="Log weight"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      <a class="au-navitem" href="../milestones/milestones.html"><svg class="au-icon"><use href="#i-trophy"></use></svg>Badges</a>
+      <a class="au-navitem" href="../settings/account.html"><svg class="au-icon"><use href="#i-user"></use></svg>Profile</a>
+    </nav>
+  </div>
+
+  <!-- QUICK WEIGH-IN SHEET -->
+  <div class="au-sheet-scrim" id="quickWeigh" hidden>
+    <div class="au-sheet" role="dialog" aria-modal="true" aria-label="Log today's weight">
+      <div class="au-sheet-grip"></div>
+      <div class="au-row-flex au-between" style="margin-bottom:var(--space-2)">
+        <div><div class="au-eyebrow">Today</div><div style="font-family:var(--font-mono);color:var(--text-lo);font-size:var(--text-sm)">Wed, Jul 18</div></div>
+        <button class="au-icon-btn" data-dialog-close aria-label="Close"><svg class="au-icon"><use href="#i-x"></use></svg></button>
+      </div>
+      <div class="weigh-stepper" style="margin:var(--space-6) 0">
+        <button class="weigh-stepper-btn" aria-label="Decrease"><svg class="au-icon"><use href="#i-minus"></use></svg></button>
+        <div class="au-bignum-field">
+          <span class="au-bignum" style="width:auto">74.9</span>
+          <span class="au-bignum-unit">kg</span>
+        </div>
+        <button class="weigh-stepper-btn" aria-label="Increase"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      </div>
+      <button class="au-btn au-btn--primary au-btn--lg au-btn--block" data-dialog-close data-toast="Weight logged — 74.9 kg" data-toast-action="Undo">
+        <svg class="au-icon"><use href="#i-check"></use></svg> Log weight
+      </button>
+    </div>
+  </div>
+
+</body>
+</html>

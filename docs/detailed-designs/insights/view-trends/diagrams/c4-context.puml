@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — View trends
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+System_Boundary(ledger, "Ledger") {
+  System(app, "Ledger", "Responsive weight-tracking web application")
+}
+
+Rel(member, app, "Reads weight trends using", "HTTPS")
+@enduml

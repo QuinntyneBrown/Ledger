@@ -1,0 +1,43 @@
+@startuml
+title UML sequence behaviour — Load the trends screen
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle { BorderColor #344054 FontColor #101828 }
+skinparam package  { BorderColor #667085 FontColor #101828 BackgroundColor #F9FAFB }
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "TrendsPage" as page
+  participant "TrendsApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "TrendsController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "GetTrendsQueryHandler" as handler
+  participant "WeightAnalytics" as analytics
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+actor -> page : Open the trends screen
+page -> page : Show skeleton placeholders
+page -> client : Request the default window
+client -> controller : HTTPS GET /api/v1/trends?range={range}
+controller -> controller : Authenticate and scope to the owner
+controller -> handler : Send GetTrendsQuery(range)
+handler -> db : Read owner-scoped weigh-ins for the window on the (userId, date) index per L2-076
+db --> handler : Weigh-ins for the window
+handler -> analytics : Compute the daily series, 7-day moving average, and range band per L2-025
+analytics --> handler : Series, moving average, and band
+handler -> handler : Overlay the goal line and milestone annotations within the range per L2-027
+handler -> analytics : Compute rate per week, total change, best week, and BMI per L2-028
+analytics --> handler : Summary figures
+handler -> handler : Compose the accessible chart description per L2-080
+handler --> controller : Trends view with series, average, band, goal line, annotations, summary, and recent entries
+controller --> client : 200 OK
+client --> page : Trends view
+page --> actor : Render the chart with an accessible description and the recent-entries preview per L2-025, L2-029, L2-080
+@enduml

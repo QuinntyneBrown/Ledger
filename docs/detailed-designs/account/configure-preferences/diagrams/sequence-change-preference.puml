@@ -1,0 +1,59 @@
+@startuml
+title UML sequence behaviour — Configure preferences: change a preference
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "PreferencesPage" as page
+  participant "AccountApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "PreferencesController" as controller
+  participant "Realtime Hub" as hub
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "ChangePreferenceCommandHandler" as handler
+  participant "Preferences" as entity
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+box "Frontend — Member's other session" #E0F2FE
+  participant "AccountApi" as client2
+  participant "PreferencesPage" as page2
+end box
+
+actor -> page : Change unit, theme, or week-start
+page -> page : Apply theme and unit locally for immediate feedback per L2-046
+page -> client : Build typed request
+client -> controller : HTTPS PUT /api/v1/preferences
+controller -> controller : Authenticate and resolve owner per L2-067
+controller -> handler : Send ChangePreferenceCommand
+handler -> db : Load owner Preferences
+db --> handler : Preferences
+handler -> entity : Apply changed fields; weights remain canonical kg per L2-045
+entity --> handler : Updated preferences
+handler -> db : Persist server-side in one unit of work per L2-048
+db --> handler : Commit
+opt member has other active sessions
+  handler -> hub : Publish preferences-changed event per L2-048
+  hub -> client2 : Push preference update to owner's session only per L2-067
+  client2 -> page2 : Apply without reload per L2-055
+end
+handler --> controller : Typed result
+controller --> client : 200 OK or ProblemDetails
+client --> page : Confirmed preferences
+page --> actor : Show updated unit, theme, and week-start across screens per L2-045
+@enduml

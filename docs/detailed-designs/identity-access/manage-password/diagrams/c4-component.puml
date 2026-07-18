@@ -1,0 +1,44 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Manage a password
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+Container_Boundary(web, "Ledger Web App") {
+  Component(page, "PasswordPage", "Angular component", "Presents forgot, reset, and change password forms")
+  Component(client, "AuthApi", "Angular HTTP service", "Typed client in ledger/api for the password endpoints")
+}
+Container_Boundary(api, "Ledger API") {
+  Component(ctrl, "AuthController", "ASP.NET Core controller", "Exposes /api/v1/auth password endpoints")
+  Component(requestHandler, "RequestPasswordResetCommandHandler", "MediatR handler", "Issues a reset token and returns a neutral response per L2-005")
+  Component(resetHandler, "ResetPasswordCommandHandler", "MediatR handler", "Applies the reset and revokes all sessions per L2-006")
+  Component(changeHandler, "ChangePasswordCommandHandler", "MediatR handler", "Changes the password and revokes other sessions per L2-007")
+  Component(user, "User", "Domain entity", "Owns identity and the password hash")
+  Component(resetToken, "PasswordResetToken", "Domain entity", "Single-use, time-limited reset token")
+  Component(hasher, "IPasswordHasher", "Application service", "Hashes new and verifies current passwords per L2-002")
+  Component(sender, "IEmailSender", "Application service", "Sends the reset link and confirmation email")
+  Component(revoker, "ISessionRevoker", "Application service", "Revokes refresh tokens on reset or change")
+  ComponentDb(db, "Ledger Database", "SQL Server", "Persists accounts, reset tokens, and refresh tokens")
+}
+System_Ext(email, "Email provider", "Sends verification, reset, and notification email via SMTP")
+
+Rel(member, page, "Submits a password form", "HTTPS")
+Rel(page, client, "Builds the typed request")
+Rel(client, ctrl, "Calls forgot, reset, and change endpoints", "JSON/HTTPS")
+Rel(ctrl, requestHandler, "Sends RequestPasswordResetCommand")
+Rel(ctrl, resetHandler, "Sends ResetPasswordCommand")
+Rel(ctrl, changeHandler, "Sends ChangePasswordCommand")
+Rel(requestHandler, resetToken, "Issues and invalidates prior tokens per L2-005")
+Rel(requestHandler, sender, "Sends the reset link")
+Rel(resetHandler, resetToken, "Loads and consumes")
+Rel(resetHandler, user, "Updates the password hash")
+Rel(resetHandler, revoker, "Revokes all sessions per L2-006")
+Rel(changeHandler, hasher, "Verifies current and hashes new per L2-007")
+Rel(changeHandler, user, "Updates the password hash")
+Rel(changeHandler, revoker, "Revokes other sessions per L2-007")
+Rel(resetHandler, sender, "Sends the confirmation email")
+Rel(requestHandler, db, "Reads accounts; writes reset tokens", "EF Core")
+Rel(resetHandler, db, "Updates the account and revokes sessions", "EF Core")
+Rel(changeHandler, db, "Updates the account and revokes sessions", "EF Core")
+Rel(sender, email, "Sends email via", "SMTP")
+@enduml

@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Select — Aurora Design System</title>
+  <meta name="description" content="Select lets people choose one option from a fixed set. Aurora offers the native dropdown select plus a segmented control for two to three inline choices.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+</head>
+<body class="doc-body">
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation">
+      <svg class="au-icon"><use href="#i-menu"></use></svg>
+    </button>
+    <a class="doc-brand" href="../index.html">
+      <span class="doc-brandmark"></span>
+      <span class="doc-brand-name">Aurora<small>Design System</small></span>
+    </a>
+    <nav class="doc-header-nav">
+      <a href="../foundations/getting-started.html">Foundations</a>
+      <a href="button.html" class="is-active">Components</a>
+      <a href="../patterns/forms-validation.html">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <!-- ============ CANONICAL SIDEBAR (shared across all DS pages) ============ -->
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="../foundations/getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="../foundations/color.html">Color</a>
+        <a class="doc-navlink" href="../foundations/typography.html">Typography</a>
+        <a class="doc-navlink" href="../foundations/spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="../foundations/elevation.html">Elevation</a>
+        <a class="doc-navlink" href="../foundations/shape.html">Shape</a>
+        <a class="doc-navlink" href="../foundations/iconography.html">Iconography</a>
+        <a class="doc-navlink" href="../foundations/motion.html">Motion</a>
+        <a class="doc-navlink" href="../foundations/accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="button.html">Button</a>
+        <a class="doc-navlink" href="text-field.html">Text field</a>
+        <a class="doc-navlink is-active" href="select.html">Select</a>
+        <a class="doc-navlink" href="switch.html">Switch</a>
+        <a class="doc-navlink" href="checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="slider.html">Slider</a>
+        <a class="doc-navlink" href="date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="card.html">Card</a>
+        <a class="doc-navlink" href="list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="avatar.html">Avatar</a>
+        <a class="doc-navlink" href="progress.html">Progress</a>
+        <a class="doc-navlink" href="gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="dialog.html">Dialog</a>
+        <a class="doc-navlink" href="snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="banner.html">Banner</a>
+        <a class="doc-navlink" href="tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="tabs.html">Tabs</a>
+        <a class="doc-navlink" href="navigation.html">Navigation</a>
+        <a class="doc-navlink" href="milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="../patterns/forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="../patterns/data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="../patterns/data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="../patterns/theming.html">Theming</a>
+        <a class="doc-navlink" href="../patterns/motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Components <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Select</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-list"></use></svg> Actions &amp; inputs</span>
+          <h1 class="doc-title">Select</h1>
+          <p class="doc-lead">Select picks one value from a fixed set. Use the native <strong style="color:var(--text-hi)">dropdown</strong> for longer lists, and the <strong style="color:var(--text-hi)">segmented control</strong> when two or three choices deserve to stay visible.</p>
+        </div>
+
+        <div class="doc-tabbar" data-tabs>
+          <button class="doc-tab is-active" data-tab="overview">Overview</button>
+          <button class="doc-tab" data-tab="examples">Examples</button>
+          <button class="doc-tab" data-tab="api">Tokens &amp; API</button>
+        </div>
+
+        <!-- ===== OVERVIEW ===== -->
+        <section data-tabpanel="overview">
+          <div class="doc-canvas" style="border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:var(--space-7);padding:var(--space-9);gap:var(--space-7)">
+            <div class="au-field" style="width:240px">
+              <label class="au-label" for="ov-unit">Weight unit</label>
+              <div class="au-select-wrap">
+                <select class="au-select" id="ov-unit">
+                  <option>Kilograms (kg)</option>
+                  <option>Pounds (lb)</option>
+                  <option>Stones (st)</option>
+                </select>
+                <svg class="au-icon au-select-caret"><use href="#i-chevron-down"></use></svg>
+              </div>
+            </div>
+            <div class="au-segmented">
+              <button>Week</button>
+              <button class="is-active is-brand">Month</button>
+              <button>Year</button>
+            </div>
+          </div>
+
+          <div class="doc-prose">
+            <h2 class="doc-section-title">When to use it</h2>
+            <p>Reach for a <strong>dropdown select</strong> when there are four or more mutually exclusive options, or the list is long enough that inline chips would crowd the layout. Choose the <strong>segmented control</strong> for two or three peer options that people switch between often — a time range, a unit, a view mode.</p>
+            <ul>
+              <li>Order options predictably — alphabetical, numeric, or by frequency.</li>
+              <li>For 2–3 options that toggle a view, prefer the <strong>segmented control</strong> over a dropdown.</li>
+              <li>Use the <strong>brand segment</strong> (<code>.is-active.is-brand</code>) to make the active choice unmistakable.</li>
+              <li>If people can pick several values at once, use <a href="checkbox-radio.html">checkboxes</a> instead.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Anatomy</h2>
+          <div class="doc-anatomy" style="padding-top:var(--space-11);padding-bottom:var(--space-11)">
+            <div class="au-select-wrap" style="width:260px">
+              <select class="au-select" aria-label="Goal pace">
+                <option>Steady — 0.5 kg / week</option>
+              </select>
+              <svg class="au-icon au-select-caret"><use href="#i-chevron-down"></use></svg>
+            </div>
+            <span class="doc-anatomy-marker" style="top:24%;left:30%">1</span>
+            <span class="doc-anatomy-marker" style="top:50%;right:20%">2</span>
+          </div>
+          <div class="doc-legend">
+            <ul>
+              <li><span class="doc-legend-num">1</span> <strong style="color:var(--text-hi)">Field</strong> — a 52px control matching the text field’s shell and focus ring.</li>
+              <li><span class="doc-legend-num">2</span> <strong style="color:var(--text-hi)">Caret</strong> — a non-interactive chevron that signals the native menu.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Do &amp; don’t</h2>
+          <div class="doc-dodont">
+            <div class="doc-guide doc-guide--do">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-check"></use></svg> Do</div>
+              <div class="doc-guide-body">
+                <div class="au-segmented">
+                  <button class="is-active is-brand">kg</button>
+                  <button>lb</button>
+                  <button>st</button>
+                </div>
+              </div>
+              <div class="doc-guide-note">Use a segmented control for a small set of peer choices you switch between.</div>
+            </div>
+            <div class="doc-guide doc-guide--dont">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-x"></use></svg> Don’t</div>
+              <div class="doc-guide-body">
+                <div class="au-segmented" style="flex-wrap:wrap;max-width:220px">
+                  <button class="is-active is-brand">Mon</button>
+                  <button>Tue</button>
+                  <button>Wed</button>
+                  <button>Thu</button>
+                  <button>Fri</button>
+                  <button>Sat</button>
+                  <button>Sun</button>
+                </div>
+              </div>
+              <div class="doc-guide-note">Don’t force many options into a segmented control — use a dropdown instead.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== EXAMPLES ===== -->
+        <section data-tabpanel="examples" hidden>
+          <!-- Dropdown states -->
+          <h2 class="doc-section-title">Dropdown — default, focus &amp; disabled</h2>
+          <p class="doc-section-lead">The native <code class="doc-td-name">&lt;select&gt;</code> is styled to match the text field. The middle control simulates the focus ring.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">select/states</span>
+              <div class="doc-example-tools"><button class="au-icon-btn au-icon-btn--sm" data-theme-toggle aria-label="Toggle theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button></div>
+            </div>
+            <div class="doc-canvas" style="gap:var(--space-6)">
+              <div class="au-field" style="width:220px">
+                <label class="au-label">Default</label>
+                <div class="au-select-wrap">
+                  <select class="au-select" aria-label="Default select"><option>Kilograms (kg)</option><option>Pounds (lb)</option></select>
+                  <svg class="au-icon au-select-caret"><use href="#i-chevron-down"></use></svg>
+                </div>
+              </div>
+              <div class="au-field" style="width:220px">
+                <label class="au-label">Focus</label>
+                <div class="au-select-wrap">
+                  <select class="au-select" style="border-color:var(--brand);box-shadow:0 0 0 4px var(--brand-ring)" aria-label="Focused select"><option>Pounds (lb)</option></select>
+                  <svg class="au-icon au-select-caret"><use href="#i-chevron-down"></use></svg>
+                </div>
+              </div>
+              <div class="au-field" style="width:220px">
+                <label class="au-label">Disabled</label>
+                <div class="au-select-wrap" style="opacity:0.5">
+                  <select class="au-select" disabled aria-label="Disabled select"><option>Stones (st)</option></select>
+                  <svg class="au-icon au-select-caret"><use href="#i-chevron-down"></use></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-select-wrap"&gt;
+  &lt;select class="au-select"&gt;
+    &lt;option&gt;Kilograms (kg)&lt;/option&gt;
+    &lt;option&gt;Pounds (lb)&lt;/option&gt;
+  &lt;/select&gt;
+  &lt;svg class="au-icon au-select-caret"&gt;&lt;use href="#i-chevron-down"/&gt;&lt;/svg&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+
+          <!-- Segmented -->
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Segmented control</h2>
+          <p class="doc-section-lead">A pill of peer options. The neutral active segment reads as a quiet selection; add <code class="doc-td-name">.is-brand</code> to make it gold.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">select/segmented</span></div>
+            <div class="doc-canvas" style="gap:var(--space-6);flex-direction:column">
+              <div class="au-segmented">
+                <button class="is-active">Week</button>
+                <button>Month</button>
+                <button>Year</button>
+              </div>
+              <div class="au-segmented">
+                <button>Week</button>
+                <button class="is-active is-brand">Month</button>
+                <button>Year</button>
+              </div>
+              <div class="au-segmented">
+                <button class="is-active is-brand">kg</button>
+                <button>lb</button>
+              </div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-segmented"&gt;
+  &lt;button&gt;Week&lt;/button&gt;
+  &lt;button class="is-active is-brand"&gt;Month&lt;/button&gt;
+  &lt;button&gt;Year&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+
+          <!-- In a form -->
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">In a form row</h2>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">select/form</span></div>
+            <div class="doc-canvas doc-canvas--start">
+              <div class="au-field" style="width:100%;max-width:420px">
+                <label class="au-label" for="ex-pace">Goal pace</label>
+                <div class="au-select-wrap">
+                  <select class="au-select" id="ex-pace">
+                    <option>Gentle — 0.25 kg / week</option>
+                    <option selected>Steady — 0.5 kg / week</option>
+                    <option>Focused — 0.75 kg / week</option>
+                    <option>Aggressive — 1.0 kg / week</option>
+                  </select>
+                  <svg class="au-icon au-select-caret"><use href="#i-chevron-down"></use></svg>
+                </div>
+                <div class="au-help">A steady pace is the most sustainable for most people.</div>
+              </div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-field"&gt;
+  &lt;label class="au-label" for="pace"&gt;Goal pace&lt;/label&gt;
+  &lt;div class="au-select-wrap"&gt;
+    &lt;select class="au-select" id="pace"&gt;…&lt;/select&gt;
+    &lt;svg class="au-icon au-select-caret"&gt;&lt;use href="#i-chevron-down"/&gt;&lt;/svg&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- ===== API ===== -->
+        <section data-tabpanel="api" hidden>
+          <h2 class="doc-section-title">Structure &amp; classes</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Class</th><th>Element</th><th>Role</th></tr></thead>
+              <tbody>
+                <tr><td><code>.au-select-wrap</code></td><td>div</td><td>Positioning context for the caret.</td></tr>
+                <tr><td><code>.au-select</code></td><td>select</td><td>The styled native control; appearance reset, 52px tall.</td></tr>
+                <tr><td><code>.au-select-caret</code></td><td>svg</td><td>Non-interactive chevron pinned to the right.</td></tr>
+                <tr><td><code>.au-segmented</code></td><td>div</td><td>Pill container for peer option buttons.</td></tr>
+                <tr><td><code>.au-segmented button</code></td><td>button</td><td>An individual option.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-8)">Modifiers &amp; states</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Class</th><th>Applies to</th><th>Effect</th></tr></thead>
+              <tbody>
+                <tr><td><code>.is-active</code></td><td>segment</td><td>The selected option — raised neutral surface.</td></tr>
+                <tr><td><code>.is-active.is-brand</code></td><td>segment</td><td>Selected option filled with the gold brand.</td></tr>
+                <tr><td><code>:hover</code></td><td>select / segment</td><td>Border strengthens / label brightens.</td></tr>
+                <tr><td><code>:focus-visible</code></td><td>select</td><td>Brand border + 4px ring.</td></tr>
+                <tr><td><code>:disabled</code></td><td>select</td><td>Dim the wrapper to signal it is unavailable.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-8)">Tokens consumed</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Token</th><th>Applied to</th></tr></thead>
+              <tbody>
+                <tr><td><code>--surface-2 · --border · --border-strong</code></td><td>Select shell fill and border.</td></tr>
+                <tr><td><code>--surface-sunken · --border-faint</code></td><td>Segmented track.</td></tr>
+                <tr><td><code>--brand · --text-on-gold</code></td><td>Brand segment fill and label.</td></tr>
+                <tr><td><code>--brand-ring</code></td><td>Focus halo.</td></tr>
+                <tr><td><code>--radius-md · --radius-pill</code></td><td>Select and segmented shapes.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-info"></use></svg>
+            <div class="doc-callout-body"><strong>Accessibility.</strong> The dropdown is a real <code>&lt;select&gt;</code>, so it is fully keyboard- and screen-reader-navigable. For the segmented control, use <code>role="tablist"</code> / <code>role="tab"</code> or a radio group and set <code>aria-pressed</code>/<code>aria-selected</code> so the active choice is announced.</div>
+          </div>
+        </section>
+
+        <!-- Pager -->
+        <nav class="doc-pager">
+          <a href="text-field.html"><small>Previous</small><span>Text field</span></a>
+          <a class="doc-pager-next" href="switch.html"><small>Next</small><span>Switch</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

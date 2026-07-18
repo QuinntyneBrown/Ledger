@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Avatar — Aurora Design System</title>
+  <meta name="description" content="Avatars represent a person or account with initials, an image, or an icon on an aurora-soft field. Three sizes and an overlapping group stack.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+</head>
+<body class="doc-body">
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation">
+      <svg class="au-icon"><use href="#i-menu"></use></svg>
+    </button>
+    <a class="doc-brand" href="../index.html">
+      <span class="doc-brandmark"></span>
+      <span class="doc-brand-name">Aurora<small>Design System</small></span>
+    </a>
+    <nav class="doc-header-nav">
+      <a href="../foundations/getting-started.html">Foundations</a>
+      <a href="button.html" class="is-active">Components</a>
+      <a href="../patterns/forms-validation.html">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <!-- ============ CANONICAL SIDEBAR (shared across all DS pages) ============ -->
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="../foundations/getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="../foundations/color.html">Color</a>
+        <a class="doc-navlink" href="../foundations/typography.html">Typography</a>
+        <a class="doc-navlink" href="../foundations/spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="../foundations/elevation.html">Elevation</a>
+        <a class="doc-navlink" href="../foundations/shape.html">Shape</a>
+        <a class="doc-navlink" href="../foundations/iconography.html">Iconography</a>
+        <a class="doc-navlink" href="../foundations/motion.html">Motion</a>
+        <a class="doc-navlink" href="../foundations/accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="button.html">Button</a>
+        <a class="doc-navlink" href="text-field.html">Text field</a>
+        <a class="doc-navlink" href="select.html">Select</a>
+        <a class="doc-navlink" href="switch.html">Switch</a>
+        <a class="doc-navlink" href="checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="slider.html">Slider</a>
+        <a class="doc-navlink" href="date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="card.html">Card</a>
+        <a class="doc-navlink" href="list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink is-active" href="avatar.html">Avatar</a>
+        <a class="doc-navlink" href="progress.html">Progress</a>
+        <a class="doc-navlink" href="gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="dialog.html">Dialog</a>
+        <a class="doc-navlink" href="snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="banner.html">Banner</a>
+        <a class="doc-navlink" href="tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="tabs.html">Tabs</a>
+        <a class="doc-navlink" href="navigation.html">Navigation</a>
+        <a class="doc-navlink" href="milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="../patterns/forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="../patterns/data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="../patterns/data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="../patterns/theming.html">Theming</a>
+        <a class="doc-navlink" href="../patterns/motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Components <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Avatar</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-user"></use></svg> Data display</span>
+          <h1 class="doc-title">Avatar</h1>
+          <p class="doc-lead">A small round mark that stands in for a person or account. It shows a photo when there is one, otherwise <strong style="color:var(--text-hi)">initials on an aurora-soft field</strong> — always legible, never a broken image.</p>
+        </div>
+
+        <div class="doc-tabbar" data-tabs>
+          <button class="doc-tab is-active" data-tab="overview">Overview</button>
+          <button class="doc-tab" data-tab="examples">Examples</button>
+          <button class="doc-tab" data-tab="api">Tokens &amp; API</button>
+        </div>
+
+        <!-- ===== OVERVIEW ===== -->
+        <section data-tabpanel="overview">
+          <div class="doc-canvas" style="border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:var(--space-7);padding:var(--space-9);gap:var(--space-6)">
+            <span class="au-avatar au-avatar--lg">QB</span>
+            <span class="au-avatar au-avatar--lg">
+              <svg viewBox="0 0 72 72" width="72" height="72" aria-hidden="true" role="img">
+                <defs><linearGradient id="avPortraitA" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="var(--violet-500)"></stop><stop offset="100%" stop-color="var(--teal-500)"></stop></linearGradient></defs>
+                <rect width="72" height="72" fill="url(#avPortraitA)"></rect>
+                <circle cx="36" cy="29" r="13" fill="rgba(255,255,255,0.9)"></circle>
+                <path d="M14 66c0-13 10-20 22-20s22 7 22 20z" fill="rgba(255,255,255,0.9)"></path>
+              </svg>
+            </span>
+            <span class="au-avatar au-avatar--lg" style="background:var(--surface-3);color:var(--text-lo)"><svg class="au-icon" style="width:34px;height:34px"><use href="#i-user"></use></svg></span>
+          </div>
+
+          <div class="doc-prose">
+            <h2 class="doc-section-title">When to use it</h2>
+            <p>Use an avatar wherever an entry, comment, or profile needs a human face — the account menu, a shared plan, a coach note. In Ledger it is quiet: one in the header, and small ones in shared-goal lists.</p>
+            <ul>
+              <li>Prefer a <strong>photo</strong> when you have one; fall back to <strong>initials</strong>, then to a generic <code>#i-user</code> icon.</li>
+              <li>Keep initials to <strong>one or two letters</strong> — the mark must read at 32px.</li>
+              <li>Use the <strong>group stack</strong> to show several participants compactly; cap it with a “+N” count.</li>
+              <li>Never stretch a non-square image — the component clips to a circle with <code>object-fit:cover</code>.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Sizes</h2>
+          <div class="doc-anatomy" style="gap:var(--space-6);grid-auto-flow:column">
+            <div class="au-row-flex au-gap-4">
+              <span class="au-avatar au-avatar--sm">QB</span>
+              <span class="au-avatar">QB</span>
+              <span class="au-avatar au-avatar--lg">QB</span>
+            </div>
+          </div>
+          <div class="doc-legend">
+            <ul>
+              <li><span class="doc-legend-num">1</span> <strong style="color:var(--text-hi)">sm — 32px</strong> for dense lists and inline mentions.</li>
+              <li><span class="doc-legend-num">2</span> <strong style="color:var(--text-hi)">default — 44px</strong> for rows and the app header.</li>
+              <li><span class="doc-legend-num">3</span> <strong style="color:var(--text-hi)">lg — 72px</strong> for a profile header.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Do &amp; don’t</h2>
+          <div class="doc-dodont">
+            <div class="doc-guide doc-guide--do">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-check"></use></svg> Do</div>
+              <div class="doc-guide-body">
+                <span class="au-avatar au-avatar--lg">QB</span>
+              </div>
+              <div class="doc-guide-note">Fall back to clear initials on the aurora field.</div>
+            </div>
+            <div class="doc-guide doc-guide--dont">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-x"></use></svg> Don’t</div>
+              <div class="doc-guide-body">
+                <span class="au-avatar au-avatar--lg" style="font-size:var(--text-2xs);letter-spacing:0">QUINN</span>
+              </div>
+              <div class="doc-guide-note">Don’t cram a full name into the mark.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== EXAMPLES ===== -->
+        <section data-tabpanel="examples" hidden>
+          <!-- Sizes -->
+          <h2 class="doc-section-title">Sizes</h2>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">avatar/sizes</span>
+              <div class="doc-example-tools"><button class="au-icon-btn au-icon-btn--sm" data-theme-toggle aria-label="Toggle theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button></div>
+            </div>
+            <div class="doc-canvas" style="gap:var(--space-6)">
+              <span class="au-avatar au-avatar--sm">QB</span>
+              <span class="au-avatar">QB</span>
+              <span class="au-avatar au-avatar--lg">QB</span>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;span class="au-avatar au-avatar--sm"&gt;QB&lt;/span&gt;
+&lt;span class="au-avatar"&gt;QB&lt;/span&gt;
+&lt;span class="au-avatar au-avatar--lg"&gt;QB&lt;/span&gt;</code></pre>
+          </div>
+
+          <!-- Content types -->
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Initials, image &amp; icon</h2>
+          <p class="doc-section-lead">The image here is an inline SVG placeholder — the same slot takes a real <code class="doc-td-name">&lt;img&gt;</code>, clipped to the circle with <code>object-fit:cover</code>.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">avatar/content</span></div>
+            <div class="doc-canvas" style="gap:var(--space-6)">
+              <span class="au-avatar au-avatar--lg">QB</span>
+              <span class="au-avatar au-avatar--lg">
+                <svg viewBox="0 0 72 72" width="72" height="72" aria-hidden="true" role="img">
+                  <defs><linearGradient id="avPortraitB" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="var(--teal-500)"></stop><stop offset="100%" stop-color="var(--gold-400)"></stop></linearGradient></defs>
+                  <rect width="72" height="72" fill="url(#avPortraitB)"></rect>
+                  <circle cx="36" cy="29" r="13" fill="rgba(20,22,30,0.55)"></circle>
+                  <path d="M14 66c0-13 10-20 22-20s22 7 22 20z" fill="rgba(20,22,30,0.55)"></path>
+                </svg>
+              </span>
+              <span class="au-avatar au-avatar--lg" style="background:var(--surface-3);color:var(--text-lo)"><svg class="au-icon" style="width:34px;height:34px"><use href="#i-user"></use></svg></span>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;!-- initials --&gt;
+&lt;span class="au-avatar"&gt;QB&lt;/span&gt;
+
+&lt;!-- photo --&gt;
+&lt;span class="au-avatar"&gt;&lt;img src="/me.jpg" alt="Quinn B."&gt;&lt;/span&gt;
+
+&lt;!-- icon fallback --&gt;
+&lt;span class="au-avatar"&gt;&lt;svg class="au-icon"&gt;&lt;use href="#i-user"/&gt;&lt;/svg&gt;&lt;/span&gt;</code></pre>
+          </div>
+
+          <!-- With name -->
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">In a row, with name</h2>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">avatar/identity</span></div>
+            <div class="doc-canvas doc-canvas--stack">
+              <div class="au-card" style="width:100%;max-width:360px;margin:0 auto">
+                <div class="au-row-flex au-gap-3">
+                  <span class="au-avatar">QB</span>
+                  <div>
+                    <div style="font-weight:var(--weight-semibold)">Quinn Brown</div>
+                    <div class="au-caption">Goal: 75.0 kg · 12-day streak</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Group / stack -->
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Group stack</h2>
+          <p class="doc-section-lead">Overlap avatars with a negative margin and ring each in the canvas color for separation. Cap with a “+N” count.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">avatar/group</span></div>
+            <div class="doc-canvas">
+              <div class="au-row-flex" style="padding-left:12px">
+                <span class="au-avatar" style="margin-left:-12px;box-shadow:0 0 0 3px var(--surface-1)">QB</span>
+                <span class="au-avatar" style="margin-left:-12px;box-shadow:0 0 0 3px var(--surface-1);background:linear-gradient(120deg,var(--teal-500),var(--gold-400));color:var(--text-on-teal)">SL</span>
+                <span class="au-avatar" style="margin-left:-12px;box-shadow:0 0 0 3px var(--surface-1);background:linear-gradient(120deg,var(--violet-500),var(--teal-400))">MK</span>
+                <span class="au-avatar" style="margin-left:-12px;box-shadow:0 0 0 3px var(--surface-1);background:var(--surface-3);color:var(--text-mid);font-size:var(--text-xs)">+4</span>
+              </div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-row-flex" style="padding-left:12px"&gt;
+  &lt;span class="au-avatar" style="margin-left:-12px;
+        box-shadow:0 0 0 3px var(--surface-1)"&gt;QB&lt;/span&gt;
+  &lt;span class="au-avatar" style="margin-left:-12px;…"&gt;SL&lt;/span&gt;
+  &lt;span class="au-avatar" style="margin-left:-12px;…"&gt;+4&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- ===== API ===== -->
+        <section data-tabpanel="api" hidden>
+          <h2 class="doc-section-title">Classes</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Class</th><th>Element</th><th>Role</th></tr></thead>
+              <tbody>
+                <tr><td><code>.au-avatar</code></td><td>span</td><td>44px round mark; centers initials or an icon on an aurora-soft field, clips images.</td></tr>
+                <tr><td><code>.au-avatar--sm</code></td><td>modifier</td><td>32px — dense lists and inline mentions.</td></tr>
+                <tr><td><code>.au-avatar--lg</code></td><td>modifier</td><td>72px — profile headers.</td></tr>
+                <tr><td><code>.au-avatar img</code></td><td>img</td><td>Fills and covers the circle (<code>object-fit:cover</code>).</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-8)">Tokens consumed</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Token</th><th>Applied to</th></tr></thead>
+              <tbody>
+                <tr><td><code>--aurora-soft</code></td><td>Default initials background.</td></tr>
+                <tr><td><code>--text-hi</code></td><td>Initials color.</td></tr>
+                <tr><td><code>--border</code></td><td>Hairline ring.</td></tr>
+                <tr><td><code>--radius-circle</code></td><td>Round shape.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-info"></use></svg>
+            <div class="doc-callout-body"><strong>Accessibility.</strong> Give a photo <code>&lt;img&gt;</code> a meaningful <code>alt</code> (the person’s name). For an initials or icon avatar that repeats a name shown beside it, mark the avatar decorative with <code>aria-hidden="true"</code> so the name isn’t read twice. Avatar backgrounds meet contrast for the initials in both themes.</div>
+          </div>
+        </section>
+
+        <!-- Pager -->
+        <nav class="doc-pager">
+          <a href="chip-badge.html"><small>Previous</small><span>Chip &amp; badge</span></a>
+          <a class="doc-pager-next" href="progress.html"><small>Next</small><span>Progress</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

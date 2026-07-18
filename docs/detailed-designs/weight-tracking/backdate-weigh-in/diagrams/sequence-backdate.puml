@@ -1,0 +1,55 @@
+@startuml
+title UML sequence behaviour — Backdate a weigh-in
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle { BorderColor #344054 FontColor #101828 }
+skinparam package  { BorderColor #667085 FontColor #101828 BackgroundColor #F9FAFB }
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "BackdateWeighInPage" as page
+  participant "WeighInsApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "WeighInsController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "LogWeighInCommandHandler" as handler
+  participant "WeighIn" as entity
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+actor -> page : Open the backdate calendar per L2-017
+page -> page : Mark today; mute and disable future days per L2-017
+alt Member attempts a future date
+  actor -> page : Try to select a future day
+  page -> page : Block the selection client-side per L2-017
+  page --> actor : Future day is non-interactive per L2-017
+else Member selects a past date
+  actor -> page : Pick a past day and enter the weight
+  page -> client : Build typed LogWeighInCommand with the past Date
+  client -> controller : HTTPS POST /api/v1/weigh-ins
+  controller -> controller : Authenticate and authorize the owner
+  controller -> handler : Send LogWeighInCommand
+  alt Date is in the future (server re-check) per L2-017
+    handler --> controller : Validation failure
+    controller --> client : 400 "Future dates can't be logged" per L2-017
+    client --> page : Show the rejection
+    page --> actor : Present the future-date error
+  else Date is today or earlier
+    handler -> db : Load the entry for userId+date
+    db --> handler : Existing entry or none
+    handler -> entity : Insert or update the entry for the date per L2-017
+    entity --> handler : Stored weigh-in
+    handler -> db : Save in one unit of work
+    db --> handler : Commit
+    handler --> controller : Typed weigh-in result
+    controller --> client : 200 with the saved entry
+    client --> page : History and trend re-average per L2-017
+    page --> actor : Toast "Saved {value} for {date}" with Undo per L2-017
+  end
+end
+@enduml

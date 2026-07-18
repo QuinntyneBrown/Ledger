@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Manage a password
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+System(app, "Ledger", "Responsive weight-tracking web application")
+System_Ext(email, "Email provider", "Sends verification, reset, and notification email via SMTP")
+
+Rel(member, app, "Requests a reset, resets, or changes a password using", "HTTPS")
+Rel(app, email, "Sends the reset link and confirmation via", "SMTP")
+@enduml

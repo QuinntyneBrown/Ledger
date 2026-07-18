@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Set up — Ledger</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+</head>
+<body class="app-body">
+
+  <div class="app-frame">
+    <!-- status bar -->
+    <div class="app-statusbar">
+      <span>9:41</span>
+      <span class="app-statusbar-right">
+        <svg class="au-icon" style="width:15px"><use href="#i-activity"></use></svg>
+        <svg class="au-icon" style="width:15px"><use href="#i-droplet"></use></svg>
+        <span class="au-mono" style="font-size:11px">100%</span>
+      </span>
+    </div>
+
+    <div class="app-screen">
+      <div class="app-scroll" style="display:flex;flex-direction:column;min-height:100%;padding-top:var(--space-2)">
+
+        <!-- top row: back + progress -->
+        <div class="au-row-flex au-gap-3">
+          <a class="au-icon-btn au-icon-btn--sm" href="welcome.html" aria-label="Back"><svg class="au-icon"><use href="#i-chevron-left"></use></svg></a>
+          <div class="onb-progress au-fill">
+            <i class="is-done"></i>
+            <i class="is-done"></i>
+            <i></i>
+            <i></i>
+          </div>
+          <span class="au-mono au-text-lo" style="font-size:var(--text-xs)">2/4</span>
+        </div>
+
+        <!-- active step: current weight -->
+        <div class="onb-step" style="padding-bottom:var(--space-4)">
+          <div class="onb-step-num">STEP 2 OF 4</div>
+          <h1 class="onb-step-title">What do you weigh now?</h1>
+          <p class="onb-step-sub">Your starting point on the ledger. You can always adjust it later.</p>
+        </div>
+
+        <!-- units segmented -->
+        <div class="au-row-flex" style="justify-content:center;margin-bottom:var(--space-2)">
+          <div class="au-segmented" role="group" aria-label="Units">
+            <button class="is-active is-brand" type="button">Kilograms</button>
+            <button type="button">Pounds</button>
+          </div>
+        </div>
+
+        <!-- big numeric entry + stepper -->
+        <div class="au-card au-card--pad-lg" style="text-align:center">
+          <div class="weigh-stepper" style="margin:var(--space-2) 0">
+            <button class="weigh-stepper-btn" type="button" aria-label="Decrease"><svg class="au-icon"><use href="#i-minus"></use></svg></button>
+            <div class="au-bignum-field">
+              <span class="au-bignum" style="width:auto">74.9</span>
+              <span class="au-bignum-unit">kg</span>
+            </div>
+            <button class="weigh-stepper-btn" type="button" aria-label="Increase"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+          </div>
+          <p class="au-caption au-mt-2">Tap to adjust in 0.1 kg steps</p>
+        </div>
+
+        <!-- the 4-step flow, made explicit -->
+        <div class="au-stack au-stack-2 au-mt-6">
+          <div class="au-row-flex au-gap-3" style="padding:var(--space-2) var(--space-2)">
+            <span class="au-avatar au-avatar--sm" style="background:var(--good-subtle);color:var(--good-text);border-color:transparent"><svg class="au-icon" style="width:16px"><use href="#i-check"></use></svg></span>
+            <div class="au-fill"><div class="set-row-label">Units</div></div>
+            <span class="au-mono au-text-lo" style="font-size:var(--text-xs)">Kilograms</span>
+          </div>
+          <div class="au-row-flex au-gap-3" style="padding:var(--space-2);background:var(--brand-subtle);border-radius:var(--radius-md)">
+            <span class="au-avatar au-avatar--sm" style="background:var(--brand);color:var(--text-on-gold);border-color:transparent"><svg class="au-icon" style="width:16px"><use href="#i-scale"></use></svg></span>
+            <div class="au-fill"><div class="set-row-label" style="color:var(--brand-strong)">Current weight</div></div>
+            <span class="au-mono" style="font-size:var(--text-xs);color:var(--brand-strong)">74.9 kg</span>
+          </div>
+          <div class="au-row-flex au-gap-3" style="padding:var(--space-2)">
+            <span class="au-avatar au-avatar--sm" style="background:var(--surface-2);color:var(--text-lo)"><svg class="au-icon" style="width:16px"><use href="#i-target"></use></svg></span>
+            <div class="au-fill"><div class="set-row-label au-text-mid">Goal weight</div></div>
+            <span class="au-mono au-text-lo" style="font-size:var(--text-xs)">Up next</span>
+          </div>
+          <div class="au-row-flex au-gap-3" style="padding:var(--space-2)">
+            <span class="au-avatar au-avatar--sm" style="background:var(--surface-2);color:var(--text-lo)"><svg class="au-icon" style="width:16px"><use href="#i-calendar"></use></svg></span>
+            <div class="au-fill"><div class="set-row-label au-text-mid">Target date</div></div>
+            <span class="au-mono au-text-lo" style="font-size:var(--text-xs)">Up next</span>
+          </div>
+        </div>
+
+        <!-- button row -->
+        <div class="au-row-flex au-gap-3" style="margin-top:auto;padding-top:var(--space-6)">
+          <a class="au-btn au-btn--outlined au-btn--lg" href="welcome.html" style="flex:0 0 auto"><svg class="au-icon"><use href="#i-arrow-left"></use></svg> Back</a>
+          <a class="au-btn au-btn--primary au-btn--lg au-fill" href="profile.html">Continue <svg class="au-icon"><use href="#i-arrow-right"></use></svg></a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

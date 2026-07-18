@@ -1,0 +1,61 @@
+@startuml
+title UML sequence behaviour — Sign in
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle { BorderColor #344054 FontColor #101828 }
+skinparam package  { BorderColor #667085 FontColor #101828 BackgroundColor #F9FAFB }
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "SignInPage" as page
+  participant "AuthApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "AuthController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "SignInCommandHandler" as handler
+  participant "User" as entity
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+actor -> page : Enter email and password
+page -> client : Build typed request
+client -> controller : HTTPS POST /api/v1/auth/sign-in
+controller -> controller : Apply rate limit per L2-071
+controller -> handler : Send SignInCommand
+handler -> handler : Check lockout state per L2-009
+alt Account locked out
+  handler -> db : Write audit record per L2-072
+  db --> handler : Commit
+  handler --> controller : Locked result with back-off
+  controller --> client : 429 ProblemDetails without account disclosure
+  client --> page : Generic error per L2-009
+  page --> actor : Present the throttled error
+else Not locked
+  handler -> db : Load the account by email
+  db --> handler : Account or none
+  handler -> entity : Verify password against the stored hash
+  entity --> handler : Match or mismatch
+  alt Credentials invalid
+    handler -> handler : Record the failure per L2-009
+    handler -> db : Write audit record per L2-072
+    db --> handler : Commit
+    handler --> controller : Invalid-credentials result
+    controller --> client : 401 ProblemDetails "email or password is incorrect"
+    client --> page : Generic error per L2-004
+    page --> actor : Present the generic error
+  else Credentials valid
+    handler -> handler : Issue signed JWT and refresh token per L2-004
+    handler -> db : Persist the refresh token and audit success per L2-072
+    db --> handler : Commit
+    handler --> controller : AuthTokens
+    controller --> client : 200 OK; refresh token as httpOnly cookie per L2-008
+    client --> page : Signed-in result
+    page --> actor : Route to the dashboard
+  end
+end
+@enduml

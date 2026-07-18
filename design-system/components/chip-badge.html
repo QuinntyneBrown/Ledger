@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chip &amp; badge — Aurora Design System</title>
+  <meta name="description" content="Chips are compact, tappable tokens for filters and status; badges are tiny counts and dots that ride on an icon; tags are mono micro-labels. Semantic color variants for good, warn, and bad.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+</head>
+<body class="doc-body">
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation">
+      <svg class="au-icon"><use href="#i-menu"></use></svg>
+    </button>
+    <a class="doc-brand" href="../index.html">
+      <span class="doc-brandmark"></span>
+      <span class="doc-brand-name">Aurora<small>Design System</small></span>
+    </a>
+    <nav class="doc-header-nav">
+      <a href="../foundations/getting-started.html">Foundations</a>
+      <a href="button.html" class="is-active">Components</a>
+      <a href="../patterns/forms-validation.html">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <!-- ============ CANONICAL SIDEBAR (shared across all DS pages) ============ -->
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="../foundations/getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="../foundations/color.html">Color</a>
+        <a class="doc-navlink" href="../foundations/typography.html">Typography</a>
+        <a class="doc-navlink" href="../foundations/spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="../foundations/elevation.html">Elevation</a>
+        <a class="doc-navlink" href="../foundations/shape.html">Shape</a>
+        <a class="doc-navlink" href="../foundations/iconography.html">Iconography</a>
+        <a class="doc-navlink" href="../foundations/motion.html">Motion</a>
+        <a class="doc-navlink" href="../foundations/accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="button.html">Button</a>
+        <a class="doc-navlink" href="text-field.html">Text field</a>
+        <a class="doc-navlink" href="select.html">Select</a>
+        <a class="doc-navlink" href="switch.html">Switch</a>
+        <a class="doc-navlink" href="checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="slider.html">Slider</a>
+        <a class="doc-navlink" href="date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink" href="card.html">Card</a>
+        <a class="doc-navlink" href="list-table.html">List &amp; table</a>
+        <a class="doc-navlink is-active" href="chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="avatar.html">Avatar</a>
+        <a class="doc-navlink" href="progress.html">Progress</a>
+        <a class="doc-navlink" href="gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="dialog.html">Dialog</a>
+        <a class="doc-navlink" href="snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="banner.html">Banner</a>
+        <a class="doc-navlink" href="tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="tabs.html">Tabs</a>
+        <a class="doc-navlink" href="navigation.html">Navigation</a>
+        <a class="doc-navlink" href="milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="../patterns/forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="../patterns/data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="../patterns/data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="../patterns/theming.html">Theming</a>
+        <a class="doc-navlink" href="../patterns/motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Components <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Chip &amp; badge</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-filter"></use></svg> Data display</span>
+          <h1 class="doc-title">Chip &amp; badge</h1>
+          <p class="doc-lead">Small tokens that label and count. A <strong style="color:var(--text-hi)">chip</strong> is a compact, often tappable pill for a filter or a status; a <strong style="color:var(--text-hi)">badge</strong> is a tiny count or dot that rides on an icon; a <strong style="color:var(--text-hi)">tag</strong> is a mono micro-label for metadata.</p>
+        </div>
+
+        <div class="doc-tabbar" data-tabs>
+          <button class="doc-tab is-active" data-tab="overview">Overview</button>
+          <button class="doc-tab" data-tab="examples">Examples</button>
+          <button class="doc-tab" data-tab="api">Tokens &amp; API</button>
+        </div>
+
+        <!-- ===== OVERVIEW ===== -->
+        <section data-tabpanel="overview">
+          <div class="doc-canvas" style="border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:var(--space-7);padding:var(--space-9);gap:var(--space-3)">
+            <span class="au-chip is-active">All</span>
+            <span class="au-chip au-chip--interactive">This week</span>
+            <span class="au-chip au-chip--good"><svg class="au-icon"><use href="#i-trending-down"></use></svg> On track</span>
+            <span class="au-chip au-chip--warn"><svg class="au-icon"><use href="#i-alert-triangle"></use></svg> Plateau</span>
+            <span class="au-chip au-chip--brand"><svg class="au-icon"><use href="#i-flame"></use></svg> Streak 12</span>
+          </div>
+
+          <div class="doc-prose">
+            <h2 class="doc-section-title">When to use each</h2>
+            <ul>
+              <li><strong>Chip</strong> — a filter, a toggleable facet, or a compact status label. Make it <code>--interactive</code> when it filters, and mark the selected one <code>.is-active</code>.</li>
+              <li><strong>Badge</strong> — an unread count on an icon button, or a bare <code>--dot</code> to signal “something new” without a number.</li>
+              <li><strong>Tag</strong> — an inline, uppercase mono label for metadata such as <code>BETA</code> or a unit; not interactive.</li>
+              <li>Use the semantic variants (<code>--good</code>, <code>--warn</code>, <code>--bad</code>, <code>--brand</code>) to carry meaning, and back them with an icon or word so color isn’t the only cue.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Anatomy</h2>
+          <div class="doc-anatomy">
+            <button class="au-icon-btn" aria-label="Notifications" style="position:relative;background:var(--surface-2)">
+              <svg class="au-icon"><use href="#i-bell"></use></svg>
+              <span class="au-badge" style="position:absolute;top:4px;right:4px">5</span>
+            </button>
+            <span class="doc-anatomy-marker" style="top:20%;left:38%">1</span>
+            <span class="doc-anatomy-marker" style="top:16%;right:34%">2</span>
+          </div>
+          <div class="doc-legend">
+            <ul>
+              <li><span class="doc-legend-num">1</span> <strong style="color:var(--text-hi)">Host</strong> — the icon or control the badge annotates.</li>
+              <li><span class="doc-legend-num">2</span> <strong style="color:var(--text-hi)">Badge</strong> — an absolutely-positioned count pill; use <code>--dot</code> for a bare indicator.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Do &amp; don’t</h2>
+          <div class="doc-dodont">
+            <div class="doc-guide doc-guide--do">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-check"></use></svg> Do</div>
+              <div class="doc-guide-body">
+                <span class="au-chip au-chip--good"><svg class="au-icon"><use href="#i-check"></use></svg> On track</span>
+              </div>
+              <div class="doc-guide-note">Pair a semantic color with an icon and a word.</div>
+            </div>
+            <div class="doc-guide doc-guide--dont">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-x"></use></svg> Don’t</div>
+              <div class="doc-guide-body">
+                <div class="au-row-flex au-gap-2">
+                  <span class="au-chip au-chip--good" style="width:20px;padding:0"></span>
+                  <span class="au-chip au-chip--warn" style="width:20px;padding:0"></span>
+                  <span class="au-chip au-chip--bad" style="width:20px;padding:0"></span>
+                </div>
+              </div>
+              <div class="doc-guide-note">Don’t rely on color alone to encode meaning.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== EXAMPLES ===== -->
+        <section data-tabpanel="examples" hidden>
+          <!-- Filter chips row -->
+          <h2 class="doc-section-title">Filter chips</h2>
+          <p class="doc-section-lead">A scrollable row of <code class="doc-td-name">.au-chip--interactive</code> filters with one <code class="doc-td-name">.is-active</code>. This is the range picker above the Ledger trend chart.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">chip/filters</span>
+              <div class="doc-example-tools"><button class="au-icon-btn au-icon-btn--sm" data-theme-toggle aria-label="Toggle theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button></div>
+            </div>
+            <div class="doc-canvas" style="gap:var(--space-2)">
+              <span class="au-chip is-active">7 days</span>
+              <span class="au-chip au-chip--interactive">30 days</span>
+              <span class="au-chip au-chip--interactive">90 days</span>
+              <span class="au-chip au-chip--interactive">1 year</span>
+              <span class="au-chip au-chip--interactive">All</span>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;span class="au-chip is-active"&gt;7 days&lt;/span&gt;
+&lt;span class="au-chip au-chip--interactive"&gt;30 days&lt;/span&gt;
+&lt;span class="au-chip au-chip--interactive"&gt;90 days&lt;/span&gt;</code></pre>
+          </div>
+
+          <!-- Semantic chips -->
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Status chips</h2>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">chip/status</span></div>
+            <div class="doc-canvas" style="gap:var(--space-3)">
+              <span class="au-chip">Default</span>
+              <span class="au-chip au-chip--brand"><svg class="au-icon"><use href="#i-sparkles"></use></svg> Brand</span>
+              <span class="au-chip au-chip--good"><svg class="au-icon"><use href="#i-trending-down"></use></svg> On track</span>
+              <span class="au-chip au-chip--warn"><svg class="au-icon"><use href="#i-alert-triangle"></use></svg> Plateau</span>
+              <span class="au-chip au-chip--bad"><svg class="au-icon"><use href="#i-trending-up"></use></svg> Off track</span>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;span class="au-chip au-chip--good"&gt;
+  &lt;svg class="au-icon"&gt;&lt;use href="#i-trending-down"/&gt;&lt;/svg&gt; On track
+&lt;/span&gt;
+&lt;span class="au-chip au-chip--warn"&gt;…&lt;/span&gt;
+&lt;span class="au-chip au-chip--bad"&gt;…&lt;/span&gt;</code></pre>
+          </div>
+
+          <!-- Notification badge -->
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Notification badge</h2>
+          <p class="doc-section-lead">A count pill or a bare dot positioned over an icon button.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">badge/notification</span></div>
+            <div class="doc-canvas" style="gap:var(--space-8)">
+              <button class="au-icon-btn" aria-label="Notifications, 5 unread" style="position:relative;background:var(--surface-2)">
+                <svg class="au-icon"><use href="#i-bell"></use></svg>
+                <span class="au-badge" style="position:absolute;top:4px;right:4px">5</span>
+              </button>
+              <button class="au-icon-btn" aria-label="Notifications, 12 unread" style="position:relative;background:var(--surface-2)">
+                <svg class="au-icon"><use href="#i-bell"></use></svg>
+                <span class="au-badge" style="position:absolute;top:2px;right:2px">12</span>
+              </button>
+              <button class="au-icon-btn" aria-label="Messages, new" style="position:relative;background:var(--surface-2)">
+                <svg class="au-icon"><use href="#i-mail"></use></svg>
+                <span class="au-badge au-badge--dot" style="position:absolute;top:8px;right:8px"></span>
+              </button>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;button class="au-icon-btn" aria-label="Notifications, 5 unread"
+        style="position:relative"&gt;
+  &lt;svg class="au-icon"&gt;&lt;use href="#i-bell"/&gt;&lt;/svg&gt;
+  &lt;span class="au-badge" style="position:absolute;top:4px;right:4px"&gt;5&lt;/span&gt;
+&lt;/button&gt;
+
+&lt;!-- bare dot --&gt;
+&lt;span class="au-badge au-badge--dot"&gt;&lt;/span&gt;</code></pre>
+          </div>
+
+          <!-- Tags -->
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Tags</h2>
+          <p class="doc-section-lead">Mono, uppercase micro-labels for metadata.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">tag/meta</span></div>
+            <div class="doc-canvas" style="gap:var(--space-3)">
+              <span class="au-tag">Beta</span>
+              <span class="au-tag">kg</span>
+              <span class="au-tag">Signature</span>
+              <span class="au-tag"><svg class="au-icon" style="width:11px;height:11px"><use href="#i-lock"></use></svg> Private</span>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;span class="au-tag"&gt;Beta&lt;/span&gt;
+&lt;span class="au-tag"&gt;kg&lt;/span&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- ===== API ===== -->
+        <section data-tabpanel="api" hidden>
+          <h2 class="doc-section-title">Chip classes</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Class</th><th>Role</th></tr></thead>
+              <tbody>
+                <tr><td><code>.au-chip</code></td><td>Base pill: surface-2 background, hairline border, mono-adjacent label.</td></tr>
+                <tr><td><code>.au-chip--brand</code></td><td>Gold-tinted — a highlighted or promoted facet.</td></tr>
+                <tr><td><code>.au-chip--good</code> / <code>--warn</code> / <code>--bad</code></td><td>Teal / amber / coral semantic status.</td></tr>
+                <tr><td><code>.au-chip--interactive</code></td><td>Adds hover feedback + pointer for tappable filters.</td></tr>
+                <tr><td><code>.au-chip.is-active</code></td><td>Selected state — solid brand fill.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-8)">Badge &amp; tag</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Class</th><th>Role</th></tr></thead>
+              <tbody>
+                <tr><td><code>.au-badge</code></td><td>Count pill (min 20px) — coral fill, white tabular numeral.</td></tr>
+                <tr><td><code>.au-badge--dot</code></td><td>Bare 10px indicator with no number.</td></tr>
+                <tr><td><code>.au-tag</code></td><td>Mono uppercase micro-label on a sunken surface.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-8)">Tokens consumed</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Token</th><th>Applied to</th></tr></thead>
+              <tbody>
+                <tr><td><code>--surface-2 · --border</code></td><td>Default chip surface + edge.</td></tr>
+                <tr><td><code>--brand-subtle · --brand</code></td><td>Brand chip and active fill.</td></tr>
+                <tr><td><code>--good-subtle / --warn-subtle / --bad-subtle</code></td><td>Semantic chip backgrounds.</td></tr>
+                <tr><td><code>--bad · --white</code></td><td>Badge fill and numeral.</td></tr>
+                <tr><td><code>--radius-pill</code></td><td>Chip and badge shape.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-info"></use></svg>
+            <div class="doc-callout-body"><strong>Accessibility.</strong> Give the badge’s host an <code>aria-label</code> that includes the count (“Notifications, 5 unread”) — the pill is decorative. Interactive chips must be real <code>&lt;button&gt;</code> elements with <code>aria-pressed</code> for the active state, and never encode status with color alone.</div>
+          </div>
+        </section>
+
+        <!-- Pager -->
+        <nav class="doc-pager">
+          <a href="list-table.html"><small>Previous</small><span>List &amp; table</span></a>
+          <a class="doc-pager-next" href="avatar.html"><small>Next</small><span>Avatar</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

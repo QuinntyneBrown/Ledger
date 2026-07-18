@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard · first run — Ledger</title>
+  <link rel="stylesheet" href="../../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/assets/components.css">
+  <link rel="stylesheet" href="../assets/app.css">
+  <script defer src="../../../design-system/assets/aurora.js"></script>
+</head>
+<body class="app-body">
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="auroraGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="var(--aurora-start)"></stop>
+        <stop offset="52%" stop-color="var(--aurora-mid)"></stop>
+        <stop offset="100%" stop-color="var(--aurora-end)"></stop>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <div class="app-frame">
+    <div class="app-statusbar">
+      <span>9:41</span>
+      <span class="app-statusbar-right">
+        <svg class="au-icon" style="width:15px"><use href="#i-activity"></use></svg>
+        <svg class="au-icon" style="width:15px"><use href="#i-droplet"></use></svg>
+        <span class="au-mono" style="font-size:11px">100%</span>
+      </span>
+    </div>
+
+    <div class="app-screen">
+      <div class="app-header">
+        <div class="au-row-flex au-gap-3">
+          <span class="au-avatar au-avatar--sm">A</span>
+          <div>
+            <div class="app-header-sub">Wednesday, Jul 18</div>
+            <div class="app-header-title" style="font-size:var(--text-base)">Welcome, Alex</div>
+          </div>
+        </div>
+        <a class="au-icon-btn" href="../settings/settings.html" aria-label="Settings"><svg class="au-icon"><use href="#i-settings"></use></svg></a>
+      </div>
+
+      <div class="app-scroll">
+        <div class="au-empty" style="padding-top:var(--space-8)">
+          <!-- dial at 0% as the art -->
+          <div class="au-gauge au-rise au-rise-1" data-value="0" data-sweep="360" style="width:216px;height:216px" role="img" aria-label="No weight logged yet">
+            <svg viewBox="0 0 120 120" width="216" height="216">
+              <circle class="au-gauge-track" cx="60" cy="60" r="52" stroke-width="9"></circle>
+              <circle class="au-gauge-arc" cx="60" cy="60" r="52" stroke-width="9"></circle>
+            </svg>
+            <div class="au-gauge-center">
+              <div class="au-gauge-value" style="font-size:var(--text-6xl);color:var(--text-lo)">—</div>
+              <div class="au-gauge-unit">no data yet</div>
+            </div>
+          </div>
+
+          <div class="dash-hero-meta" style="margin-top:var(--space-2)">
+            <span class="au-chip"><svg class="au-icon"><use href="#i-flag"></use></svg> Start 80.0</span>
+            <span class="au-chip au-chip--brand"><svg class="au-icon"><use href="#i-target"></use></svg> Goal 73.0</span>
+          </div>
+
+          <div class="au-empty-title au-mt-4">Log your first weight</div>
+          <p class="au-empty-text">Your dial fills as you log. Record today's weight and watch your progress take shape — one calm entry at a time.</p>
+
+          <button class="au-btn au-btn--primary au-btn--lg" data-dialog-open="quickWeigh" style="margin-top:var(--space-2)">
+            <svg class="au-icon"><use href="#i-plus"></use></svg> Log your first weight
+          </button>
+          <a class="au-btn au-btn--text" href="../goal/edit-goal.html">
+            <svg class="au-icon"><use href="#i-target"></use></svg> Adjust your goal
+          </a>
+        </div>
+
+        <!-- gentle onboarding tip -->
+        <div class="au-banner au-banner--info" style="margin:var(--space-2) var(--space-1) 0">
+          <svg class="au-icon"><use href="#i-sparkles"></use></svg>
+          <div class="au-banner-body">
+            <div class="au-banner-title">Tip: weigh in at the same time</div>
+            <div class="au-banner-text">Mornings, after waking, give the steadiest readings. We smooth the day-to-day noise for you.</div>
+          </div>
+        </div>
+        <div style="height:var(--space-4)"></div>
+      </div>
+    </div>
+
+    <nav class="au-bottomnav app-bottomnav">
+      <a class="app-rail-brand" href="../dashboard/dashboard.html"><span class="app-rail-mark"></span>Ledger</a>
+      <a class="au-navitem is-active" href="dashboard.html"><svg class="au-icon"><use href="#i-home"></use></svg>Home</a>
+      <a class="au-navitem" href="../trends/trends.html"><svg class="au-icon"><use href="#i-activity"></use></svg>Trends</a>
+      <button class="app-navfab" data-dialog-open="quickWeigh" aria-label="Log weight"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      <a class="au-navitem" href="../milestones/milestones.html"><svg class="au-icon"><use href="#i-trophy"></use></svg>Badges</a>
+      <a class="au-navitem" href="../settings/account.html"><svg class="au-icon"><use href="#i-user"></use></svg>Profile</a>
+    </nav>
+  </div>
+
+  <!-- QUICK WEIGH-IN SHEET (first entry) -->
+  <div class="au-sheet-scrim" id="quickWeigh" hidden>
+    <div class="au-sheet" role="dialog" aria-modal="true" aria-label="Log today's weight">
+      <div class="au-sheet-grip"></div>
+      <div class="au-row-flex au-between" style="margin-bottom:var(--space-2)">
+        <div><div class="au-eyebrow">Today</div><div style="font-family:var(--font-mono);color:var(--text-lo);font-size:var(--text-sm)">Wed, Jul 18</div></div>
+        <button class="au-icon-btn" data-dialog-close aria-label="Close"><svg class="au-icon"><use href="#i-x"></use></svg></button>
+      </div>
+      <div class="weigh-stepper" style="margin:var(--space-6) 0">
+        <button class="weigh-stepper-btn" aria-label="Decrease"><svg class="au-icon"><use href="#i-minus"></use></svg></button>
+        <div class="au-bignum-field">
+          <span class="au-bignum" style="width:auto">80.0</span>
+          <span class="au-bignum-unit">kg</span>
+        </div>
+        <button class="weigh-stepper-btn" aria-label="Increase"><svg class="au-icon"><use href="#i-plus"></use></svg></button>
+      </div>
+      <button class="au-btn au-btn--primary au-btn--lg au-btn--block" data-dialog-close data-toast="First weight logged — 80.0 kg" data-toast-action="Undo">
+        <svg class="au-icon"><use href="#i-check"></use></svg> Log weight
+      </button>
+    </div>
+  </div>
+
+</body>
+</html>

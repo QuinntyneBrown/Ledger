@@ -1,0 +1,38 @@
+@startuml
+title UML sequence behaviour — Visit the marketing site and convert
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle { BorderColor #344054 FontColor #101828 }
+skinparam package  { BorderColor #667085 FontColor #101828 BackgroundColor #F9FAFB }
+actor "Visitor" as actor
+box "Delivery — Marketing Site host" #FFF4E5
+  participant "Site Delivery" as host
+end box
+box "Frontend — Marketing Site" #E0F2FE
+  participant "LandingPage" as landing
+  participant "HeroSection" as hero
+end box
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "App auth route" as app
+end box
+actor -> host : Request the site root
+host --> landing : Return pre-rendered HTML per L2-057 and L2-060
+landing -> landing : Render hero and value proposition per L2-057
+landing -> hero : Render primary and secondary call-to-action per L2-057
+landing -> landing : Render feature sections describing the core loop per L2-058
+landing --> actor : Present the landing page without loading the app bundle per L2-062
+opt Authenticated visitor detected
+  landing --> actor : Offer a path to open the app per L2-062
+end
+actor -> hero : Activate a call-to-action
+alt Primary CTA "Get started"
+  hero -> app : Route to the app registration route per L2-062
+  app --> actor : Present registration
+else Secondary CTA "Sign in"
+  hero -> app : Route to the app sign-in route per L2-062
+  app --> actor : Present sign-in
+end
+@enduml

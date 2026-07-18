@@ -1,0 +1,48 @@
+@startuml
+title UML sequence behaviour — Manage reminders: deliver or suppress
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "DeliverReminderCommandHandler" as handler
+  participant "Preferences" as prefs
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  participant "ReminderSchedulerJob" as job
+  database "Ledger Database" as db
+  participant "Web Push service" as push
+end box
+actor "Member" as actor
+
+job -> job : Reach a member's local reminder time per L2-049
+job -> handler : Send DeliverReminderCommand
+handler -> db : Load owner Preferences and today's WeighIn
+db --> handler : Preferences and entry state
+alt reminder disabled
+  handler --> job : No-op; reminder is off per L2-049
+else within quiet hours
+  handler -> prefs : Evaluate quiet-hours window across midnight per L2-050
+  prefs --> handler : Within quiet hours
+  handler --> job : Suppressed per L2-050
+else today already logged
+  handler --> job : Suppressed; today's entry exists per L2-051
+else deliver
+  handler -> prefs : Confirm outside quiet hours and not yet logged
+  prefs --> handler : Eligible
+  handler -> push : Deliver reminder
+  push --> handler : Accepted for delivery
+  handler --> job : Delivered
+  push -> actor : Show reminder notification
+end
+@enduml

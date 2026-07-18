@@ -1,0 +1,54 @@
+@startuml
+title UML sequence behaviour — Earn badges: celebrate an unlock once
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — Ledger Web App" #E0F2FE
+  participant "BadgesPage" as page
+  participant "MilestonesApi" as client
+end box
+box "Backend — Ledger API application" #D1FADF
+  participant "MilestonesController" as controller
+end box
+box "Backend — Ledger Application and Domain" #ECFDF3
+  participant "GetBadgesQueryHandler" as handler
+end box
+box "Backend — Ledger Infrastructure" #FFF4E5
+  database "Ledger Database" as db
+end box
+
+actor -> page : Open the badges screen
+page -> client : Build typed request
+client -> controller : HTTPS request GET /api/v1/milestones
+controller -> controller : Authenticate and authorize owner
+controller -> handler : Send GetBadgesQuery
+handler -> db : Load earned milestones and derived progress
+db --> handler : Owner-scoped state
+handler --> controller : Badges with earned flags and progress
+controller --> client : HTTP response or ProblemDetails
+client --> page : Badges view
+opt a badge is newly earned and not yet acknowledged
+  alt reduced motion is not preferred
+    page -> page : Play the unlock celebration once per L2-036
+  else prefers-reduced-motion is set
+    page -> page : Present a static celebratory state per L2-081
+  end
+  page -> page : Mark the unlock acknowledged so it is shown once per L2-036
+  note right of page
+    The store for the acknowledgment is <TO SUPPLY>
+  end note
+end
+page --> actor : Present badges and any one-time celebration
+@enduml

@@ -1,0 +1,38 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Sign in
+
+Person(member, "Member", "Tracks weight toward a goal in Ledger")
+Container_Boundary(web, "Ledger Web App") {
+  Component(page, "SignInPage", "Angular component", "Presents the sign-in form and generic error state")
+  Component(client, "AuthApi", "Angular HTTP service", "Typed client in ledger/api for the auth endpoints")
+}
+Container_Boundary(api, "Ledger API") {
+  Component(ctrl, "AuthController", "ASP.NET Core controller", "Exposes /api/v1/auth sign-in and refresh endpoints")
+  Component(signInHandler, "SignInCommandHandler", "MediatR handler", "Verifies credentials and issues tokens")
+  Component(refreshHandler, "RefreshTokenCommandHandler", "MediatR handler", "Renews the access token from a valid refresh token")
+  Component(user, "User", "Domain entity", "Owns identity and the password hash")
+  Component(refresh, "RefreshToken", "Domain entity", "Renewable, revocable session token")
+  Component(hasher, "IPasswordHasher", "Application service", "Verifies the password against the stored hash")
+  Component(tokens, "ITokenService", "Application service", "Signs JWT access tokens and issues refresh tokens per L2-004")
+  Component(lockout, "ILockoutPolicy", "Application service", "Throttles and locks after repeated failures per L2-009")
+  Component(audit, "IAuditLog", "Application service", "Records authentication events per L2-072")
+  ComponentDb(db, "Ledger Database", "SQL Server", "Persists accounts, refresh tokens, and audit records")
+}
+
+Rel(member, page, "Submits credentials", "HTTPS")
+Rel(page, client, "Builds the typed request")
+Rel(client, ctrl, "Calls /api/v1/auth/sign-in and /refresh", "JSON/HTTPS")
+Rel(ctrl, lockout, "Checks lockout state per L2-009")
+Rel(ctrl, signInHandler, "Sends SignInCommand")
+Rel(ctrl, refreshHandler, "Sends RefreshTokenCommand")
+Rel(signInHandler, user, "Loads by email")
+Rel(signInHandler, hasher, "Verifies the password")
+Rel(signInHandler, tokens, "Issues access and refresh tokens per L2-004")
+Rel(signInHandler, audit, "Records success and failure per L2-072")
+Rel(refreshHandler, refresh, "Validates and rotates")
+Rel(refreshHandler, tokens, "Issues a new access token per L2-008")
+Rel(signInHandler, db, "Reads accounts; writes refresh tokens", "EF Core")
+Rel(refreshHandler, db, "Reads and revokes refresh tokens", "EF Core")
+@enduml

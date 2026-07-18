@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Card — Aurora Design System</title>
+  <meta name="description" content="Cards group a single subject — a stat, a summary, an action — onto one elevated surface. Aurora ships glass, raised, and interactive variants plus the dashboard stat card.">
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/components.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <script defer src="../assets/aurora.js"></script>
+</head>
+<body class="doc-body">
+
+  <header class="doc-header">
+    <button class="au-icon-btn doc-menu-btn" onclick="document.body.classList.toggle('is-nav-open')" aria-label="Toggle navigation">
+      <svg class="au-icon"><use href="#i-menu"></use></svg>
+    </button>
+    <a class="doc-brand" href="../index.html">
+      <span class="doc-brandmark"></span>
+      <span class="doc-brand-name">Aurora<small>Design System</small></span>
+    </a>
+    <nav class="doc-header-nav">
+      <a href="../foundations/getting-started.html">Foundations</a>
+      <a href="button.html" class="is-active">Components</a>
+      <a href="../patterns/forms-validation.html">Patterns</a>
+    </nav>
+    <div class="doc-header-spacer"></div>
+    <div class="doc-search" role="button" tabindex="0" aria-label="Search"><svg class="au-icon"><use href="#i-search"></use></svg><span>Search</span><kbd>/</kbd></div>
+    <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+  </header>
+
+  <div class="doc-shell">
+    <!-- ============ CANONICAL SIDEBAR (shared across all DS pages) ============ -->
+    <aside class="doc-sidebar">
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-book"></use></svg> Foundations</div>
+        <a class="doc-navlink" href="../foundations/getting-started.html">Getting started</a>
+        <a class="doc-navlink" href="../foundations/color.html">Color</a>
+        <a class="doc-navlink" href="../foundations/typography.html">Typography</a>
+        <a class="doc-navlink" href="../foundations/spacing.html">Spacing &amp; layout</a>
+        <a class="doc-navlink" href="../foundations/elevation.html">Elevation</a>
+        <a class="doc-navlink" href="../foundations/shape.html">Shape</a>
+        <a class="doc-navlink" href="../foundations/iconography.html">Iconography</a>
+        <a class="doc-navlink" href="../foundations/motion.html">Motion</a>
+        <a class="doc-navlink" href="../foundations/accessibility.html">Accessibility</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-edit"></use></svg> Actions &amp; inputs</div>
+        <a class="doc-navlink" href="button.html">Button</a>
+        <a class="doc-navlink" href="text-field.html">Text field</a>
+        <a class="doc-navlink" href="select.html">Select</a>
+        <a class="doc-navlink" href="switch.html">Switch</a>
+        <a class="doc-navlink" href="checkbox-radio.html">Checkbox &amp; radio</a>
+        <a class="doc-navlink" href="slider.html">Slider</a>
+        <a class="doc-navlink" href="date-picker.html">Date picker</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</div>
+        <a class="doc-navlink is-active" href="card.html">Card</a>
+        <a class="doc-navlink" href="list-table.html">List &amp; table</a>
+        <a class="doc-navlink" href="chip-badge.html">Chip &amp; badge</a>
+        <a class="doc-navlink" href="avatar.html">Avatar</a>
+        <a class="doc-navlink" href="progress.html">Progress</a>
+        <a class="doc-navlink" href="gauge.html">Gauge <span class="doc-nav-tag">★</span></a>
+        <a class="doc-navlink" href="chart.html">Chart <span class="doc-nav-tag">★</span></a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-bell"></use></svg> Feedback &amp; nav</div>
+        <a class="doc-navlink" href="dialog.html">Dialog</a>
+        <a class="doc-navlink" href="snackbar.html">Snackbar</a>
+        <a class="doc-navlink" href="banner.html">Banner</a>
+        <a class="doc-navlink" href="tooltip.html">Tooltip</a>
+        <a class="doc-navlink" href="empty-state.html">Empty state</a>
+        <a class="doc-navlink" href="tabs.html">Tabs</a>
+        <a class="doc-navlink" href="navigation.html">Navigation</a>
+        <a class="doc-navlink" href="milestone-badge.html">Milestone badge</a>
+      </div>
+      <div class="doc-navgroup">
+        <div class="doc-navgroup-title"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-layers"></use></svg> Patterns</div>
+        <a class="doc-navlink" href="../patterns/forms-validation.html">Forms &amp; validation</a>
+        <a class="doc-navlink" href="../patterns/data-entry.html">Data entry</a>
+        <a class="doc-navlink" href="../patterns/data-viz.html">Data visualization</a>
+        <a class="doc-navlink" href="../patterns/theming.html">Theming</a>
+        <a class="doc-navlink" href="../patterns/motion-feedback.html">Motion &amp; feedback</a>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="doc-main">
+      <div class="doc-content">
+        <div class="doc-breadcrumb"><a href="../index.html">Aurora</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Components <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Card</div>
+
+        <div class="doc-page-head">
+          <span class="au-eyebrow"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Data display</span>
+          <h1 class="doc-title">Card</h1>
+          <p class="doc-lead">A card gathers one subject — a stat, a summary, an action — onto a single elevated surface. It is the building block of the Ledger dashboard: <strong style="color:var(--text-hi)">every metric lives in its own quiet frame</strong>, so the eye reads one thing at a time.</p>
+        </div>
+
+        <div class="doc-tabbar" data-tabs>
+          <button class="doc-tab is-active" data-tab="overview">Overview</button>
+          <button class="doc-tab" data-tab="examples">Examples</button>
+          <button class="doc-tab" data-tab="api">Tokens &amp; API</button>
+        </div>
+
+        <!-- ===== OVERVIEW ===== -->
+        <section data-tabpanel="overview">
+          <div class="doc-canvas" style="border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:var(--space-7);padding:var(--space-9)">
+            <div class="au-card au-card--raised" style="width:280px">
+              <div class="au-card-head">
+                <div class="au-card-title"><svg class="au-icon" style="width:16px;height:16px"><use href="#i-scale"></use></svg> Current weight</div>
+                <button class="au-icon-btn au-icon-btn--sm" aria-label="More"><svg class="au-icon"><use href="#i-more-horizontal"></use></svg></button>
+              </div>
+              <div class="au-stat">
+                <div class="au-stat-value">81.4<small> kg</small></div>
+                <div class="au-delta is-good"><svg class="au-icon" style="width:15px;height:15px"><use href="#i-trending-down"></use></svg> 0.6 kg this week</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="doc-prose">
+            <h2 class="doc-section-title">When to use it</h2>
+            <p>Use a card whenever a piece of content deserves its own boundary — a KPI, a chart, a settings group, a list of recent entries. Cards create rhythm on a busy screen by separating unrelated things without heavy rules or boxes.</p>
+            <ul>
+              <li>Use <strong>one card per idea</strong>. If a card needs two headings, it is probably two cards.</li>
+              <li>Reach for <strong><code>--interactive</code></strong> only when the whole surface navigates somewhere; otherwise keep actions to explicit buttons inside.</li>
+              <li>Use the <strong>stat card</strong> (<code>.au-stat</code>) for a single number with a trend — it pairs a display numeral with a colored <code>.au-delta</code>.</li>
+              <li>Prefer <strong><code>--glass</code></strong> for cards floating over imagery or the aurora glow; keep plain <code>.au-card</code> for dense grids.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Anatomy</h2>
+          <div class="doc-anatomy">
+            <div class="au-card" style="width:280px">
+              <div class="au-card-head">
+                <div class="au-card-title"><svg class="au-icon" style="width:16px;height:16px"><use href="#i-flame"></use></svg> Streak</div>
+              </div>
+              <div class="au-stat">
+                <div class="au-stat-value">12<small> days</small></div>
+                <div class="au-delta is-good"><svg class="au-icon" style="width:15px;height:15px"><use href="#i-trending-up"></use></svg> personal best</div>
+              </div>
+            </div>
+            <span class="doc-anatomy-marker" style="top:16%;left:12%">1</span>
+            <span class="doc-anatomy-marker" style="top:30%;right:14%">2</span>
+            <span class="doc-anatomy-marker" style="bottom:24%;left:12%">3</span>
+          </div>
+          <div class="doc-legend">
+            <ul>
+              <li><span class="doc-legend-num">1</span> <strong style="color:var(--text-hi)">Head</strong> — an optional <code>.au-card-head</code> with a muted <code>.au-card-title</code> and trailing action.</li>
+              <li><span class="doc-legend-num">2</span> <strong style="color:var(--text-hi)">Surface</strong> — <code>--surface-1</code>, a hairline border, shadow and a faint top highlight for glassy depth.</li>
+              <li><span class="doc-legend-num">3</span> <strong style="color:var(--text-hi)">Body</strong> — the content; here a <code>.au-stat</code> with a display value and colored delta.</li>
+            </ul>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Do &amp; don’t</h2>
+          <div class="doc-dodont">
+            <div class="doc-guide doc-guide--do">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-check"></use></svg> Do</div>
+              <div class="doc-guide-body">
+                <div class="au-card au-card--pad-sm" style="width:200px">
+                  <div class="au-stat">
+                    <div class="au-stat-label">To goal</div>
+                    <div class="au-stat-value" style="font-size:var(--text-2xl)">72<small>%</small></div>
+                  </div>
+                </div>
+              </div>
+              <div class="doc-guide-note">Keep one metric per card so the value reads instantly.</div>
+            </div>
+            <div class="doc-guide doc-guide--dont">
+              <div class="doc-guide-tag"><svg class="au-icon"><use href="#i-x"></use></svg> Don’t</div>
+              <div class="doc-guide-body">
+                <div class="au-card au-card--pad-sm" style="width:200px">
+                  <div class="au-row-flex au-between" style="gap:var(--space-3)">
+                    <div class="au-stat"><div class="au-stat-label">Weight</div><div class="au-stat-value" style="font-size:var(--text-lg)">81<small>kg</small></div></div>
+                    <div class="au-stat"><div class="au-stat-label">BMI</div><div class="au-stat-value" style="font-size:var(--text-lg)">24</div></div>
+                    <div class="au-stat"><div class="au-stat-label">Days</div><div class="au-stat-value" style="font-size:var(--text-lg)">12</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="doc-guide-note">Don’t crowd several unrelated metrics into one frame.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== EXAMPLES ===== -->
+        <section data-tabpanel="examples" hidden>
+          <!-- Base + modifiers -->
+          <h2 class="doc-section-title">Surfaces</h2>
+          <p class="doc-section-lead">The base <code class="doc-td-name">.au-card</code> plus elevation and material modifiers. All share the same padding rhythm and hairline border.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">card/surfaces</span>
+              <div class="doc-example-tools"><button class="au-icon-btn au-icon-btn--sm" data-theme-toggle aria-label="Toggle theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button></div>
+            </div>
+            <div class="doc-canvas">
+              <div class="au-card" style="width:180px">
+                <div class="au-card-title" style="margin-bottom:var(--space-2)">Default</div>
+                <p class="au-caption">Flat surface-1 with a hairline border.</p>
+              </div>
+              <div class="au-card au-card--raised" style="width:180px">
+                <div class="au-card-title" style="margin-bottom:var(--space-2)">Raised</div>
+                <p class="au-caption">Lifted with a deeper shadow.</p>
+              </div>
+              <div class="au-card au-card--glass" style="width:180px">
+                <div class="au-card-title" style="margin-bottom:var(--space-2)">Glass</div>
+                <p class="au-caption">Blurred, for floating over glow.</p>
+              </div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-card"&gt;…&lt;/div&gt;
+&lt;div class="au-card au-card--raised"&gt;…&lt;/div&gt;
+&lt;div class="au-card au-card--glass"&gt;…&lt;/div&gt;</code></pre>
+          </div>
+
+          <!-- Padding -->
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Padding &amp; flush</h2>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">card/padding</span></div>
+            <div class="doc-canvas">
+              <div class="au-card au-card--pad-sm" style="width:150px"><div class="au-card-title">pad-sm</div></div>
+              <div class="au-card" style="width:150px"><div class="au-card-title">default</div></div>
+              <div class="au-card au-card--pad-lg" style="width:150px"><div class="au-card-title">pad-lg</div></div>
+              <div class="au-card au-card--flush" style="width:180px">
+                <div style="height:56px;background:var(--aurora-soft)"></div>
+                <div style="padding:var(--space-4)"><div class="au-card-title">flush</div><p class="au-caption">Edge-to-edge media.</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-card au-card--pad-sm"&gt;…&lt;/div&gt;
+&lt;div class="au-card au-card--pad-lg"&gt;…&lt;/div&gt;
+&lt;!-- --flush removes padding + clips media to the radius --&gt;
+&lt;div class="au-card au-card--flush"&gt;
+  &lt;div class="media"&gt;…&lt;/div&gt;
+  &lt;div style="padding:1rem"&gt;…&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+
+          <!-- Stat card -->
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Dashboard stat card</h2>
+          <p class="doc-section-lead">The pattern behind every tile on the Ledger dashboard: a display numeral with a unit and a trend delta colored by direction. Remember <strong>down is good</strong> — a loss is <code class="doc-td-name">.is-good</code> (teal).</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">card/stat</span></div>
+            <div class="doc-canvas">
+              <div class="au-card" style="width:220px">
+                <div class="au-card-head">
+                  <div class="au-card-title"><svg class="au-icon" style="width:16px;height:16px"><use href="#i-scale"></use></svg> Weight</div>
+                </div>
+                <div class="au-stat">
+                  <div class="au-stat-value">81.4<small> kg</small></div>
+                  <div class="au-delta is-good"><svg class="au-icon" style="width:15px;height:15px"><use href="#i-trending-down"></use></svg> 0.6 this week</div>
+                </div>
+              </div>
+              <div class="au-card" style="width:220px">
+                <div class="au-card-head">
+                  <div class="au-card-title"><svg class="au-icon" style="width:16px;height:16px"><use href="#i-droplet"></use></svg> Body fat</div>
+                </div>
+                <div class="au-stat">
+                  <div class="au-stat-value">22.8<small> %</small></div>
+                  <div class="au-delta is-bad"><svg class="au-icon" style="width:15px;height:15px"><use href="#i-trending-up"></use></svg> 0.3 this week</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;div class="au-card"&gt;
+  &lt;div class="au-card-head"&gt;
+    &lt;div class="au-card-title"&gt;
+      &lt;svg class="au-icon"&gt;&lt;use href="#i-scale"/&gt;&lt;/svg&gt; Weight
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="au-stat"&gt;
+    &lt;div class="au-stat-value"&gt;81.4&lt;small&gt; kg&lt;/small&gt;&lt;/div&gt;
+    &lt;div class="au-delta is-good"&gt;
+      &lt;svg class="au-icon"&gt;&lt;use href="#i-trending-down"/&gt;&lt;/svg&gt; 0.6 this week
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+
+          <!-- Interactive -->
+          <h2 class="doc-section-title" style="margin-top:var(--space-9)">Interactive card</h2>
+          <p class="doc-section-lead">Add <code class="doc-td-name">.au-card--interactive</code> when the whole surface is a link. It lifts and brightens its border on hover.</p>
+          <div class="doc-example">
+            <div class="doc-example-bar"><span class="doc-example-label">card/interactive</span></div>
+            <div class="doc-canvas">
+              <a class="au-card au-card--interactive" style="width:280px;text-decoration:none;color:inherit" href="#">
+                <div class="au-row-flex au-between">
+                  <div>
+                    <div class="au-card-title" style="margin-bottom:var(--space-1)"><svg class="au-icon" style="width:16px;height:16px"><use href="#i-target"></use></svg> Goal</div>
+                    <div class="au-stat-value" style="font-size:var(--text-2xl)">75.0<small> kg</small></div>
+                  </div>
+                  <svg class="au-icon" style="color:var(--text-lo)"><use href="#i-chevron-right"></use></svg>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="doc-code">
+            <button class="doc-copy" data-copy><svg class="au-icon"><use href="#i-copy"></use></svg><span data-copy-label>Copy</span></button>
+            <pre><code>&lt;a class="au-card au-card--interactive" href="/goal"&gt;
+  … content …
+&lt;/a&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- ===== API ===== -->
+        <section data-tabpanel="api" hidden>
+          <h2 class="doc-section-title">Classes</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Class</th><th>Element</th><th>Role</th></tr></thead>
+              <tbody>
+                <tr><td><code>.au-card</code></td><td>div / a</td><td>Base surface: <code>--surface-1</code>, hairline border, shadow, top highlight.</td></tr>
+                <tr><td><code>.au-card--glass</code></td><td>modifier</td><td>Translucent, backdrop-blurred material for floating cards.</td></tr>
+                <tr><td><code>.au-card--raised</code></td><td>modifier</td><td>Deeper <code>--shadow-3</code> for a lifted resting state.</td></tr>
+                <tr><td><code>.au-card--pad-lg</code> / <code>--pad-sm</code></td><td>modifier</td><td>Swap the default padding for a roomier or denser rhythm.</td></tr>
+                <tr><td><code>.au-card--flush</code></td><td>modifier</td><td>Removes padding and clips content to the radius (for edge media).</td></tr>
+                <tr><td><code>.au-card--interactive</code></td><td>modifier</td><td>Adds hover lift, brighter border and a pointer cursor.</td></tr>
+                <tr><td><code>.au-card-head</code></td><td>div</td><td>Flex header row: title left, trailing action right.</td></tr>
+                <tr><td><code>.au-card-title</code></td><td>div</td><td>Muted, small, semibold label with an optional leading icon.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-8)">Stat card</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Class</th><th>Element</th><th>Role</th></tr></thead>
+              <tbody>
+                <tr><td><code>.au-stat</code></td><td>div</td><td>Vertical stack for one metric.</td></tr>
+                <tr><td><code>.au-stat-label</code></td><td>div</td><td>Uppercase mono caption above the value.</td></tr>
+                <tr><td><code>.au-stat-value</code></td><td>div</td><td>Display numeral, tabular; wrap the unit in <code>&lt;small&gt;</code>.</td></tr>
+                <tr><td><code>.au-delta.is-good</code></td><td>div</td><td>Trend text in teal — a loss / on-track change.</td></tr>
+                <tr><td><code>.au-delta.is-bad</code> / <code>.is-flat</code></td><td>div</td><td>Coral for a gain, muted for no change.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="doc-section-title" style="margin-top:var(--space-8)">Tokens consumed</h2>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Token</th><th>Applied to</th></tr></thead>
+              <tbody>
+                <tr><td><code>--surface-1</code></td><td>Card background.</td></tr>
+                <tr><td><code>--border · --border-strong</code></td><td>Resting and hover border.</td></tr>
+                <tr><td><code>--shadow-1 / --shadow-3</code></td><td>Base and raised elevation.</td></tr>
+                <tr><td><code>--highlight-top</code></td><td>Inset top highlight for glassy depth.</td></tr>
+                <tr><td><code>--radius-lg</code></td><td>Corner radius.</td></tr>
+                <tr><td><code>--good-text / --bad-text</code></td><td>Delta trend colors.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="doc-callout">
+            <svg class="au-icon"><use href="#i-info"></use></svg>
+            <div class="doc-callout-body"><strong>Accessibility.</strong> An interactive card must be a real <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code> so it is focusable and announced. Don’t nest independent links inside a card that is itself a link. The stat delta’s meaning must not rely on color alone — keep the trend icon and the wording.</div>
+          </div>
+        </section>
+
+        <!-- Pager -->
+        <nav class="doc-pager">
+          <a href="date-picker.html"><small>Previous</small><span>Date picker</span></a>
+          <a class="doc-pager-next" href="list-table.html"><small>Next</small><span>List &amp; table</span></a>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

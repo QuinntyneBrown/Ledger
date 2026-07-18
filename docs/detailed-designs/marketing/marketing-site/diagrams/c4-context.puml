@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Marketing site
+
+Person(visitor, "Visitor", "Prospective member browsing the marketing site")
+System_Boundary(ledger, "Ledger") {
+  System(app, "Ledger", "Responsive weight-tracking web application with a public marketing site")
+}
+System_Ext(analytics, "Analytics provider", "Optional, non-essential analytics loaded only after consent per L2-061")
+
+Rel(visitor, app, "Browses the marketing site and creates an account using", "HTTPS")
+Rel(app, analytics, "Loads non-essential analytics after consent per L2-061", "HTTPS")
+@enduml

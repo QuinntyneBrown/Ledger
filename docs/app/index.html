@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ledger — screen gallery</title>
+  <meta name="description" content="Every screen, dialog and state in the Ledger weight-tracker mock.">
+  <link rel="stylesheet" href="../../design-system/assets/tokens.css">
+  <link rel="stylesheet" href="../../design-system/assets/components.css">
+  <link rel="stylesheet" href="assets/app.css">
+  <link rel="stylesheet" href="../../design-system/assets/docs.css">
+  <script defer src="../../design-system/assets/aurora.js"></script>
+</head>
+<body class="gallery-body">
+  <div class="gallery-wrap">
+
+    <header class="au-row-flex au-between au-wrap" style="gap:var(--space-4);margin-bottom:var(--space-8)">
+      <div>
+        <div class="doc-breadcrumb"><a href="../index.html">Home</a> <svg class="au-icon" style="width:12px;height:12px"><use href="#i-chevron-right"></use></svg> Ledger app</div>
+        <h1 class="doc-title" style="font-size:var(--text-4xl)">Ledger — every screen</h1>
+        <p class="doc-lead">The five value features, their supporting screens, and every dialog, error and state.</p>
+      </div>
+      <div class="au-row-flex au-gap-2">
+        <a class="au-btn au-btn--outlined au-btn--sm" href="../../design-system/index.html">Design system</a>
+        <a class="au-btn au-btn--primary au-btn--sm" href="dashboard/dashboard.html"><svg class="au-icon"><use href="#i-home"></use></svg> Open dashboard</a>
+        <button class="au-icon-btn" data-theme-toggle aria-label="Switch theme"><svg class="au-icon"><use href="#i-sun"></use></svg></button>
+      </div>
+    </header>
+
+    <!-- CORE FEATURES -->
+    <h2 class="au-eyebrow" style="margin-bottom:var(--space-4)"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-home"></use></svg> Feature 1–3 · Goal, Weigh-in, Dashboard</h2>
+    <div class="gallery-grid" style="margin-bottom:var(--space-9)">
+      <a class="gallery-card" href="dashboard/dashboard.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-home"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Dashboard</div><div class="gallery-desc">Hero dial · deltas · streak</div></div></a>
+      <a class="gallery-card" href="dashboard/empty.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-sparkles"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Dashboard · empty</div><div class="gallery-desc">First-run, no entries</div></div></a>
+      <a class="gallery-card" href="dashboard/loading.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-refresh"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Dashboard · loading</div><div class="gallery-desc">Skeleton state</div></div></a>
+      <a class="gallery-card" href="dashboard/celebration.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-trophy"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Goal reached</div><div class="gallery-desc">Celebration</div></div></a>
+      <a class="gallery-card" href="weigh-in/log.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-plus"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Log weigh-in</div><div class="gallery-desc">Quick daily entry</div></div></a>
+      <a class="gallery-card" href="weigh-in/backdate.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-calendar"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Backdate</div><div class="gallery-desc">Log a past day</div></div></a>
+      <a class="gallery-card" href="weigh-in/edit.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-edit"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Edit / delete entry</div><div class="gallery-desc">With delete confirm</div></div></a>
+      <a class="gallery-card" href="goal/goal.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-target"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Goal</div><div class="gallery-desc">Current goal overview</div></div></a>
+      <a class="gallery-card" href="goal/edit-goal.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-flag"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Set / edit goal</div><div class="gallery-desc">Rate preview + warnings</div></div></a>
+    </div>
+
+    <!-- TRENDS + MILESTONES -->
+    <h2 class="au-eyebrow" style="margin-bottom:var(--space-4)"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-activity"></use></svg> Feature 4–5 · Trends &amp; Milestones</h2>
+    <div class="gallery-grid" style="margin-bottom:var(--space-9)">
+      <a class="gallery-card" href="trends/trends.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-activity"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Trends</div><div class="gallery-desc">Chart · range · MA band</div></div></a>
+      <a class="gallery-card" href="trends/log-history.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-list"></use></svg></div><div class="gallery-meta"><div class="gallery-name">History</div><div class="gallery-desc">All entries, editable</div></div></a>
+      <a class="gallery-card" href="trends/empty.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-activity"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Trends · empty</div><div class="gallery-desc">Not enough data</div></div></a>
+      <a class="gallery-card" href="milestones/milestones.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-trophy"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Milestones</div><div class="gallery-desc">Badges · streaks</div></div></a>
+      <a class="gallery-card" href="milestones/celebration.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-award"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Badge unlocked</div><div class="gallery-desc">Celebration</div></div></a>
+    </div>
+
+    <!-- ONBOARDING + AUTH -->
+    <h2 class="au-eyebrow" style="margin-bottom:var(--space-4)"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-user"></use></svg> Getting in · Onboarding &amp; auth <span class="au-tag" style="margin-left:var(--space-2)">infra</span></h2>
+    <div class="gallery-grid" style="margin-bottom:var(--space-9)">
+      <a class="gallery-card" href="onboarding/welcome.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-scale"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Welcome</div><div class="gallery-desc">First run</div></div></a>
+      <a class="gallery-card" href="onboarding/wizard.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-corner-down-right"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Setup wizard</div><div class="gallery-desc">4-step onboarding</div></div></a>
+      <a class="gallery-card" href="onboarding/profile.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-user"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Profile setup</div><div class="gallery-desc">Name · height · avatar</div></div></a>
+      <a class="gallery-card" href="auth/login.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-lock"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Sign in</div><div class="gallery-desc">Email + OAuth</div></div></a>
+      <a class="gallery-card" href="auth/sign-up.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-user"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Create account</div><div class="gallery-desc">Sign up</div></div></a>
+      <a class="gallery-card" href="auth/forgot-password.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-mail"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Forgot password</div><div class="gallery-desc">Request reset</div></div></a>
+      <a class="gallery-card" href="auth/reset-password.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-lock"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Reset password</div><div class="gallery-desc">Set new password</div></div></a>
+      <a class="gallery-card" href="auth/verify-email.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-mail"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Verify email</div><div class="gallery-desc">Check your inbox</div></div></a>
+    </div>
+
+    <!-- SETTINGS -->
+    <h2 class="au-eyebrow" style="margin-bottom:var(--space-4)"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-settings"></use></svg> Settings &amp; account</h2>
+    <div class="gallery-grid" style="margin-bottom:var(--space-9)">
+      <a class="gallery-card" href="settings/settings.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-settings"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Settings</div><div class="gallery-desc">Units · theme · reminders</div></div></a>
+      <a class="gallery-card" href="settings/account.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-user"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Account</div><div class="gallery-desc">Profile details</div></div></a>
+      <a class="gallery-card" href="settings/change-password.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-lock"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Change password</div><div class="gallery-desc">Security</div></div></a>
+    </div>
+
+    <!-- STATE GALLERIES -->
+    <h2 class="au-eyebrow" style="margin-bottom:var(--space-4)"><svg class="au-icon" style="width:14px;height:14px"><use href="#i-grid"></use></svg> Every dialog, toast, error &amp; empty state</h2>
+    <div class="gallery-grid" style="margin-bottom:var(--space-9)">
+      <a class="gallery-card" href="states/dialogs.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-alert-circle"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Dialogs</div><div class="gallery-desc">Confirms · sheets · destructive</div></div></a>
+      <a class="gallery-card" href="states/toasts.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-check-circle"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Toasts</div><div class="gallery-desc">Success · error · undo</div></div></a>
+      <a class="gallery-card" href="states/errors.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-alert-triangle"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Errors &amp; validation</div><div class="gallery-desc">Every error message</div></div></a>
+      <a class="gallery-card" href="states/empty-states.html"><div class="gallery-thumb"><svg class="au-icon"><use href="#i-layers"></use></svg></div><div class="gallery-meta"><div class="gallery-name">Empty &amp; loading</div><div class="gallery-desc">All zero/loading states</div></div></a>
+    </div>
+
+  </div>
+</body>
+</html>
