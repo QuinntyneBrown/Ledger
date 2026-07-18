@@ -1,0 +1,7 @@
+import { expect, test } from '@playwright/test';
+
+// Traces to: L2-057, L2-058, L2-059, L2-060, L2-061, L2-062, L2-078, L2-081
+test('marketing site presents the product and legal routes',async({page})=>{await page.goto('http://127.0.0.1:4300');await expect(page.getByRole('heading',{level:1})).toContainText('Weight');await expect(page.getByRole('link',{name:/start your ledger/i})).toBeVisible();await page.goto('http://127.0.0.1:4300/privacy');await expect(page.getByRole('heading',{level:1})).toHaveText('Privacy Policy');});
+
+// Traces to: L2-001, L2-002, L2-004, L2-005, L2-064, L2-079
+test('authentication surfaces are keyboard reachable',async({page})=>{await page.goto('/sign-in');await expect(page.getByRole('heading',{level:1})).toHaveText('Sign in to Ledger');await page.keyboard.press('Tab');await expect(page.locator(':focus')).toBeVisible();await page.getByRole('link',{name:/create an account/i}).click();await expect(page.getByRole('heading',{level:1})).toHaveText('Create your account');});

@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "ledger-app": {
+      "projectType": "application",
+      "root": "projects/ledger-app",
+      "sourceRoot": "projects/ledger-app/src",
+      "prefix": "ledger",
+      "architect": {
+        "build": { "builder": "@angular/build:application", "options": { "browser": "projects/ledger-app/src/main.ts", "tsConfig": "projects/ledger-app/tsconfig.app.json", "index": "projects/ledger-app/src/index.html", "styles": ["../design-system/assets/tokens.css", "../design-system/assets/components.css", "projects/ledger-app/src/styles.css"], "assets": [{"glob":"**/*","input":"projects/ledger-app/public","output":"/"}] }, "configurations": { "production": { "outputHashing": "all", "budgets": [{"type":"initial","maximumWarning":"700kB","maximumError":"1MB"}] }, "development": { "optimization": false, "sourceMap": true } }, "defaultConfiguration": "production" },
+        "serve": { "builder": "@angular/build:dev-server", "options": { "proxyConfig": "proxy.conf.json" }, "configurations": { "production": { "buildTarget": "ledger-app:build:production" }, "development": { "buildTarget": "ledger-app:build:development" } }, "defaultConfiguration": "development" }
+      }
+    },
+    "ledger-marketing": {
+      "projectType": "application",
+      "root": "projects/ledger-marketing",
+      "sourceRoot": "projects/ledger-marketing/src",
+      "prefix": "ledger",
+      "architect": {
+        "build": { "builder": "@angular/build:application", "options": { "browser": "projects/ledger-marketing/src/main.ts", "tsConfig": "projects/ledger-marketing/tsconfig.app.json", "index": "projects/ledger-marketing/src/index.html", "styles": ["../design-system/assets/tokens.css", "projects/ledger-marketing/src/styles.css"], "ssr": {"entry":"projects/ledger-marketing/src/server.ts"}, "server": "projects/ledger-marketing/src/main.server.ts", "outputMode": "static", "assets": [{"glob":"**/*","input":"projects/ledger-marketing/public","output":"/"}] }, "configurations": { "production": { "outputHashing": "all" }, "development": { "optimization": false, "sourceMap": true } }, "defaultConfiguration": "production" },
+        "serve": { "builder": "@angular/build:dev-server", "configurations": { "development": { "buildTarget": "ledger-marketing:build:development" } }, "defaultConfiguration": "development" }
+      }
+    }
+  },
+  "cli": { "analytics": false }
+}

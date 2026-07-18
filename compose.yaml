@@ -1,0 +1,42 @@
+name: ledger
+services:
+  sql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment: { ACCEPT_EULA: "Y", MSSQL_SA_PASSWORD: "${LEDGER_SQL_PASSWORD:-Ledger_dev_123!}" }
+    ports: ["14333:1433"]
+    volumes: ["ledger-sql:/var/opt/mssql"]
+    healthcheck: { test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P '$$MSSQL_SA_PASSWORD' -C -Q 'select 1' || exit 1"], interval: 10s, timeout: 5s, retries: 20 }
+  redis:
+    image: redis:7.4-alpine
+    command: redis-server --appendonly yes
+    volumes: ["ledger-redis:/data"]
+    healthcheck: { test: ["CMD", "redis-cli", "ping"], interval: 5s, timeout: 3s, retries: 10 }
+  mailpit:
+    image: axllent/mailpit:v1.27
+    ports: ["8025:8025"]
+  api:
+    build: { context: ., dockerfile: backend/Dockerfile }
+    ports: ["8082:8080"]
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__Ledger: Server=sql;Database=Ledger;User Id=sa;Password=${LEDGER_SQL_PASSWORD:-Ledger_dev_123!};TrustServerCertificate=True
+      ConnectionStrings__Redis: redis:6379
+      Jwt__Key: ${LEDGER_JWT_KEY:-local-development-signing-key-change-me-123456789}
+      Vapid__PublicKey: ${LEDGER_VAPID_PUBLIC_KEY:-}
+      Vapid__PrivateKey: ${LEDGER_VAPID_PRIVATE_KEY:-}
+      Smtp__Host: mailpit
+      Storage__AvatarPath: /app/wwwroot/avatars
+      Database__MigrateOnStartup: "true"
+      App__BaseUrl: http://localhost:8080
+    volumes: ["ledger-avatars:/app/wwwroot/avatars"]
+    depends_on: { sql: { condition: service_healthy }, redis: { condition: service_healthy } }
+    healthcheck: { test: ["CMD-SHELL", "curl --fail --silent http://localhost:8080/health/live >/dev/null || exit 1"], interval: 10s, timeout: 3s, retries: 10 }
+  app:
+    build: { context: ., dockerfile: frontend/Dockerfile, target: app }
+    ports: ["8080:80"]
+    depends_on: { api: { condition: service_healthy } }
+  marketing:
+    build: { context: ., dockerfile: frontend/Dockerfile, target: marketing }
+    ports: ["8081:80"]
+volumes: { ledger-sql: {}, ledger-redis: {}, ledger-avatars: {} }
