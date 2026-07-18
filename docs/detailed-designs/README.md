@@ -2,10 +2,9 @@
 
 Per-feature design documents refining the requirements in [`../specs/`](../specs/). Each feature folder holds a `README.md` (Overview, Description, Requirements, Diagrams) and a `diagrams/` folder of PlantUML sources rendered to PNG. Every feature traces to level-2 (L2) requirements, which refine level-1 (L1) requirements.
 
-Diagrams are rendered with `python <skill>/scripts/render_puml.py docs/detailed-designs`.
+**10 subsystems · 22 features · 89 of 89 L2 requirements covered.**
 
-
-**10 subsystems · 22 features · 88 distinct L2 requirements covered.**
+Regenerate diagrams with `python <skill>/scripts/render_puml.py docs/detailed-designs`.
 
 ## Subsystems
 
@@ -79,5 +78,5 @@ Diagrams are rendered with `python <skill>/scripts/render_puml.py docs/detailed-
 | Feature | L2 requirements |
 |---------|-----------------|
 | [API and persistence foundation](platform/api-and-persistence-foundation/) | `L2-085`, `L2-088`, `L2-089`, `L2-074`, `L2-082`, `L2-083`, `L2-087` |
-| [Web app shell](platform/web-app-shell/) | `L2-063`, `L2-064`, `L2-065`, `L2-066`, `L2-073`, `L2-078`, `L2-086` |
+| [Web app shell](platform/web-app-shell/) | `L2-063`, `L2-064`, `L2-065`, `L2-066`, `L2-073`, `L2-075`, `L2-078`, `L2-086` |
 
