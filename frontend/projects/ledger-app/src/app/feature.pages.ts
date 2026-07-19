@@ -16,7 +16,12 @@ import { EmptyStateComponent, ProgressRingComponent } from "@ledger/components";
   standalone: true,
   imports: [ReactiveFormsModule],
   template: `<section class="wizard">
-    <p class="eyebrow">Step {{ step() }} of 4</p>
+    <div class="section-head">
+      <p class="eyebrow">Step {{ step() }} of 4</p>
+      <button class="button secondary" type="button" (click)="signOut()">
+        Sign out
+      </button>
+    </div>
     <div class="step-track"><i [style.width.%]="step() * 25"></i></div>
     <h1>Set your baseline</h1>
     <form [formGroup]="form" (ngSubmit)="next()">
@@ -118,7 +123,10 @@ export class OnboardingPage {
         goalWeightKg: this.fromKg(draft.goalWeightKg ?? 70, draft.unit),
         targetDate: draft.targetDate ?? "",
       });
-    });
+      });
+  }
+  signOut(): void {
+    this.api.signOut().subscribe(() => this.router.navigateByUrl("/sign-in"));
   }
   next(): void {
     if (this.step() < 4) {
