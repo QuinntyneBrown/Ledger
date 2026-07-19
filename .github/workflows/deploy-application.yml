@@ -100,7 +100,17 @@ jobs:
             --only-show-errors \
             --output none
           chmod +x "${{ runner.temp }}/ledger-migrations"
-          "${{ runner.temp }}/ledger-migrations" --connection "$LEDGER_SQL_CONNECTION_STRING"
+          for attempt in {1..12}; do
+            if "${{ runner.temp }}/ledger-migrations" --connection "$LEDGER_SQL_CONNECTION_STRING"; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 12 ]; then
+              echo "Database migration failed after waiting for Azure SQL to become available." >&2
+              exit 1
+            fi
+            echo "Azure SQL is not ready yet; retrying migration in 15 seconds (attempt $attempt of 12)."
+            sleep 15
+          done
 
       - name: Deploy application package
         run: >-
