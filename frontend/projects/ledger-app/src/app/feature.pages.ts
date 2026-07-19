@@ -862,7 +862,7 @@ export class BadgesPage {
     <div class="set-group account-overview"><div class="set-group-title">Account details</div><div class="au-card au-card--flush">
       <button class="set-row au-row--interactive overview-row" type="button" (click)="manage.set(true)"><span class="set-row-icon"><svg class="au-icon"><use href="#i-user" /></svg></span><span class="set-row-main"><span class="set-row-desc">Name</span><span class="set-row-label">{{ profile.controls.name.value }}</span></span><svg class="au-icon au-text-lo"><use href="#i-edit" /></svg></button>
       <button class="set-row au-row--interactive overview-row" type="button" (click)="manage.set(true)"><span class="set-row-icon"><svg class="au-icon"><use href="#i-mail" /></svg></span><span class="set-row-main"><span class="set-row-desc">Email</span><span class="set-row-label">{{ profile.controls.email.value }}</span></span><svg class="au-icon au-text-lo"><use href="#i-edit" /></svg></button>
-      <button class="set-row au-row--interactive overview-row" type="button" (click)="manage.set(true)"><span class="set-row-icon"><svg class="au-icon"><use href="#i-ruler" /></svg></span><span class="set-row-main"><span class="set-row-desc">Height</span><span class="set-row-label">{{ profile.controls.heightCm.value || "—" }} cm</span></span><svg class="au-icon au-text-lo"><use href="#i-edit" /></svg></button>
+      <button class="set-row au-row--interactive overview-row" type="button" (click)="openHeightEdit()"><span class="set-row-icon"><svg class="au-icon"><use href="#i-ruler" /></svg></span><span class="set-row-main"><span class="set-row-desc">Height</span><span class="set-row-label">{{ profile.controls.heightCm.value || "—" }} cm</span></span><svg class="au-icon au-text-lo"><use href="#i-edit" /></svg></button>
     </div></div>
     <div class="set-group account-overview"><div class="set-group-title">Security</div><div class="au-card au-card--flush">
       <button class="set-row au-row--interactive overview-row" type="button" (click)="manage.set(true)"><span class="set-row-icon"><svg class="au-icon"><use href="#i-lock" /></svg></span><span class="set-row-main"><span class="set-row-label">Change password</span><span class="set-row-desc">Keep your account secure</span></span><svg class="au-icon au-text-lo"><use href="#i-chevron-right" /></svg></button>
@@ -921,6 +921,9 @@ export class BadgesPage {
       </article>
     </section>
     }
+    @if (heightEdit()) {
+      <div class="au-scrim is-open" (click)="closeHeightEdit()"><section class="au-dialog" role="dialog" aria-modal="true" aria-labelledby="edit-height-title" (click)="$event.stopPropagation()"><div class="au-dialog-icon"><svg class="au-icon"><use href="#i-ruler" /></svg></div><h2 id="edit-height-title" class="au-dialog-title">Edit height</h2><p class="au-dialog-body">Your height is used to calculate your BMI.</p><label class="au-field"><span class="au-label">Height</span><div class="au-input-wrap"><svg class="au-icon"><use href="#i-ruler" /></svg><input class="au-input" type="number" min="50" max="272" [(ngModel)]="heightDraft" [ngModelOptions]="{ standalone: true }" (keyup.enter)="saveHeight()" /><span class="au-input-affix">cm</span></div></label><div class="au-dialog-actions"><button class="au-btn au-btn--outlined" type="button" (click)="closeHeightEdit()">Cancel</button><button class="au-btn au-btn--primary" type="button" (click)="saveHeight()">Save height</button></div></section></div>
+    }
     @if (message()) {
       <div class="au-toast-region app-toast-region"><div class="au-toast au-toast--success" role="status"><svg class="au-icon au-toast-icon"><use href="#i-check-circle" /></svg><span class="au-toast-msg">{{ message() }}</span></div></div>
     }
@@ -936,6 +939,8 @@ export class AccountPage {
   loading = signal(true);
   error = signal("");
   manage = signal(false);
+  heightEdit = signal(false);
+  heightDraft: number | null = null;
   journey = signal<Dashboard | null>(null);
   profile = this.fb.nonNullable.group({
     name: ["", Validators.required],
@@ -987,6 +992,23 @@ export class AccountPage {
     this.api
       .updateProfile(this.profile.getRawValue())
       .subscribe(() => this.message.set("Profile saved"));
+  }
+  openHeightEdit(): void {
+    this.heightDraft = this.profile.controls.heightCm.value;
+    this.heightEdit.set(true);
+  }
+  closeHeightEdit(): void {
+    this.heightEdit.set(false);
+  }
+  saveHeight(): void {
+    const heightCm = this.heightDraft;
+    this.api
+      .updateProfile({ ...this.profile.getRawValue(), heightCm })
+      .subscribe(() => {
+        this.profile.controls.heightCm.setValue(heightCm);
+        this.heightEdit.set(false);
+        this.message.set("Height saved");
+      });
   }
   uploadAvatar(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
