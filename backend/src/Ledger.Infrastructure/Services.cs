@@ -142,10 +142,20 @@ public sealed class SyncRetentionWorker(IServiceScopeFactory scopes, ILocalDate 
 
 public static class InfrastructureRegistration
 {
-    public static IServiceCollection AddLedgerInfrastructure(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection AddLedgerPersistence(this IServiceCollection services, IConfiguration config)
     {
         var connection = config.GetConnectionString("Ledger") ?? "Server=(localdb)\\mssqllocaldb;Database=Ledger;Trusted_Connection=True;TrustServerCertificate=True";
-        services.AddDbContext<LedgerDbContext>(o => o.UseSqlServer(connection)); services.AddScoped<ILedgerDbContext>(x => x.GetRequiredService<LedgerDbContext>());
-        services.AddSingleton<IPasswordService, PasswordService>(); services.AddSingleton<ITokenService, TokenService>(); services.AddSingleton<ILocalDate, SystemLocalDate>(); services.AddSingleton<IVapidKeys, VapidKeyProvider>(); services.AddSingleton<IAppLinks, AppLinks>(); services.AddScoped<IEmailSender, SmtpEmailSender>(); services.AddScoped<IRealtimeNotifier, SignalRNotifier>(); services.AddScoped<IAvatarStore, FileAvatarStore>(); services.AddScoped<IWebPushSender, WebPushSender>(); services.AddHostedService<ReminderWorker>(); services.AddHostedService<SyncRetentionWorker>(); return services;
+        services.AddDbContext<LedgerDbContext>(o => o.UseSqlServer(connection));
+        services.AddScoped<ILedgerDbContext>(x => x.GetRequiredService<LedgerDbContext>());
+        services.AddSingleton<IPasswordService, PasswordService>();
+        services.AddSingleton<ITokenService, TokenService>();
+        services.AddSingleton<ILocalDate, SystemLocalDate>();
+        return services;
+    }
+
+    public static IServiceCollection AddLedgerInfrastructure(this IServiceCollection services, IConfiguration config)
+    {
+        services.AddLedgerPersistence(config);
+        services.AddSingleton<IVapidKeys, VapidKeyProvider>(); services.AddSingleton<IAppLinks, AppLinks>(); services.AddScoped<IEmailSender, SmtpEmailSender>(); services.AddScoped<IRealtimeNotifier, SignalRNotifier>(); services.AddScoped<IAvatarStore, FileAvatarStore>(); services.AddScoped<IWebPushSender, WebPushSender>(); services.AddHostedService<ReminderWorker>(); services.AddHostedService<SyncRetentionWorker>(); return services;
     }
 }

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>ledger</AssemblyName>
+    <RootNamespace>Ledger.Cli</RootNamespace>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>ledger</ToolCommandName>
+    <PackageId>Ledger.Cli</PackageId>
+    <Description>Administrative CLI for Ledger database, member, data, and maintenance operations.</Description>
+    <Authors>Ledger</Authors>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Ledger.Application/Ledger.Application.csproj" />
+    <ProjectReference Include="../Ledger.Infrastructure/Ledger.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.9" />
+    <PackageReference Include="System.CommandLine" Version="2.0.10" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>

@@ -4,7 +4,7 @@ Ledger is a dark-first, responsive weight tracker: set a goal, log a weigh-in, r
 
 ## Repository
 
-- `backend/` — .NET 9 clean-architecture API, SQL Server migrations, SignalR, background reminders, and xUnit tests.
+- `backend/` — .NET 9 clean-architecture API, SQL Server migrations, the Ledger administration CLI, SignalR, background reminders, and xUnit tests.
 - `frontend/` — Angular 21 authenticated app, shared `api`/`components`/`domain` libraries, prerendered marketing app, Jest, and Playwright.
 - `design-system/` — Aurora tokens and reference components used by both applications.
 - `docs/` — product specifications, detailed designs, and static visual references.
@@ -19,7 +19,21 @@ docker compose up --build
 
 The app is served at `http://localhost:8080`, marketing at `http://localhost:8081`, API documentation at `http://localhost:8082/swagger` in Development, and captured email at `http://localhost:8025`.
 
-SQL migrations run automatically only in the Docker/development profile. Production deployments should apply `dotnet tool run dotnet-ef database update` as an explicit release step before starting the new API.
+SQL migrations run automatically only in the Docker/development profile. Production deployments should run the Ledger CLI's `database migrate` command as an explicit release step before starting the new API.
+
+## Administration CLI
+
+`Ledger.Cli` manages the database, seed data, member accounts, passwords, sessions, exports, erasure, and retention cleanup using the same persistence and security implementations as the API:
+
+```powershell
+dotnet run --project backend/src/Ledger.Cli -- database status
+dotnet run --project backend/src/Ledger.Cli -- database migrate
+$env:LEDGER_CLI_PASSWORD = 'a-strong-temporary-password1!'
+dotnet run --project backend/src/Ledger.Cli -- users add --email admin@example.com --name Administrator
+dotnet run --project backend/src/Ledger.Cli -- users reset-password --email admin@example.com
+```
+
+Use `--help` at any command level for the full command catalog. See [the CLI operations guide](backend/src/Ledger.Cli/README.md) for local configuration, non-interactive use, Docker, and Azure deployment patterns.
 
 ## Local checks
 

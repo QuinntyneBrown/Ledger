@@ -4,9 +4,11 @@
     <Project Path="src/Ledger.Application/Ledger.Application.csproj" />
     <Project Path="src/Ledger.Infrastructure/Ledger.Infrastructure.csproj" />
     <Project Path="src/Ledger.Api/Ledger.Api.csproj" />
+    <Project Path="src/Ledger.Cli/Ledger.Cli.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Ledger.UnitTests/Ledger.UnitTests.csproj" />
     <Project Path="tests/Ledger.IntegrationTests/Ledger.IntegrationTests.csproj" />
+    <Project Path="tests/Ledger.CliTests/Ledger.CliTests.csproj" />
   </Folder>
 </Solution>
