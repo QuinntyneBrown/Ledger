@@ -1,0 +1,68 @@
+name: Deploy Azure Static Web Apps
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "frontend/**"
+      - "design-system/**"
+      - ".github/workflows/deploy-static-web-apps.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: azure-static-web-apps-production
+  cancel-in-progress: true
+
+jobs:
+  marketing:
+    name: Deploy marketing site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build marketing site
+        working-directory: frontend
+        run: npm run build:marketing
+
+      - name: Deploy marketing site
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LEDGER_MARKETING }}
+          action: upload
+          app_location: frontend/dist/ledger-marketing/browser
+          skip_app_build: true
+
+  design-system:
+    name: Deploy design system
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Verify design system entry point
+        shell: bash
+        run: test -f design-system/index.html
+
+      - name: Deploy design system
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LEDGER_DESIGN_SYSTEM }}
+          action: upload
+          app_location: design-system
+          skip_app_build: true

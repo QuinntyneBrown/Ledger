@@ -36,3 +36,12 @@ npm run e2e
 Production must set SQL and Redis connections, a random JWT key, durable VAPID keys, SMTP credentials, allowed origins, HTTPS termination, and an OTLP endpoint. Avatar storage is abstracted behind `IAvatarStore`; Docker uses a persistent filesystem volume.
 
 The Terms and Privacy pages are product-specific drafts and require legal review before a production launch.
+
+## Azure Static Web Apps deployments
+
+Pushes to `main` deploy the prerendered marketing site and the Aurora design system through `.github/workflows/deploy-static-web-apps.yml`. The workflow expects a separate Azure Static Web Apps deployment token for each site in these GitHub Actions repository secrets:
+
+- `AZURE_STATIC_WEB_APPS_API_TOKEN_LEDGER_MARKETING`
+- `AZURE_STATIC_WEB_APPS_API_TOKEN_LEDGER_DESIGN_SYSTEM`
+
+The workflow can also be run manually from GitHub Actions. Marketing is built from `frontend/` and deployed from `frontend/dist/ledger-marketing/browser`; the design system is deployed directly from `design-system/`.

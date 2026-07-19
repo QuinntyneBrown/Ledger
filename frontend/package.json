@@ -7,6 +7,7 @@
     "start": "ng serve ledger-app",
     "start:marketing": "ng serve ledger-marketing --port 4300",
     "build": "ng build ledger-app && ng build ledger-marketing",
+    "build:marketing": "ng build ledger-marketing --configuration production",
     "test": "jest --runInBand",
     "e2e": "playwright test"
   },
