@@ -9,74 +9,98 @@ import {
 import { Router, RouterLink } from "@angular/router";
 import { DisplayPreferencesService, LedgerApi } from "@ledger/api";
 import { Dashboard, Preferences } from "@ledger/domain";
-import { EmptyStateComponent, ProgressRingComponent } from "@ledger/components";
+import { EmptyStateComponent } from "@ledger/components";
+import { localCalendarDate } from "./date.utils";
+
+@Component({
+  selector: "ledger-welcome",
+  standalone: true,
+  imports: [RouterLink],
+  template: `<section class="welcome-flow">
+    <a class="app-rail-brand onboarding-brand" routerLink="/welcome"><span class="app-rail-mark"></span>Ledger</a>
+    <div class="welcome-art" aria-hidden="true"><div class="au-gauge welcome-gauge"><svg viewBox="0 0 120 120"><circle class="au-gauge-track" cx="60" cy="60" r="52" stroke-width="9"></circle><circle class="au-gauge-arc welcome-arc" cx="60" cy="60" r="52" stroke-width="9"></circle></svg><div class="au-gauge-center"><svg class="au-icon"><use href="#i-scale" /></svg></div></div></div>
+    <div class="welcome-copy"><p class="au-eyebrow">Your honest record</p><h1 class="au-display">Weight,<br />kept honestly.</h1><p class="au-lead">A calm, private place to track progress without judgment or noise.</p></div>
+    <a class="au-btn au-btn--primary au-btn--lg" routerLink="/onboarding">Get started <svg class="au-icon"><use href="#i-arrow-right" /></svg></a>
+    <p class="au-caption">It takes less than a minute.</p>
+  </section>`,
+})
+export class WelcomePage {}
+
+@Component({
+  selector: "ledger-profile-setup",
+  standalone: true,
+  imports: [ReactiveFormsModule],
+  template: `<section class="wizard wizard-shell">
+    <div class="wizard-top"><span class="app-rail-brand onboarding-brand"><span class="app-rail-mark"></span>Ledger</span><button class="au-btn au-btn--text au-btn--sm" type="button" (click)="skip()">Skip</button></div>
+    <div class="onb-progress" aria-label="Profile setup"><i class="is-done"></i><i class="is-done"></i><i class="is-done"></i><i class="is-done"></i></div>
+    <div class="onb-step"><p class="onb-step-num">FINAL STEP</p><h1 class="onb-step-title">Set up your profile</h1><p class="onb-step-sub">A few details make your trends more useful. You can change these anytime.</p></div>
+    <form class="onb-form" [formGroup]="form" (ngSubmit)="save()">
+      <div class="profile-avatar"><span class="au-avatar au-avatar--lg">{{ initial() }}</span><label class="au-icon-btn profile-camera" aria-label="Choose profile photo"><svg class="au-icon"><use href="#i-camera" /></svg><input class="sr-only" type="file" accept="image/jpeg,image/png,image/webp" (change)="upload($event)" /></label></div>
+      <div class="au-field"><label class="au-label" for="profile-name">Your name</label><div class="au-input-wrap"><svg class="au-icon"><use href="#i-user" /></svg><input id="profile-name" class="au-input" formControlName="name" autocomplete="name" /></div></div>
+      <div class="au-field"><label class="au-label" for="profile-height">Height <span class="au-text-lo">optional</span></label><div class="au-input-wrap"><svg class="au-icon"><use href="#i-ruler" /></svg><input id="profile-height" class="au-input" type="number" min="50" max="272" formControlName="heightCm" /><span class="au-input-suffix">cm</span></div></div>
+      @if (error()) { <p class="au-help is-error" role="alert">{{ error() }}</p> }
+      <div class="actions"><button class="au-btn au-btn--text au-btn--lg" type="button" (click)="skip()">Skip for now</button><button class="au-btn au-btn--primary au-btn--lg">Finish setup <svg class="au-icon"><use href="#i-check" /></svg></button></div>
+    </form>
+  </section>`,
+})
+export class ProfileSetupPage {
+  private fb = inject(FormBuilder);
+  private api = inject(LedgerApi);
+  private router = inject(Router);
+  error = signal("");
+  form = this.fb.nonNullable.group({ name: ["", Validators.required], heightCm: [null as number | null] });
+  constructor() { this.api.profile().subscribe((p: any) => this.form.patchValue({ name: p.name, heightCm: p.heightCm })); }
+  initial(): string { return this.form.controls.name.value.trim().charAt(0).toUpperCase() || "L"; }
+  upload(event: Event): void { const file = (event.target as HTMLInputElement).files?.[0]; if (file) this.api.uploadAvatar(file).subscribe({ error: (e) => this.error.set(this.api.problem(e)) }); }
+  save(): void { if (this.form.invalid) return; this.api.profile().subscribe((p: any) => this.api.updateProfile({ ...p, ...this.form.getRawValue() }).subscribe({ next: () => this.skip(), error: (e) => this.error.set(this.api.problem(e)) })); }
+  skip(): void { void this.router.navigateByUrl("/dashboard"); }
+}
 
 @Component({
   selector: "ledger-onboarding",
   standalone: true,
   imports: [ReactiveFormsModule],
-  template: `<section class="wizard">
-    <div class="section-head">
-      <p class="eyebrow">Step {{ step() }} of 4</p>
-      <button class="button secondary" type="button" (click)="signOut()">
-        Sign out
-      </button>
+  template: `<section class="wizard wizard-shell">
+    <div class="wizard-top">
+      <span class="app-rail-brand onboarding-brand"><span class="app-rail-mark"></span>Ledger</span>
+      <button class="au-btn au-btn--text au-btn--sm" type="button" (click)="signOut()"><svg class="au-icon"><use href="#i-logout" /></svg>Sign out</button>
     </div>
-    <div class="step-track"><i [style.width.%]="step() * 25"></i></div>
-    <h1>Set your baseline</h1>
-    <form [formGroup]="form" (ngSubmit)="next()">
+    <div class="onb-progress" aria-label="Step {{ step() }} of 4">
+      @for (n of [1,2,3,4]; track n) { <i [class.is-done]="n <= step()"></i> }
+    </div>
+    <div class="onb-step">
+      <p class="onb-step-num">STEP {{ step() }} OF 4</p>
+      <h1 class="onb-step-title">{{ stepTitle() }}</h1>
+      <p class="onb-step-sub">{{ stepSubtitle() }}</p>
+    </div>
+    <form class="onb-form" [formGroup]="form" (ngSubmit)="next()">
       @switch (step()) {
         @case (1) {
-          <fieldset>
-            <legend>How do you measure?</legend>
-            <label class="choice"
-              ><input type="radio" formControlName="unit" value="Kg" />
-              Kilograms</label
-            ><label class="choice"
-              ><input type="radio" formControlName="unit" value="Lbs" />
-              Pounds</label
-            >
-          </fieldset>
+          <div class="onb-choice-grid" role="radiogroup" aria-label="Weight unit">
+            <label class="onb-choice"><input type="radio" formControlName="unit" value="Kg" /><svg class="au-icon"><use href="#i-scale" /></svg><strong>Kilograms</strong><span class="au-caption">kg</span></label>
+            <label class="onb-choice"><input type="radio" formControlName="unit" value="Lbs" /><svg class="au-icon"><use href="#i-scale" /></svg><strong>Pounds</strong><span class="au-caption">lb</span></label>
+          </div>
         }
         @case (2) {
-          <label
-            >Current weight<input
-              type="number"
-              step="0.1"
-              formControlName="currentWeightKg"
-            /><span>{{ unitLabel() }}</span></label
-          >
+          <label class="onb-number"><span class="sr-only">Current weight</span><input type="number" step="0.1" formControlName="currentWeightKg" /><span class="au-bignum-unit">{{ unitLabel() }}</span></label>
         }
         @case (3) {
-          <label
-            >Goal weight<input
-              type="number"
-              step="0.1"
-              formControlName="goalWeightKg"
-            /><span>{{ unitLabel() }}</span></label
-          >
+          <label class="onb-number"><span class="sr-only">Goal weight</span><input type="number" step="0.1" formControlName="goalWeightKg" /><span class="au-bignum-unit">{{ unitLabel() }}</span></label>
         }
         @case (4) {
-          <label
-            >Target date<input type="date" formControlName="targetDate"
-          /></label>
+          <div class="au-card"><label class="au-field"><span class="au-label"><svg class="au-icon"><use href="#i-calendar" /></svg>Target date</span><input class="au-input" type="date" formControlName="targetDate" /></label></div>
         }
       }
       @if (error()) {
-        <p class="field-error" role="alert">{{ error() }}</p>
+        <div class="au-banner au-banner--bad" role="alert"><svg class="au-icon"><use href="#i-alert-circle" /></svg><div class="au-banner-body"><div class="au-banner-title">We couldn’t save that</div><div class="au-banner-text">{{ error() }}</div></div></div>
       }
       <div class="actions">
         @if (step() > 1) {
-          <button
-            type="button"
-            class="button secondary"
-            (click)="step.set(step() - 1)"
-          >
-            Back
-          </button>
+          <button type="button" class="au-btn au-btn--text au-btn--lg" (click)="step.set(step() - 1)"><svg class="au-icon"><use href="#i-arrow-left" /></svg>Back</button>
         }
-        <button class="button primary">
+        <button class="au-btn au-btn--primary au-btn--lg">
           {{ step() === 4 ? "Finish setup" : "Continue" }}
+          <svg class="au-icon"><use href="#i-arrow-right" /></svg>
         </button>
       </div>
     </form>
@@ -129,16 +153,23 @@ export class OnboardingPage {
     this.api.signOut().subscribe(() => this.router.navigateByUrl("/sign-in"));
   }
   next(): void {
+    this.error.set("");
     if (this.step() < 4) {
       const value = this.form.getRawValue();
       this.api
         .saveOnboarding({
           lastCompletedStep: this.step(),
-          ...value,
-          currentWeightKg: this.toKg(value.currentWeightKg),
-          goalWeightKg: this.toKg(value.goalWeightKg),
+          unit: value.unit,
+          currentWeightKg:
+            this.step() >= 2 ? this.toKg(value.currentWeightKg) : null,
+          goalWeightKg:
+            this.step() >= 3 ? this.toKg(value.goalWeightKg) : null,
+          targetDate: value.targetDate || null,
         })
-        .subscribe(() => this.step.update((x) => x + 1));
+        .subscribe({
+          next: () => this.step.update((x) => x + 1),
+          error: (e) => this.error.set(this.api.problem(e)),
+        });
       return;
     }
     const v = this.form.getRawValue();
@@ -151,12 +182,18 @@ export class OnboardingPage {
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       })
       .subscribe({
-        next: () => this.router.navigateByUrl("/dashboard"),
+        next: () => this.router.navigateByUrl("/onboarding/profile"),
         error: (e) => this.error.set(this.api.problem(e)),
       });
   }
   unitLabel(): string {
     return this.form.controls.unit.value === "Lbs" ? "lb" : "kg";
+  }
+  stepTitle(): string {
+    return ["", "How do you measure?", "What do you weigh now?", "What’s your goal weight?", "When would you like to get there?"][this.step()];
+  }
+  stepSubtitle(): string {
+    return ["", "Choose the unit you use every day.", "This becomes the honest starting point for your ledger.", "A clear destination makes every entry meaningful.", "Choose a realistic date. You can change it later."][this.step()];
   }
   private toKg(value: number): number {
     return this.form.controls.unit.value === "Lbs"
@@ -171,13 +208,10 @@ export class OnboardingPage {
 @Component({
   selector: "ledger-dashboard",
   standalone: true,
-  imports: [CommonModule, RouterLink, ProgressRingComponent],
-  template: `<header class="page-header">
-      <div>
-        <p class="eyebrow">Today</p>
-        <h1>{{ data()?.greeting ?? "Your ledger" }}</h1>
-      </div>
-      <a class="button secondary" routerLink="/goal">Goal</a>
+  imports: [CommonModule, RouterLink, EmptyStateComponent],
+  template: `<header class="page-header app-route-header">
+      <div class="au-row-flex au-gap-3"><span class="au-avatar au-avatar--sm">L</span><div><p class="app-header-sub">{{ today | date: "EEEE, MMM d" }}</p><h1 class="app-header-title">{{ data()?.greeting ?? "Your ledger" }}</h1></div></div>
+      <a class="au-icon-btn" routerLink="/account" aria-label="Settings"><svg class="au-icon"><use href="#i-settings" /></svg></a>
     </header>
     @if (loading()) {
       <div class="skeleton hero"></div>
@@ -191,51 +225,25 @@ export class OnboardingPage {
         <button class="button primary" (click)="load()">Try again</button>
       </section>
     } @else if (data(); as d) {
-      <section class="hero-card">
-        <ledger-progress-ring
-          [value]="d.progress.percentComplete"
-          [label]="d.progress.percentComplete + ' percent toward goal'"
-        />
-        <div class="weight-hero">
-          <span>Now</span
-          ><strong>{{
-            display.fromKg(d.progress.currentWeightKg) | number: "1.1-1"
-          }}</strong
-          ><small>{{ display.unitLabel }}</small>
+      @if (!d.trend.length) {
+        <ledger-empty-state title="Your ledger starts here" message="Log your first weight to begin seeing progress."><a class="au-btn au-btn--primary au-btn--lg au-mt-4" routerLink="/log"><svg class="au-icon"><use href="#i-plus" /></svg>Log weight</a></ledger-empty-state>
+      } @else {
+      <section class="dash-hero au-rise au-rise-1">
+        <div class="dashboard-gauge" [style.--dashboard-progress]="d.progress.percentComplete" role="img" [attr.aria-label]="d.progress.percentComplete + ' percent toward goal, current weight ' + display.fromKg(d.progress.currentWeightKg) + ' ' + display.unitLabel"><span class="au-gauge-caption">CURRENT</span><strong>{{ display.fromKg(d.progress.currentWeightKg) | number: "1.1-1" }}</strong><small>{{ display.unitLabel === 'kg' ? 'kilograms' : 'pounds' }}</small></div>
+        <div class="dash-hero-meta">
+          <span class="au-chip"><svg class="au-icon"><use href="#i-flag" /></svg>Start <b>{{ display.fromKg(d.progress.startWeightKg) | number: "1.1-1" }}</b></span>
+          <span class="au-chip au-chip--brand"><svg class="au-icon"><use href="#i-target" /></svg>Goal <b>{{ display.fromKg(d.progress.goalWeightKg) | number: "1.1-1" }}</b></span>
         </div>
-        <div class="chip-row">
-          <span
-            >Start <b>{{ display.fromKg(d.progress.startWeightKg) }}</b></span
-          ><span
-            >Goal <b>{{ display.fromKg(d.progress.goalWeightKg) }}</b></span
-          >
-        </div>
-        <p class="pace">{{ d.progress.pace.message }}</p>
+        <p class="au-caption pace"><strong>{{ d.progress.percentComplete | number: "1.0-0" }}% there</strong> — {{ d.progress.pace.message }}</p>
       </section>
-      <section class="stat-grid">
-        <article>
-          <span>This week</span
-          ><strong
-            >{{ display.fromKg(d.thisWeekChangeKg) | number: "1.1-1" }}
-            {{ display.unitLabel }}</strong
-          >
-        </article>
-        <article>
-          <span>Weekly pace</span
-          ><strong
-            >{{ display.fromKg(d.averageWeeklyChangeKg) | number: "1.1-1" }}
-            {{ display.unitLabel }}</strong
-          >
-        </article>
-        <article>
-          <span>Streak</span><strong>{{ d.currentStreak }} days</strong>
-        </article>
+      <section class="dash-stats au-rise au-rise-2">
+        <article class="au-card dash-ministat au-card--pad-sm"><span class="au-stat-label">This week</span><strong class="au-stat-value au-delta is-good">{{ display.fromKg(d.thisWeekChangeKg) | number: "1.1-1" }}</strong><span class="au-caption">{{ display.unitLabel }}</span></article>
+        <article class="au-card dash-ministat au-card--pad-sm"><span class="au-stat-label">Avg / week</span><strong class="au-stat-value">{{ display.fromKg(d.averageWeeklyChangeKg) | number: "1.1-1" }}</strong><span class="au-caption">{{ display.unitLabel }}</span></article>
+        <article class="au-card dash-ministat au-card--pad-sm"><span class="au-stat-label">Streak</span><strong class="au-stat-value streak-value">{{ d.currentStreak }}</strong><span class="au-caption">days</span></article>
       </section>
-      <section class="card">
-        <div class="section-head">
-          <h2>Last 30 days</h2>
-          <a routerLink="/trends">View trends</a>
-        </div>
+      <div class="app-section-title"><h2>Last 30 days</h2><a routerLink="/trends">View trends</a></div>
+      <a class="au-card au-card--interactive trend-snapshot" routerLink="/trends">
+        <div class="au-row-flex au-between"><div class="au-stat"><span class="au-stat-label">30-day direction</span><span class="au-delta is-good"><svg class="au-icon"><use href="#i-trending-down" /></svg>{{ display.fromKg(d.thisWeekChangeKg) | number: "1.1-1" }} {{ display.unitLabel }}</span></div><span class="au-chip au-chip--good">On track</span></div>
         <div
           class="sparkline"
           role="img"
@@ -247,7 +255,11 @@ export class OnboardingPage {
             <polyline [attr.points]="points(d)" />
           </svg>
         </div>
-      </section>
+      </a>
+      <div class="app-section-title"><h2>Next milestone</h2><a routerLink="/badges">All badges</a></div>
+      <a class="au-card au-card--interactive next-milestone" routerLink="/badges"><div class="au-ring"><svg class="au-icon"><use href="#i-trophy" /></svg></div><div class="au-fill"><strong>{{ d.nextBadge ? badgeName(d.nextBadge) : "Keep your streak going" }}</strong><div class="au-caption">Every honest entry moves you forward.</div></div><svg class="au-icon au-text-lo"><use href="#i-chevron-right" /></svg></a>
+      }
+      @if (goalCelebration()) { <div class="au-dialog-scrim is-open"><section class="au-dialog celebrate" role="dialog" aria-modal="true" aria-labelledby="goal-celebration-title"><div class="celebrate-medal badge-icon"><svg class="au-icon"><use href="#i-trophy" /></svg></div><p class="au-eyebrow">GOAL REACHED</p><h2 id="goal-celebration-title" class="au-display">You hit your goal!</h2><p class="au-dialog-text">The honest record got you here. Take a moment to celebrate your steady work.</p><button class="au-btn au-btn--primary au-btn--lg" type="button" (click)="goalCelebration.set(false)">See my progress</button></section></div> }
     } `,
 })
 export class DashboardPage {
@@ -256,6 +268,8 @@ export class DashboardPage {
   data = signal<Dashboard | null>(null);
   loading = signal(true);
   error = signal("");
+  goalCelebration = signal(false);
+  today = new Date();
   constructor() {
     this.load();
   }
@@ -264,6 +278,7 @@ export class DashboardPage {
     this.api.dashboard().subscribe({
       next: (x) => {
         this.data.set(x);
+        this.goalCelebration.set(x.progress.reached);
         this.loading.set(false);
       },
       error: (e) => {
@@ -283,25 +298,24 @@ export class DashboardPage {
       )
       .join(" ");
   }
+  badgeName(value: string): string { return value.replace(/([A-Z])/g, " $1").trim(); }
 }
 
 @Component({
   selector: "ledger-log",
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
-  template: `<header class="page-header">
-      <div>
-        <p class="eyebrow">Daily record</p>
-        <h1>Log your weight</h1>
-      </div>
-      <a routerLink="/history">History</a>
+  imports: [ReactiveFormsModule, RouterLink, DatePipe],
+  template: `<header class="page-header app-route-header">
+      <a class="au-icon-btn" routerLink="/dashboard" aria-label="Back to dashboard"><svg class="au-icon"><use href="#i-arrow-left" /></svg></a>
+      <h1 class="app-header-title">Log weight</h1>
+      <a class="au-icon-btn" routerLink="/history" aria-label="View history"><svg class="au-icon"><use href="#i-list" /></svg></a>
     </header>
-    <section class="entry-card">
+    <section class="weigh-page">
+      <div class="weigh-hero"><div class="au-eyebrow">{{ form.controls.date.value === today ? "Today" : "Past entry" }}</div><div class="weigh-date">{{ form.controls.date.value | date: "EEEE, MMM d y":"UTC" }}</div></div>
       <form [formGroup]="form" (ngSubmit)="save()">
-        <label
-          >Date<input type="date" formControlName="date" [max]="today" /></label
-        ><label class="weight-input"
-          ><span>Weight ({{ display.unitLabel }})</span>
+        <label class="au-field weigh-date-field"><span class="au-label"><svg class="au-icon"><use href="#i-calendar" /></svg>Date</span><input class="au-input" type="date" formControlName="date" [max]="today" /></label>
+        <label class="weight-input"
+          ><span class="sr-only">Weight ({{ display.unitLabel }})</span>
           <div>
             <button
               type="button"
@@ -309,7 +323,7 @@ export class DashboardPage {
               aria-label="Decrease weight"
             >
               −</button
-            ><input
+            ><input aria-label="Weight"
               type="number"
               step="0.1"
               formControlName="weightKg"
@@ -320,17 +334,21 @@ export class DashboardPage {
             >
               ＋
             </button>
+            <span class="weight-unit">{{ display.unitLabel }}</span>
           </div></label
-        ><label
-          >Note <small>optional</small
-          ><textarea maxlength="280" formControlName="note" rows="4"></textarea>
+        ><p class="au-caption weigh-hint">Tap − / + to adjust in 0.1 {{ display.unitLabel }} steps</p>
+        <hr class="au-hairline" />
+        <label class="au-field"
+          ><span class="au-label"><svg class="au-icon"><use href="#i-edit" /></svg>Add a note <small>· optional</small></span
+          ><textarea class="au-textarea" maxlength="280" formControlName="note" rows="3" placeholder="e.g. after a morning run, well hydrated"></textarea>
         </label>
         @if (error()) {
-          <p class="field-error" role="alert">{{ error() }}</p>
+          <p class="au-help is-error" role="alert">{{ error() }}</p>
         }
-        <button class="button primary" [disabled]="form.invalid || busy()">
-          {{ busy() ? "Saving…" : "Save weigh-in" }}
+        <button class="au-btn au-btn--primary au-btn--lg au-btn--block" [disabled]="form.invalid || busy()">
+          <svg class="au-icon"><use href="#i-check" /></svg>{{ busy() ? "Saving…" : "Save weight" }}
         </button>
+        <p class="au-caption weigh-hint">Logged entries sync to your trends automatically</p>
       </form>
       @if (saved()) {
         <div class="toast" role="status">
@@ -343,7 +361,7 @@ export class LogPage {
   private fb = inject(FormBuilder);
   private api = inject(LedgerApi);
   readonly display = inject(DisplayPreferencesService);
-  today = new Date().toISOString().slice(0, 10);
+  today = localCalendarDate();
   form = this.fb.nonNullable.group({
     date: [this.today, Validators.required],
     weightKg: [
@@ -396,12 +414,12 @@ export class LogPage {
   selector: "ledger-history",
   standalone: true,
   imports: [CommonModule, FormsModule, EmptyStateComponent],
-  template: `<header class="page-header">
+  template: `<header class="page-header app-route-header">
       <div>
-        <p class="eyebrow">Your record</p>
-        <h1>History</h1>
+        <p class="app-header-sub">Your record</p>
+        <h1 class="app-header-title">History</h1>
       </div>
-      <select [value]="sort()" (change)="changeSort($event)">
+      <select class="au-select" aria-label="Sort entries" [value]="sort()" (change)="changeSort($event)">
         <option>Newest</option>
         <option>Oldest</option>
         <option>BiggestDrop</option>
@@ -412,7 +430,7 @@ export class LogPage {
       @for (month of d.months; track month.year + "-" + month.month) {
         <section class="history-month">
           <h2>
-            {{ month.year }}-{{ month.month }}
+            {{ monthDate(month.year, month.month) | date: "MMMM yyyy":"UTC" }}
             <span
               >{{ display.fromKg(month.netChangeKg) | number: "1.1-1" }}
               {{ display.unitLabel }}</span
@@ -421,25 +439,24 @@ export class LogPage {
           @for (entry of month.entries; track entry.id) {
             <article>
               <div>
-                <strong>{{ entry.date | date: "EEE, MMM d" }}</strong
+                <strong>{{ entry.date | date: "EEE, MMM d":"UTC" }}</strong
                 ><small>{{ entry.note }}</small>
               </div>
               <b
                 >{{ display.fromKg(entry.weightKg) | number: "1.1-1" }}
                 {{ display.unitLabel }}</b
               ><button
-                class="icon-button"
+                class="au-icon-btn au-icon-btn--sm"
                 (click)="beginEdit(entry)"
                 aria-label="Edit entry"
               >
-                ✎</button
+                <svg class="au-icon"><use href="#i-edit" /></svg></button
               ><button
-                class="icon-button"
-                (click)="remove(entry.id)"
+                class="au-icon-btn au-icon-btn--sm"
+                (click)="requestRemove(entry.id)"
                 aria-label="Delete entry"
               >
-                ×
-              </button>
+                <svg class="au-icon"><use href="#i-trash" /></svg></button>
             </article>
             @if (editingId() === entry.id) {
               <form class="inline-editor" (ngSubmit)="saveEdit(entry.id)">
@@ -458,10 +475,10 @@ export class LogPage {
                   ></textarea>
                 </label>
                 <div class="actions">
-                  <button class="button primary">Save</button
+                  <button class="au-btn au-btn--primary">Save</button
                   ><button
                     type="button"
-                    class="button secondary"
+                    class="au-btn au-btn--outlined"
                     (click)="editingId.set(null)"
                   >
                     Cancel
@@ -473,13 +490,16 @@ export class LogPage {
         </section>
       }
       @if (d.hasMore) {
-        <button class="button secondary" (click)="more()">Load more</button>
+        <button class="au-btn au-btn--outlined" (click)="more()">Load more</button>
       }
     } @else {
       <ledger-empty-state
         title="No entries yet"
         message="Log your first weight to begin your honest record."
       />
+    }
+    @if (deletingId()) {
+      <div class="au-dialog-scrim is-open" (click)="cancelRemove()"><section class="au-dialog" role="alertdialog" aria-modal="true" aria-labelledby="delete-entry-title" (click)="$event.stopPropagation()"><div class="au-dialog-icon is-danger"><svg class="au-icon"><use href="#i-trash" /></svg></div><h2 id="delete-entry-title" class="au-dialog-title">Delete this entry?</h2><p class="au-dialog-text">This removes the weigh-in from your history and recalculates your progress.</p><div class="au-dialog-actions"><button class="au-btn au-btn--outlined" type="button" (click)="cancelRemove()">Cancel</button><button class="au-btn au-btn--danger" type="button" (click)="confirmRemove()">Delete entry</button></div></section></div>
     }`,
 })
 export class HistoryPage {
@@ -489,8 +509,12 @@ export class HistoryPage {
   sort = signal(sessionStorage.getItem("ledger.history.sort") ?? "Newest");
   page = signal(1);
   editingId = signal<string | null>(null);
+  deletingId = signal<string | null>(null);
   editWeight = 0;
   editNote = "";
+  monthDate(year: number, month: number): string {
+    return `${year}-${String(month).padStart(2, "0")}-01`;
+  }
   constructor() {
     this.load();
   }
@@ -531,8 +555,13 @@ export class HistoryPage {
     this.page.update((x) => x + 1);
     this.load(true);
   }
-  remove(id: string): void {
+  requestRemove(id: string): void { this.deletingId.set(id); }
+  cancelRemove(): void { this.deletingId.set(null); }
+  confirmRemove(): void {
+    const id = this.deletingId();
+    if (!id) return;
     this.api.deleteWeight(id).subscribe(() => {
+      this.deletingId.set(null);
       this.page.set(1);
       this.load();
     });
@@ -563,29 +592,31 @@ export class HistoryPage {
   selector: "ledger-trends",
   standalone: true,
   imports: [CommonModule, RouterLink, EmptyStateComponent],
-  template: `<header class="page-header">
+  template: `<header class="page-header app-route-header">
       <div>
-        <p class="eyebrow">Direction of travel</p>
-        <h1>Trends</h1>
+        <p class="app-header-sub">Analytics</p>
+        <h1 class="app-header-title">Trends</h1>
       </div>
-      <a routerLink="/history">History</a>
+      <a class="au-icon-btn" routerLink="/history" aria-label="View history"><svg class="au-icon"><use href="#i-list" /></svg></a>
     </header>
-    <div class="range-tabs" role="group" aria-label="Time range">
+    <div class="range-tabs au-segmented" role="tablist" aria-label="Time range">
       @for (r of ranges; track r) {
-        <button [class.active]="range() === r" (click)="select(r)">
+        <button [class.active]="range() === r" [class.is-active]="range() === r" [attr.aria-selected]="range() === r" (click)="select(r)">
           {{ labels[r] }}
         </button>
       }
     </div>
     @if (data(); as d) {
       @if (d.series.length) {
-        <section class="chart-card">
+        <section class="au-card trend-chartcard au-rise au-rise-1">
+          <div class="au-row-flex au-between trend-current"><div class="au-stat"><span class="au-stat-label">Current</span><span class="au-stat-value">{{ display.fromKg(d.series[d.series.length - 1].weightKg) | number: "1.1-1" }}<small>{{ display.unitLabel }}</small></span></div><span class="au-chip au-chip--good"><svg class="au-icon"><use href="#i-trending-down" /></svg>{{ display.fromKg(d.totalChangeKg) | number: "1.1-1" }} {{ display.unitLabel }}</span></div>
           <div
             class="chart"
             role="img"
             [attr.aria-label]="d.accessibleDescription"
           >
             <svg viewBox="0 0 600 260" preserveAspectRatio="none">
+              <g class="au-chart-grid"><line x1="0" y1="20" x2="600" y2="20"/><line x1="0" y1="80" x2="600" y2="80"/><line x1="0" y1="140" x2="600" y2="140"/><line x1="0" y1="200" x2="600" y2="200"/></g>
               <line
                 x1="0"
                 [attr.y1]="goalY(d)"
@@ -596,25 +627,26 @@ export class HistoryPage {
               <polyline [attr.points]="chartPoints(d)" />
             </svg>
           </div>
+          <div class="trend-legend"><span><i style="background:var(--viz-2)"></i>Daily weight</span><span><i style="background:var(--brand);height:2px"></i>Goal</span></div>
           <p class="sr-only">{{ d.accessibleDescription }}</p>
         </section>
-        <section class="stat-grid">
-          <article>
-            <span>Weekly rate</span
+        <section class="trend-statgrid stat-grid">
+          <article class="au-card">
+            <span class="au-stat-label">Rate / week</span
             ><strong
               >{{ display.fromKg(d.ratePerWeekKg) | number: "1.2-2" }}
               {{ display.unitLabel }}</strong
             >
           </article>
-          <article>
-            <span>Total change</span
+          <article class="au-card">
+            <span class="au-stat-label">Total change</span
             ><strong
               >{{ display.fromKg(d.totalChangeKg) | number: "1.1-1" }}
               {{ display.unitLabel }}</strong
             >
           </article>
-          <article>
-            <span>BMI</span><strong>{{ d.bmi ?? "—" }}</strong>
+          <article class="au-card">
+            <span class="au-stat-label">BMI</span><strong>{{ d.bmi ?? "—" }}</strong>
           </article>
         </section>
       } @else {
@@ -675,57 +707,32 @@ export class TrendsPage {
 @Component({
   selector: "ledger-goal",
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  template: `<header class="page-header">
-      <div>
-        <p class="eyebrow">Destination</p>
-        <h1>Your goal</h1>
-      </div>
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  template: `<header class="page-header app-route-header">
+      <a class="au-icon-btn" routerLink="/dashboard" aria-label="Back"><svg class="au-icon"><use href="#i-arrow-left" /></svg></a>
+      <h1 class="app-header-title">{{ editing() ? "Edit goal" : "Your goal" }}</h1>
+      @if (!editing()) { <button class="au-icon-btn" type="button" aria-label="Edit goal" (click)="editing.set(true)"><svg class="au-icon"><use href="#i-edit" /></svg></button> } @else { <span></span> }
     </header>
     @if (data(); as d) {
-      <section class="hero-card">
-        <div class="weight-hero">
-          <span>Progress</span
-          ><strong>{{ d.percentComplete | number: "1.0-0" }}%</strong>
-        </div>
-        <div class="chip-row">
-          <span
-            >Start
-            <b
-              >{{ display.fromKg(d.startWeightKg) }} {{ display.unitLabel }}</b
-            ></span
-          ><span
-            >Now
-            <b
-              >{{ display.fromKg(d.currentWeightKg) }}
-              {{ display.unitLabel }}</b
-            ></span
-          ><span
-            >Goal
-            <b
-              >{{ display.fromKg(d.goalWeightKg) }} {{ display.unitLabel }}</b
-            ></span
-          >
-        </div>
-        <p>{{ d.pace.message }}</p>
-      </section>
-      <section class="card">
-        <h2>Edit goal</h2>
-        <form [formGroup]="form" (ngSubmit)="save()">
-          <label
-            >Goal weight ({{ display.unitLabel }})<input
-              type="number"
-              step="0.1"
-              formControlName="goalWeightKg" /></label
-          ><label
-            >Target date<input type="date" formControlName="targetDate"
-          /></label>
-          @if (message()) {
-            <p role="status">{{ message() }}</p>
-          }
-          <button class="button primary">Save goal</button>
-        </form>
-      </section>
+      @if (!editing()) {
+        <section class="dash-hero goal-hero au-rise au-rise-1">
+          <div class="goal-gauge" [style.--goal-progress]="d.percentComplete"><span class="au-gauge-caption">COMPLETE</span><strong>{{ d.percentComplete | number: "1.0-0" }}%</strong><small>{{ display.fromKg(d.remainingKg) | number: "1.1-1" }} {{ display.unitLabel }} to go</small></div>
+          <div class="dash-hero-meta"><span class="au-chip"><svg class="au-icon"><use href="#i-flag" /></svg>Start {{ display.fromKg(d.startWeightKg) | number: "1.1-1" }}</span><span class="au-chip"><svg class="au-icon"><use href="#i-scale" /></svg>Now {{ display.fromKg(d.currentWeightKg) | number: "1.1-1" }}</span><span class="au-chip au-chip--brand"><svg class="au-icon"><use href="#i-target" /></svg>Goal {{ display.fromKg(d.goalWeightKg) | number: "1.1-1" }}</span></div>
+        </section>
+        <section class="au-card goal-progress-card"><div class="au-card-head"><div class="au-card-title"><svg class="au-icon"><use href="#i-activity" /></svg>Progress</div><span class="au-chip au-chip--good">On track</span></div><div class="goal-labels"><span>{{ display.fromKg(d.startWeightKg) | number: "1.1-1" }} {{ display.unitLabel }}</span><span>{{ display.fromKg(d.goalWeightKg) | number: "1.1-1" }} {{ display.unitLabel }}</span></div><div class="au-progress"><div class="au-progress-bar" [style.width.%]="d.percentComplete"></div></div><p class="au-caption">{{ d.pace.message }}</p></section>
+        <div class="au-banner au-banner--good goal-pace"><svg class="au-icon"><use href="#i-trending-down" /></svg><div class="au-banner-body"><div class="au-banner-title">Keep your steady pace</div><div class="au-banner-text">{{ d.pace.message }}</div></div></div>
+        <button class="au-btn au-btn--tonal au-btn--lg au-btn--block" type="button" (click)="editing.set(true)"><svg class="au-icon"><use href="#i-edit" /></svg>Edit goal</button>
+      } @else {
+        <section class="au-card goal-editor au-rise au-rise-1">
+          <div class="onb-step"><p class="onb-step-num">YOUR DESTINATION</p><h2 class="onb-step-title">Update your goal</h2><p class="onb-step-sub">Choose a weight and date that feel realistic. You can adjust them anytime.</p></div>
+          <form class="onb-form" [formGroup]="form" (ngSubmit)="save()">
+            <label class="au-field"><span class="au-label">Goal weight ({{ display.unitLabel }})</span><input class="au-input goal-weight-input" type="number" step="0.1" formControlName="goalWeightKg" /></label>
+            <label class="au-field"><span class="au-label"><svg class="au-icon"><use href="#i-calendar" /></svg>Target date</span><input class="au-input" type="date" formControlName="targetDate" /></label>
+            @if (message()) { <p class="au-help" role="status">{{ message() }}</p> }
+            <div class="actions"><button type="button" class="au-btn au-btn--text" (click)="editing.set(false)">Cancel</button><button class="au-btn au-btn--primary au-btn--lg">Save goal</button></div>
+          </form>
+        </section>
+      }
     }`,
 })
 export class GoalPage {
@@ -734,6 +741,7 @@ export class GoalPage {
   readonly display = inject(DisplayPreferencesService);
   data = signal<any>(null);
   message = signal("");
+  editing = signal(false);
   form = this.fb.nonNullable.group({
     goalWeightKg: [70, Validators.required],
     targetDate: ["", Validators.required],
@@ -746,6 +754,7 @@ export class GoalPage {
       this.data.set(x);
       this.form.patchValue({
         goalWeightKg: this.display.fromKg(x.goalWeightKg),
+        targetDate: x.targetDate ?? "",
       });
     });
   }
@@ -759,6 +768,7 @@ export class GoalPage {
       .subscribe({
         next: () => {
           this.message.set("Goal updated");
+          this.editing.set(false);
           this.load();
         },
         error: (e) => this.message.set(this.api.problem(e)),
@@ -773,19 +783,20 @@ export class GoalPage {
   selector: "ledger-badges",
   standalone: true,
   imports: [CommonModule],
-  template: `<header class="page-header">
+  template: `<header class="page-header app-route-header">
       <div>
-        <p class="eyebrow">Consistency counts</p>
-        <h1>Badges</h1>
+        <p class="app-header-sub">Consistency counts</p>
+        <h1 class="app-header-title">Milestones</h1>
       </div>
-      <strong>{{ earned() }} of 8</strong>
+      <span class="au-chip au-chip--brand"><svg class="au-icon"><use href="#i-trophy" /></svg>{{ earned() }} of 8</span>
     </header>
+    <section class="au-card mile-streak"><div><p class="au-eyebrow">CURRENT STREAK</p><h2>{{ earned() ? "You’re building momentum" : "Start with one honest entry" }}</h2><p class="au-caption">Consistency matters more than perfection.</p></div><div class="mile-flames" aria-hidden="true">@for (n of [1,2,3,4,5]; track n) { <svg class="au-icon mile-flame" [class.is-off]="n > earned()"><use href="#i-flame" /></svg> }</div></section>
+    @if (nextBadge(); as next) { <div class="app-section-title"><h2>Next badge</h2></div><section class="au-card mile-next"><div class="badge-icon"><svg class="au-icon"><use href="#i-award" /></svg></div><div class="au-fill"><strong>{{ name(next.type) }}</strong><p class="au-caption">{{ next.remaining }}</p><div class="au-progress au-mt-3"><div class="au-progress-bar" [style.width.%]="next.progress"></div></div></div></section> }
+    <div class="app-section-title"><h2>Your collection</h2></div>
     <section class="badge-grid">
       @for (b of badges(); track b.type) {
         <article [class.locked]="!b.earned">
-          <div class="badge-icon" aria-hidden="true">
-            {{ b.earned ? "✦" : "◇" }}
-          </div>
+          <div class="badge-icon" aria-hidden="true"><svg class="au-icon"><use [attr.href]="b.earned ? '#i-award' : '#i-lock'" /></svg></div>
           <h2>{{ name(b.type) }}</h2>
           <p>{{ b.remaining }}</p>
           <div class="mini-progress"><i [style.width.%]="b.progress"></i></div>
@@ -794,11 +805,13 @@ export class GoalPage {
           }
         </article>
       }
-    </section>`,
+    </section>
+    @if (celebrating(); as badge) { <div class="au-dialog-scrim is-open"><section class="au-dialog celebrate" role="dialog" aria-modal="true" aria-labelledby="badge-title"><div class="confetti" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="celebrate-medal badge-icon"><svg class="au-icon"><use href="#i-trophy" /></svg></div><p class="au-eyebrow">BADGE UNLOCKED</p><h2 id="badge-title" class="au-display">{{ name(badge.type) }}</h2><p class="au-dialog-text">Your consistency earned this. Keep writing the honest record.</p><button class="au-btn au-btn--primary au-btn--lg" type="button" (click)="dismissCelebration()">Keep going <svg class="au-icon"><use href="#i-arrow-right" /></svg></button></section></div> }`,
 })
 export class BadgesPage {
   private api = inject(LedgerApi);
   badges = signal<any[]>([]);
+  celebrating = signal<any | null>(null);
   constructor() {
     this.load();
   }
@@ -808,14 +821,15 @@ export class BadgesPage {
   name(v: string): string {
     return v.replace(/([A-Z])/g, " $1").trim();
   }
+  nextBadge(): any | null { return this.badges().find((x) => !x.earned) ?? null; }
+  dismissCelebration(): void { const badge = this.celebrating(); if (!badge) return; this.api.acknowledgeMilestone(badge.id).subscribe(() => this.celebrating.set(null)); }
   @HostListener("window:ledger-change") onRealtimeChange(): void {
     this.load();
   }
   private load(): void {
     this.api.milestones().subscribe((x: any) => {
       this.badges.set(x);
-      for (const badge of x.filter((item: any) => item.celebrationPending))
-        this.api.acknowledgeMilestone(badge.id).subscribe();
+      this.celebrating.set(x.find((item: any) => item.celebrationPending) ?? null);
     });
   }
 }
@@ -823,14 +837,28 @@ export class BadgesPage {
 @Component({
   selector: "ledger-account",
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
-  template: `<header class="page-header">
-      <div>
-        <p class="eyebrow">Account</p>
-        <h1>Settings</h1>
-      </div>
-      <button class="button secondary" (click)="signOut()">Sign out</button>
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink],
+  template: `<header class="page-header app-route-header">
+      <div><p class="app-header-sub">Account</p><h1 class="app-header-title">Profile & settings</h1></div>
+      <button class="au-icon-btn" type="button" (click)="manage.set(!manage())" [attr.aria-label]="manage() ? 'Close edit forms' : 'Edit profile'"><svg class="au-icon"><use [attr.href]="manage() ? '#i-x' : '#i-edit'" /></svg></button>
     </header>
+    <section class="au-card profile-hero au-rise au-rise-1">
+      <div class="profile-avatar"><span class="au-avatar au-avatar--lg">{{ profile.controls.name.value.charAt(0).toUpperCase() || "L" }}</span><label class="au-icon-btn profile-camera" aria-label="Change photo"><svg class="au-icon"><use href="#i-camera" /></svg><input class="sr-only" type="file" accept="image/jpeg,image/png,image/webp" (change)="uploadAvatar($event)" /></label></div>
+      <div><h2 class="au-display">{{ profile.controls.name.value || "Ledger member" }}</h2><p class="au-mono au-text-mid">{{ profile.controls.email.value }}</p></div>
+      <div class="au-row-flex au-gap-2 au-wrap"><span class="au-chip"><svg class="au-icon"><use href="#i-ruler" /></svg>{{ profile.controls.heightCm.value || "—" }} cm</span><span class="au-chip"><svg class="au-icon"><use href="#i-scale" /></svg>{{ prefs.controls.unit.value }}</span></div>
+    </section>
+    @if (journey(); as d) { <div class="app-section-title"><h2>Your journey</h2><a routerLink="/trends">Trends</a></div><section class="dash-stats"><article class="au-card dash-ministat"><span class="au-stat-label">Start</span><strong class="au-stat-value">{{ display.fromKg(d.progress.startWeightKg) | number: "1.1-1" }}</strong><span class="au-caption">{{ display.unitLabel }}</span></article><article class="au-card dash-ministat"><span class="au-stat-label">Current</span><strong class="au-stat-value brand-value">{{ display.fromKg(d.progress.currentWeightKg) | number: "1.1-1" }}</strong><span class="au-caption">{{ display.unitLabel }}</span></article><article class="au-card dash-ministat"><span class="au-stat-label">Goal</span><strong class="au-stat-value">{{ display.fromKg(d.progress.goalWeightKg) | number: "1.1-1" }}</strong><span class="au-caption">{{ display.unitLabel }}</span></article></section> }
+    <div class="set-group account-overview"><div class="set-group-title">Preferences</div><div class="au-card au-card--flush">
+      <button class="set-row au-row--interactive overview-row" type="button" (click)="manage.set(true)"><span class="set-row-icon"><svg class="au-icon"><use href="#i-scale" /></svg></span><span class="set-row-main"><span class="set-row-label">Units</span><span class="set-row-desc">Weight display throughout Ledger</span></span><span class="set-row-value">{{ prefs.controls.unit.value }}</span><svg class="au-icon au-text-lo"><use href="#i-chevron-right" /></svg></button>
+      <button class="set-row au-row--interactive overview-row" type="button" (click)="manage.set(true)"><span class="set-row-icon"><svg class="au-icon"><use href="#i-moon" /></svg></span><span class="set-row-main"><span class="set-row-label">Appearance</span><span class="set-row-desc">Theme and week layout</span></span><span class="set-row-value">{{ prefs.controls.theme.value }}</span><svg class="au-icon au-text-lo"><use href="#i-chevron-right" /></svg></button>
+      <button class="set-row au-row--interactive overview-row" type="button" (click)="manage.set(true)"><span class="set-row-icon"><svg class="au-icon"><use href="#i-bell" /></svg></span><span class="set-row-main"><span class="set-row-label">Daily reminder</span><span class="set-row-desc">Quiet, optional accountability</span></span><span class="set-row-value">{{ reminder.controls.enabled.value ? reminder.controls.time.value : "Off" }}</span><svg class="au-icon au-text-lo"><use href="#i-chevron-right" /></svg></button>
+    </div></div>
+    <div class="set-group account-overview"><div class="set-group-title">Account</div><div class="au-card au-card--flush">
+      <button class="set-row au-row--interactive overview-row" type="button" (click)="manage.set(true)"><span class="set-row-icon"><svg class="au-icon"><use href="#i-lock" /></svg></span><span class="set-row-main"><span class="set-row-label">Security & profile</span><span class="set-row-desc">Name, email, height and password</span></span><svg class="au-icon au-text-lo"><use href="#i-chevron-right" /></svg></button>
+      <button class="set-row au-row--interactive overview-row" type="button" (click)="exportData()"><span class="set-row-icon"><svg class="au-icon"><use href="#i-download" /></svg></span><span class="set-row-main"><span class="set-row-label">Export data</span><span class="set-row-desc">Download all entries as CSV</span></span><svg class="au-icon au-text-lo"><use href="#i-download" /></svg></button>
+      <button class="set-row au-row--interactive overview-row" type="button" (click)="signOut()"><span class="set-row-icon"><svg class="au-icon"><use href="#i-logout" /></svg></span><span class="set-row-main"><span class="set-row-label">Sign out</span><span class="set-row-desc">Sign out on this device</span></span><svg class="au-icon au-text-lo"><use href="#i-chevron-right" /></svg></button>
+    </div></div>
+    @if (manage()) {
     <section class="settings-grid">
       <article class="card">
         <h2>Profile</h2>
@@ -954,6 +982,7 @@ export class BadgesPage {
         </button>
       </article>
     </section>
+    }
     @if (message()) {
       <div class="toast" role="status">{{ message() }}</div>
     }`,
@@ -961,10 +990,12 @@ export class BadgesPage {
 export class AccountPage {
   private fb = inject(FormBuilder);
   private api = inject(LedgerApi);
-  private display = inject(DisplayPreferencesService);
+  readonly display = inject(DisplayPreferencesService);
   private router = inject(Router);
   confirmation = "";
   message = signal("");
+  manage = signal(false);
+  journey = signal<Dashboard | null>(null);
   profile = this.fb.nonNullable.group({
     name: ["", Validators.required],
     email: ["", [Validators.required, Validators.email]],
@@ -987,6 +1018,7 @@ export class AccountPage {
     quietHoursEnd: ["07:00"],
   });
   constructor() {
+    this.api.dashboard().subscribe((d) => this.journey.set(d));
     this.api.profile().subscribe((p: any) =>
       this.profile.patchValue({
         name: p.name,

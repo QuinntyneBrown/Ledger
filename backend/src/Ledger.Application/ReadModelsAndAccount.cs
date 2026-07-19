@@ -54,14 +54,14 @@ public sealed class GetTrendsHandler(ILedgerDbContext db, IUserContext user, ILo
     }
 }
 
-public sealed record BadgeView(BadgeType Type, bool Earned, DateTimeOffset? EarnedAt, decimal Progress, string Remaining, bool CelebrationPending);
+public sealed record BadgeView(Guid? Id, BadgeType Type, bool Earned, DateTimeOffset? EarnedAt, decimal Progress, string Remaining, bool CelebrationPending);
 public sealed record GetBadgesQuery : IRequest<IReadOnlyList<BadgeView>>;
 public sealed class GetBadgesHandler(ILedgerDbContext db, IUserContext user) : IRequestHandler<GetBadgesQuery, IReadOnlyList<BadgeView>>
 {
     public async Task<IReadOnlyList<BadgeView>> Handle(GetBadgesQuery r, CancellationToken ct)
     {
         var entries = await db.WeighIns.AsNoTracking().Where(x => x.UserId == user.UserId).OrderBy(x => x.Date).ToListAsync(ct); var goal = await db.Goals.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == user.UserId, ct); var streak = await db.Streaks.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == user.UserId, ct); var earned = await db.Milestones.AsNoTracking().Where(x => x.UserId == user.UserId).ToDictionaryAsync(x => x.Type, ct);
-        return Enum.GetValues<BadgeType>().Select(type => { earned.TryGetValue(type, out var m); var (progress, remaining) = BadgeProgress(type, entries, goal, streak); return new BadgeView(type, m is not null, m?.EarnedAt, m is not null ? 100 : progress, m is not null ? "Earned" : remaining, m is not null && m.AcknowledgedAt is null); }).ToArray();
+        return Enum.GetValues<BadgeType>().Select(type => { earned.TryGetValue(type, out var m); var (progress, remaining) = BadgeProgress(type, entries, goal, streak); return new BadgeView(m?.Id, type, m is not null, m?.EarnedAt, m is not null ? 100 : progress, m is not null ? "Earned" : remaining, m is not null && m.AcknowledgedAt is null); }).ToArray();
     }
     private static (decimal, string) BadgeProgress(BadgeType type, IReadOnlyList<WeighIn> entries, Goal? goal, Streak? streak)
     {

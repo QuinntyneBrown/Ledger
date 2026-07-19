@@ -13,6 +13,7 @@ import {
   RouterLink,
   RouterLinkActive,
   RouterOutlet,
+  Router,
   Routes,
 } from "@angular/router";
 import {
@@ -22,7 +23,9 @@ import {
   RealtimeService,
   requireNeedsOnboarding,
   requireOnboarded,
+  requireAuth,
 } from "@ledger/api";
+import { localCalendarDate } from "./date.utils";
 
 @Component({
   selector: "ledger-root",
@@ -38,44 +41,44 @@ import {
   template: `
     <a class="skip-link" href="#main">Skip to content</a>
     @if (auth.accessToken()) {
-      <div class="app-shell">
-        <aside class="side-nav" aria-label="Primary">
-          <a class="brand" routerLink="/dashboard">◒ <span>Ledger</span></a
-          ><ng-container *ngTemplateOutlet="links" />
-        </aside>
-        <main id="main" class="app-main"><router-outlet /></main>
-        <nav class="bottom-nav" aria-label="Primary">
-          <ng-container *ngTemplateOutlet="links" />
+      <div class="app-frame">
+        <main id="main" class="app-screen">
+          <div class="app-scroll"><router-outlet /></div>
+        </main>
+        @if (!focusedFlow()) {
+        <nav class="au-bottomnav app-bottomnav" aria-label="Primary">
+          <a class="app-rail-brand" routerLink="/dashboard"
+            ><span class="app-rail-mark"></span>Ledger</a
+          >
+          <a class="au-navitem" routerLink="/dashboard" routerLinkActive="is-active"
+            ><svg class="au-icon"><use href="#i-home" /></svg>Home</a
+          >
+          <a class="au-navitem" routerLink="/trends" routerLinkActive="is-active"
+            ><svg class="au-icon"><use href="#i-activity" /></svg>Trends</a
+          >
+          <button
+            #quickButton
+            type="button"
+            class="app-navfab"
+            aria-label="Log weight"
+            (click)="quickOpen.set(true)"
+          ><svg class="au-icon"><use href="#i-plus" /></svg></button>
+          <a class="au-navitem" routerLink="/badges" routerLinkActive="is-active"
+            ><svg class="au-icon"><use href="#i-trophy" /></svg>Badges</a
+          >
+          <a class="au-navitem" routerLink="/account" routerLinkActive="is-active"
+            ><svg class="au-icon"><use href="#i-user" /></svg>Profile</a
+          >
         </nav>
-        <button
-          #quickButton
-          type="button"
-          class="quick-action"
-          aria-label="Log a quick weigh-in"
-          (click)="quickOpen.set(true)"
-        >
-          ＋
-        </button>
+        }
       </div>
     } @else {
       <main id="main" class="auth-shell"><router-outlet /></main>
     }
-    <ng-template #links
-      ><a routerLink="/dashboard" routerLinkActive="active"
-        >⌂ <span>Home</span></a
-      ><a routerLink="/trends" routerLinkActive="active"
-        >⌁ <span>Trends</span></a
-      ><a routerLink="/log" routerLinkActive="active">＋ <span>Log</span></a
-      ><a routerLink="/badges" routerLinkActive="active"
-        >✦ <span>Badges</span></a
-      ><a routerLink="/account" routerLinkActive="active"
-        >○ <span>Account</span></a
-      ></ng-template
-    >
     @if (quickOpen()) {
-      <div class="dialog-backdrop" (click)="closeQuick()">
+      <div class="au-sheet-scrim is-open" (click)="closeQuick()">
         <section
-          class="quick-sheet"
+          class="au-sheet"
           role="dialog"
           aria-modal="true"
           aria-labelledby="quick-title"
@@ -83,34 +86,35 @@ import {
           [cdkTrapFocusAutoCapture]="true"
           (click)="$event.stopPropagation()"
         >
-          <div class="section-head">
-            <h2 id="quick-title">Quick weigh-in</h2>
+          <div class="au-sheet-grip"></div>
+          <div class="au-row-flex au-between">
+            <div><div class="au-eyebrow">Today</div><h2 id="quick-title">Quick weigh-in</h2></div>
             <button
-              class="icon-button"
+              class="au-icon-btn"
               type="button"
               (click)="closeQuick()"
               aria-label="Close"
             >
-              ×
+              <svg class="au-icon"><use href="#i-x" /></svg>
             </button>
           </div>
-          <form [formGroup]="quickForm" (ngSubmit)="saveQuick()">
-            <label
-              >Weight ({{ display.unitLabel }})<input
+          <form class="quick-form" [formGroup]="quickForm" (ngSubmit)="saveQuick()">
+            <label class="au-field"
+              ><span class="au-label">Weight ({{ display.unitLabel }})</span><input class="au-input"
                 type="number"
                 step="0.1"
                 min="20"
                 max="500"
                 formControlName="weightKg" /></label
-            ><label
-              >Note <small>optional</small
-              ><textarea maxlength="280" formControlName="note"></textarea>
+            ><label class="au-field"
+              ><span class="au-label">Note <small>optional</small></span
+              ><textarea class="au-textarea" maxlength="280" formControlName="note"></textarea>
             </label>
             @if (quickError()) {
-              <p class="field-error" role="alert">{{ quickError() }}</p>
+              <p class="au-help is-error" role="alert">{{ quickError() }}</p>
             }
-            <button class="button primary" [disabled]="quickForm.invalid">
-              Save weigh-in
+            <button class="au-btn au-btn--primary au-btn--lg au-btn--block" [disabled]="quickForm.invalid">
+              <svg class="au-icon"><use href="#i-check" /></svg> Save weigh-in
             </button>
           </form>
         </section>
@@ -124,6 +128,7 @@ export class AppComponent {
   private readonly realtime = inject(RealtimeService);
   private readonly api = inject(LedgerApi);
   private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
   @ViewChild("quickButton") quickButton?: ElementRef<HTMLButtonElement>;
   quickOpen = signal(false);
   quickError = signal("");
@@ -147,6 +152,9 @@ export class AppComponent {
         this.quickForm.controls.weightKg.setValue(this.display.fromKg(75));
     });
   }
+  focusedFlow(): boolean {
+    return this.router.url === "/welcome" || this.router.url.startsWith("/onboarding");
+  }
   closeQuick(): void {
     this.quickOpen.set(false);
     queueMicrotask(() => this.quickButton?.nativeElement.focus());
@@ -163,7 +171,7 @@ export class AppComponent {
     this.quickError.set("");
     this.api
       .logWeight({
-        date: new Date().toISOString().slice(0, 10),
+        date: localCalendarDate(),
         weightKg,
         note: this.quickForm.controls.note.value,
       })
@@ -193,10 +201,20 @@ export const routes: Routes = [
     loadComponent: () => import("./auth.pages").then((m) => m.VerifyPage),
   },
   {
+    path: "welcome",
+    loadComponent: () => import("./feature.pages").then((m) => m.WelcomePage),
+    canActivate: [requireNeedsOnboarding],
+  },
+  {
     path: "onboarding",
     loadComponent: () =>
       import("./feature.pages").then((m) => m.OnboardingPage),
     canActivate: [requireNeedsOnboarding],
+  },
+  {
+    path: "onboarding/profile",
+    loadComponent: () => import("./feature.pages").then((m) => m.ProfileSetupPage),
+    canActivate: [requireAuth],
   },
   {
     path: "dashboard",

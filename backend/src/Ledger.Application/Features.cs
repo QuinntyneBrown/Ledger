@@ -35,7 +35,9 @@ public sealed class CompleteOnboardingHandler(ILedgerDbContext db, IUserContext 
         db.Goals.Add(goal); db.WeighIns.Add(new WeighIn { UserId = user.UserId, Date = today, WeightKg = r.CurrentWeightKg });
         var prefs = await db.Preferences.SingleAsync(x => x.UserId == user.UserId, ct); prefs.Unit = r.Unit; prefs.TimeZone = r.TimeZone;
         var draft = await db.OnboardingDrafts.SingleOrDefaultAsync(x => x.UserId == user.UserId, ct); if (draft is not null) db.OnboardingDrafts.Remove(draft);
-        await db.SaveChangesAsync(ct); return goal.ToDto();
+        await db.SaveChangesAsync(ct);
+        await DerivedState.RecomputeAsync(db, user.UserId, today, clock.UtcNow, ct);
+        return goal.ToDto();
     }
 }
 
