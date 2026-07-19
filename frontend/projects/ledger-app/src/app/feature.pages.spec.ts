@@ -1,5 +1,5 @@
 import { TestBed } from "@angular/core/testing";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { LedgerApi } from "@ledger/api";
 import { of, throwError } from "rxjs";
 import { BadgesPage, HistoryPage, OnboardingPage } from "./feature.pages";
@@ -15,7 +15,11 @@ describe("OnboardingPage", () => {
     signOut: jest.fn(),
     problem: jest.fn(),
   };
-  const router = { navigateByUrl: jest.fn() };
+  const router = {
+    navigateByUrl: jest.fn(),
+    createUrlTree: jest.fn(() => ({ toString: () => "/trends" })),
+    serializeUrl: jest.fn(() => "/trends"),
+  };
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -28,6 +32,7 @@ describe("OnboardingPage", () => {
       providers: [
         { provide: LedgerApi, useValue: api },
         { provide: Router, useValue: router },
+        { provide: ActivatedRoute, useValue: {} },
       ],
     }).compileComponents();
   });

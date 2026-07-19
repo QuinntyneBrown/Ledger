@@ -26,15 +26,15 @@ const publicSiteUrl = (): string =>
       </div>
       <div class="au-field" [class.is-error]="error()">
         <div class="auth-inline"><label class="au-label" for="password">Password</label><a routerLink="/forgot-password">Forgot password?</a></div>
-        <div class="au-input-wrap"><svg class="au-icon"><use href="#i-lock" /></svg><input id="password" class="au-input" type="password" formControlName="password" placeholder="Enter your password" autocomplete="current-password" /></div>
+        <div class="au-input-wrap"><svg class="au-icon"><use href="#i-lock" /></svg><input id="password" class="au-input" [type]="showPassword() ? 'text' : 'password'" formControlName="password" placeholder="Enter your password" autocomplete="current-password" /><button type="button" class="auth-pw-toggle" (click)="showPassword.set(!showPassword())" [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"><svg class="au-icon"><use [attr.href]="showPassword() ? '#i-eye-off' : '#i-eye'" /></svg></button></div>
         @if (error()) { <p class="au-help is-error" role="alert"><svg class="au-icon"><use href="#i-alert-circle" /></svg>{{ error() }}</p> }
       </div>
       <button class="au-btn au-btn--primary au-btn--lg au-btn--block" [disabled]="form.invalid || busy()">{{ busy() ? "Signing in…" : "Sign in" }}</button>
     </form>
     <div class="auth-divider">or</div>
-    <div class="auth-social"><button type="button" class="au-btn au-btn--outlined au-btn--lg au-btn--block" (click)="socialMessage.set('Google sign-in is not configured yet.')">Continue with Google</button><button type="button" class="au-btn au-btn--outlined au-btn--lg au-btn--block" (click)="socialMessage.set('Apple sign-in is not configured yet.')">Continue with Apple</button></div>
+    <div class="auth-social"><button type="button" class="au-btn au-btn--outlined au-btn--lg au-btn--block" (click)="socialMessage.set('Google sign-in is not configured yet.')"><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3A12 12 0 1 1 32 15l5.7-5.6A20 20 0 1 0 44 24c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8A12 12 0 0 1 32 15l5.7-5.6A20 20 0 0 0 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2A12 12 0 0 1 12.7 28l-6.5 5A20 20 0 0 0 24 44z"/><path fill="#1976D2" d="M43.6 20.1H24v8h11.3a12 12 0 0 1-4.1 5.6l6.2 5.2C41.2 35.3 44 30 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>Continue with Google</button><button type="button" class="au-btn au-btn--outlined au-btn--lg au-btn--block" (click)="socialMessage.set('Apple sign-in is not configured yet.')"><svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.05 12.04c-.03-2.6 2.12-3.85 2.22-3.91-1.21-1.77-3.09-2.01-3.76-2.04-1.6-.16-3.12.94-3.93.94-.81 0-2.06-.92-3.39-.89-1.74.03-3.35 1.01-4.25 2.57-1.81 3.14-.46 7.79 1.3 10.34.86 1.25 1.89 2.65 3.23 2.6 1.3-.05 1.79-.84 3.36-.84 1.57 0 2.01.84 3.39.81 1.4-.02 2.29-1.27 3.15-2.53.99-1.45 1.4-2.85 1.42-2.93-.03-.01-2.72-1.04-2.75-4.13zM14.94 4.54c.72-.87 1.2-2.08 1.07-3.29-1.03.04-2.28.69-3.02 1.56-.66.77-1.24 2-1.09 3.18 1.15.09 2.32-.58 3.04-1.45z"/></svg>Continue with Apple</button></div>
     <p class="auth-alt">New here? <a routerLink="/register">Create an account</a></p>
-    @if (socialMessage()) { <div class="toast" role="status">{{ socialMessage() }}</div> }
+    @if (socialMessage()) { <div class="au-toast-region app-toast-region"><div class="au-toast au-toast--info" role="status"><svg class="au-icon au-toast-icon"><use href="#i-info" /></svg><span class="au-toast-msg">{{ socialMessage() }}</span></div></div> }
   </section>`,
 })
 export class SignInPage {
@@ -47,6 +47,7 @@ export class SignInPage {
   });
   error = signal("");
   busy = signal(false);
+  showPassword = signal(false);
   socialMessage = signal("");
   submit(): void {
     if (this.form.invalid) return;

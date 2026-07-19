@@ -1,7 +1,7 @@
 # Ledger visual conformance audit
 
 - Audit date: 2026-07-19
-- Reference source: `docs/mocks`
+- Reference source: `design-system` Aurora tokens/components, with the product compositions in `docs/mocks`
 - Implementation: Angular application in `frontend/projects/ledger-app`
 
 ## Result
@@ -23,13 +23,13 @@ The mock gallery contains several state variants rather than separate product ro
 | `weigh-in/edit.html` | `/history` inline edit | Edit existed but used generic controls | Aurora icon action and styled inline editor with Save/Cancel actions |
 | `goal/goal.html` | `/goal` summary mode | Summary and edit form were merged; gauge and progress hierarchy differed | Dedicated summary mode with gauge, chips, progress card, pace banner and edit action |
 | `goal/edit-goal.html` | `/goal` edit mode | No distinct edit state; target date was not repopulated | Dedicated editor mode, centered goal input, calendar field, Cancel/Save; target date now loads correctly |
-| `trends/trends.html` | `/trends` populated | Plain polyline, generic tabs and cards | Aurora segmented ranges, current/change summary, grid/goal line, legend and trend stat cards |
-| `trends/log-history.html` | `/history` | Header, sort and row actions diverged | Reference record header, styled sort control, grouped months, weights, notes and icon actions |
+| `trends/trends.html` | `/trends` populated | Plain polyline, generic tabs and cards | Aurora segmented ranges, responsive area/range/moving-average chart, goal line, legend, four trend stats and recent entries |
+| `trends/log-history.html` | `/history` | Header, sort and row actions diverged | Reference record header, compact grouped ledger rows, chronological deltas, filter sheet and inline edit/delete actions |
 | `trends/empty.html` | `/trends` with fewer than two entries | Minimal generic message | Action-oriented empty trend state remains in the chart flow |
 | `milestones/milestones.html` | `/badges` | Flat badge grid only | Milestone header, streak card, next-badge progress, earned/locked collection states |
 | `milestones/celebration.html` | `/badges` pending celebration | New badges were acknowledged silently on load | Pending badge remains visible in an Aurora celebration dialog until the user dismisses it |
 | `onboarding/welcome.html` | `/welcome` | Welcome screen did not exist | Added focused welcome route with brand, gauge artwork, reference headline and primary action |
-| `onboarding/wizard.html` | `/onboarding` steps 1–4 | Large generic card, radio rows and mismatched hierarchy | Focused four-step flow, segmented progress, unit tiles, big-number steps, clear step-specific copy and recoverable error banner |
+| `onboarding/wizard.html` | `/onboarding` steps 1–4 | Large generic card, radio rows and mismatched hierarchy | Focused four-step flow, segmented progress, segmented Kg/Lbs selector, big-number steps, clear step-specific copy and recoverable error banner |
 | `onboarding/profile.html` | `/onboarding/profile` | Final profile step did not exist | Added avatar, name, optional height, photo upload, skip and finish actions |
 | `auth/login.html` | `/sign-in` | Circular text logo, generic inputs and missing social section | Aurora mark, icon inputs, aligned recovery link, inline errors, primary action, social section and account link |
 | `auth/sign-up.html` | `/register` | Generic form and weak visual feedback | Aurora field wrappers, password reveal/hint, branded checkbox, success banner and matching hierarchy |
@@ -47,7 +47,7 @@ The mock gallery contains several state variants rather than separate product ro
 ## Shared gaps resolved
 
 - Replaced the 220 px bespoke desktop navigation with the reference 264 px Aurora rail and reference mobile bottom navigation/FAB.
-- Loaded `docs/mocks/assets/app.css` and the Aurora icon runtime for a single visual source of truth.
+- Loaded the canonical `design-system/assets/tokens.css`, `components.css`, and Aurora runtime; product-only compositions come from `docs/mocks/assets/app.css`.
 - Replaced Unicode navigation/action symbols with the reference SVG icon system.
 - Aligned canvas, glass headers, card surfaces, borders, radii, typography, spacing, focus treatment, motion, and responsive breakpoints.
 - Added focused-flow shell behavior so welcome/onboarding/profile setup do not display application navigation.
@@ -58,8 +58,10 @@ The mock gallery contains several state variants rather than separate product ro
 
 - Production Angular build: passed.
 - Frontend unit tests: 9 passed.
-- Visual browser pass: authenticated and public routes captured at 1440 × 1000 and 390 × 844 using deterministic API fixtures.
+- Backend solution tests: 25 passed (12 unit, 8 CLI and 5 integration).
+- Visual browser pass: authenticated and public routes captured at 1440 × 1000 and 390 × 844 against the live local API.
 - Audited populated, loading, empty, edit, error, modal, toast, celebration, desktop rail, and mobile bottom-navigation states.
-- Azure App Service deployment: successful on one instance; all public/app fallback routes and both health endpoints returned HTTP 200 with the new bundle.
+- Completed the four-step onboarding flow with Kilograms selected and confirmed it routes successfully to the dashboard with no failed requests.
+- Interaction/accessibility scan: no browser failures and no unnamed interactive controls across dashboard, log, history, trends, goal, badges, and account.
 
 OAuth provider buttons match the visual reference and give explicit in-app feedback that provider configuration is unavailable; they do not pretend to complete an external authentication flow that the backend does not support.

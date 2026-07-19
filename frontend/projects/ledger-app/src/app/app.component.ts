@@ -39,6 +39,12 @@ import { localCalendarDate } from "./date.utils";
     RouterLinkActive,
   ],
   template: `
+    <svg width="0" height="0" class="sr-only" aria-hidden="true">
+      <defs>
+        <linearGradient id="auroraGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="var(--aurora-start)"/><stop offset="52%" stop-color="var(--aurora-mid)"/><stop offset="100%" stop-color="var(--aurora-end)"/></linearGradient>
+        <linearGradient id="auChartArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--viz-2)" stop-opacity=".36"/><stop offset="100%" stop-color="var(--viz-2)" stop-opacity="0"/></linearGradient>
+      </defs>
+    </svg>
     <a class="skip-link" href="#main">Skip to content</a>
     @if (auth.accessToken()) {
       <div class="app-frame">
@@ -61,7 +67,7 @@ import { localCalendarDate } from "./date.utils";
             type="button"
             class="app-navfab"
             aria-label="Log weight"
-            (click)="quickOpen.set(true)"
+            (click)="openQuick()"
           ><svg class="au-icon"><use href="#i-plus" /></svg></button>
           <a class="au-navitem" routerLink="/badges" routerLinkActive="is-active"
             ><svg class="au-icon"><use href="#i-trophy" /></svg>Badges</a
@@ -99,16 +105,14 @@ import { localCalendarDate } from "./date.utils";
             </button>
           </div>
           <form class="quick-form" [formGroup]="quickForm" (ngSubmit)="saveQuick()">
+            <div class="weigh-stepper" aria-label="Weight in {{ display.unitLabel }}">
+              <button class="weigh-stepper-btn" type="button" (click)="adjustQuick(-0.1)" aria-label="Decrease by 0.1"><svg class="au-icon"><use href="#i-minus" /></svg></button>
+              <label class="au-bignum-field"><span class="sr-only">Weight</span><input class="au-bignum" type="text" inputmode="decimal" formControlName="weightKg" /><span class="au-bignum-unit">{{ display.unitLabel }}</span></label>
+              <button class="weigh-stepper-btn" type="button" (click)="adjustQuick(0.1)" aria-label="Increase by 0.1"><svg class="au-icon"><use href="#i-plus" /></svg></button>
+            </div>
             <label class="au-field"
-              ><span class="au-label">Weight ({{ display.unitLabel }})</span><input class="au-input"
-                type="number"
-                step="0.1"
-                min="20"
-                max="500"
-                formControlName="weightKg" /></label
-            ><label class="au-field"
               ><span class="au-label">Note <small>optional</small></span
-              ><textarea class="au-textarea" maxlength="280" formControlName="note"></textarea>
+              ><div class="au-input-wrap"><textarea class="au-input" maxlength="280" formControlName="note"></textarea></div>
             </label>
             @if (quickError()) {
               <p class="au-help is-error" role="alert">{{ quickError() }}</p>
@@ -158,6 +162,22 @@ export class AppComponent {
   closeQuick(): void {
     this.quickOpen.set(false);
     queueMicrotask(() => this.quickButton?.nativeElement.focus());
+  }
+  openQuick(): void {
+    this.api.dashboard().subscribe({
+      next: (dashboard) => {
+        this.quickForm.controls.weightKg.setValue(
+          this.display.fromKg(dashboard.progress.currentWeightKg),
+        );
+        this.quickOpen.set(true);
+      },
+      error: () => this.quickOpen.set(true),
+    });
+  }
+  adjustQuick(amount: number): void {
+    this.quickForm.controls.weightKg.setValue(
+      Math.round((Number(this.quickForm.controls.weightKg.value) + amount) * 10) / 10,
+    );
   }
   saveQuick(): void {
     if (this.quickForm.invalid) return;

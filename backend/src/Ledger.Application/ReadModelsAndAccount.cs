@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ledger.Application;
 
-public sealed record GoalProgressView(decimal PercentComplete, decimal StartWeightKg, decimal CurrentWeightKg, decimal GoalWeightKg, decimal RemainingKg, bool Reached, bool HasSufficientData, PaceProjection Pace);
+public sealed record GoalProgressView(decimal PercentComplete, decimal StartWeightKg, decimal CurrentWeightKg, decimal GoalWeightKg, decimal RemainingKg, DateOnly TargetDate, bool Reached, bool HasSufficientData, PaceProjection Pace);
 public sealed record GetGoalProgressQuery : IRequest<GoalProgressView>;
 public sealed class GetGoalProgressHandler(ILedgerDbContext db, IUserContext user, ILocalDate clock) : IRequestHandler<GetGoalProgressQuery, GoalProgressView>
 {
@@ -15,7 +15,7 @@ public sealed class GetGoalProgressHandler(ILedgerDbContext db, IUserContext use
         var goal = await db.Goals.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == user.UserId, ct) ?? throw AppProblem.NotFound();
         var entries = await db.WeighIns.AsNoTracking().Where(x => x.UserId == user.UserId).OrderBy(x => x.Date).ToListAsync(ct); if (entries.Count == 0) throw AppProblem.NotFound();
         var prefs = await db.Preferences.AsNoTracking().SingleAsync(x => x.UserId == user.UserId, ct); var pace = TrendCalculator.Project(entries, goal, clock.Today(prefs.TimeZone)); var current = entries[^1].WeightKg;
-        return new(goal.PercentComplete(current), goal.StartWeightKg, current, goal.GoalWeightKg, goal.RemainingKg(current), goal.IsReached(current), pace.ProjectedDate is not null, pace);
+        return new(goal.PercentComplete(current), goal.StartWeightKg, current, goal.GoalWeightKg, goal.RemainingKg(current), goal.TargetDate, goal.IsReached(current), pace.ProjectedDate is not null, pace);
     }
 }
 
@@ -27,7 +27,7 @@ public sealed class GetDashboardHandler(ILedgerDbContext db, IUserContext user, 
     {
         var owner = await db.Users.AsNoTracking().SingleAsync(x => x.Id == user.UserId, ct); var goal = await db.Goals.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == user.UserId, ct) ?? throw new AppProblem(409, "onboarding_required", "Complete onboarding first.");
         var entries = await db.WeighIns.AsNoTracking().Where(x => x.UserId == user.UserId).OrderBy(x => x.Date).ToListAsync(ct); var prefs = await db.Preferences.AsNoTracking().SingleAsync(x => x.UserId == user.UserId, ct); var today = clock.Today(prefs.TimeZone); var current = entries[^1].WeightKg; var pace = TrendCalculator.Project(entries, goal, today);
-        var progress = new GoalProgressView(goal.PercentComplete(current), goal.StartWeightKg, current, goal.GoalWeightKg, goal.RemainingKg(current), goal.IsReached(current), pace.ProjectedDate is not null, pace);
+        var progress = new GoalProgressView(goal.PercentComplete(current), goal.StartWeightKg, current, goal.GoalWeightKg, goal.RemainingKg(current), goal.TargetDate, goal.IsReached(current), pace.ProjectedDate is not null, pace);
         var week = entries.Where(x => x.Date >= today.AddDays(-7)).ToArray(); var weekChange = week.Length < 2 ? 0 : week[^1].WeightKg - week[0].WeightKg;
         var span = Math.Max(1, entries[^1].Date.DayNumber - entries[0].Date.DayNumber); var avg = entries.Count < 2 ? 0 : Math.Round((entries[^1].WeightKg - entries[0].WeightKg) / span * 7m, 2);
         var streak = await db.Streaks.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == user.UserId, ct); var earned = await db.Milestones.AsNoTracking().Where(x => x.UserId == user.UserId).Select(x => x.Type).ToListAsync(ct); var celebrations = await db.Milestones.AsNoTracking().Where(x => x.UserId == user.UserId && x.AcknowledgedAt == null).Select(x => x.Type).ToListAsync(ct);
