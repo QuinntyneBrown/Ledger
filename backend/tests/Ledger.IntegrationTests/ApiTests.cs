@@ -48,6 +48,25 @@ public sealed class ApiTests(LedgerFactory factory) : IClassFixture<LedgerFactor
         var client = factory.CreateClient(); var response = await client.PostAsJsonAsync("/api/v1/auth/forgot-password", new { email = "missing@example.test" }); Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
+    [Fact]
+    public async Task Sign_out_expires_refresh_cookie_on_its_original_path()
+    {
+        var client = factory.CreateClient(new WebApplicationFactoryClientOptions { BaseAddress = new Uri("https://localhost") }); var email = $"sign-out-{Guid.NewGuid():N}@example.test";
+        var registration = await client.PostAsJsonAsync("/api/v1/auth/register", new { name = "Sign Out Member", email, password = "Strong!234", termsAccepted = true }); registration.EnsureSuccessStatusCode();
+        using (var scope = factory.Services.CreateScope()) { var db = scope.ServiceProvider.GetRequiredService<LedgerDbContext>(); var user = await db.Users.SingleAsync(x => x.Email == email); user.EmailVerified = true; await db.SaveChangesAsync(); }
+
+        var signIn = await client.PostAsJsonAsync("/api/v1/auth/sign-in", new { email, password = "Strong!234" }); signIn.EnsureSuccessStatusCode();
+        var signInCookies = signIn.Headers.GetValues("Set-Cookie").ToArray();
+        var csrfCookie = signInCookies.Single(x => x.StartsWith("ledger_csrf=", StringComparison.OrdinalIgnoreCase)).Split(';')[0];
+        client.DefaultRequestHeaders.Add("X-CSRF", csrfCookie[(csrfCookie.IndexOf('=') + 1)..]);
+
+        var signOut = await client.PostAsJsonAsync("/api/v1/auth/sign-out", new { });
+        Assert.Equal(HttpStatusCode.NoContent, signOut.StatusCode);
+        var deletedCookies = signOut.Headers.GetValues("Set-Cookie").ToArray();
+        Assert.Contains(deletedCookies, cookie => cookie.StartsWith("ledger_refresh=", StringComparison.OrdinalIgnoreCase) && cookie.Contains("path=/api/v1/auth", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(deletedCookies, cookie => cookie.StartsWith("ledger_csrf=", StringComparison.OrdinalIgnoreCase) && cookie.Contains("path=/", StringComparison.OrdinalIgnoreCase));
+    }
+
     // Traces to: L2-001, L2-003, L2-004, L2-008, L2-010, L2-011, L2-012, L2-013, L2-015, L2-016, L2-017, L2-021, L2-023, L2-025, L2-026, L2-028, L2-030, L2-033, L2-034, L2-035, L2-038, L2-039, L2-040, L2-045, L2-048, L2-055, L2-067, L2-068, L2-074, L2-076, L2-088, L2-089
     [Fact]
     public async Task Member_journey_flows_through_versioned_owner_scoped_api()

@@ -5,7 +5,7 @@ import {
   HttpInterceptorFn,
 } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
-import { Router } from "@angular/router";
+import { Router, UrlTree } from "@angular/router";
 import * as signalR from "@microsoft/signalr";
 import {
   BehaviorSubject,
@@ -13,6 +13,7 @@ import {
   map,
   Observable,
   of,
+  switchMap,
   tap,
   throwError,
 } from "rxjs";
@@ -87,15 +88,20 @@ export class DisplayPreferencesService {
   }
 }
 
+function cookieValue(name: string): string | undefined {
+  if (typeof document === "undefined") return undefined;
+  return document.cookie
+    .split("; ")
+    .find((cookie) => cookie.startsWith(`${name}=`))
+    ?.slice(name.length + 1);
+}
+
 export const authInterceptor: HttpInterceptorFn = (request, next) => {
   const auth = inject(AuthStore);
   const token = auth.accessToken();
   let headers = request.headers;
   if (token) headers = headers.set("Authorization", `Bearer ${token}`);
-  const csrf = document.cookie
-    .split("; ")
-    .find((x) => x.startsWith("ledger_csrf="))
-    ?.split("=")[1];
+  const csrf = cookieValue("ledger_csrf");
   if (csrf) headers = headers.set("X-CSRF", decodeURIComponent(csrf));
   return next(request.clone({ headers, withCredentials: true }));
 };
@@ -291,41 +297,54 @@ export class RealtimeService {
   }
 }
 
-export function requireAuth():
-  boolean | Observable<boolean | import("@angular/router").UrlTree> {
+function restoreAuthentication(): Observable<true | UrlTree> {
   const auth = inject(AuthStore);
   const router = inject(Router);
   const api = inject(LedgerApi);
-  return auth.accessToken()
-    ? true
-    : api.refresh().pipe(
-        map(() => true),
-        catchError(() => of(router.parseUrl("/sign-in"))),
-      );
+  if (auth.accessToken()) return of(true);
+  if (!cookieValue("ledger_csrf")) return of(router.parseUrl("/sign-in"));
+  return api.refresh().pipe(
+    map(() => true as const),
+    catchError(() => {
+      auth.clear();
+      return of(router.parseUrl("/sign-in"));
+    }),
+  );
 }
-export function requireOnboarded(): Observable<
-  boolean | import("@angular/router").UrlTree
-> {
+
+export function requireAuth(): Observable<true | UrlTree> {
+  return restoreAuthentication();
+}
+
+function requireSessionRoute(
+  selectRoute: (session: Session, router: Router) => true | UrlTree,
+): Observable<true | UrlTree> {
+  const auth = inject(AuthStore);
   const router = inject(Router);
   const api = inject(LedgerApi);
-  return api
-    .getSession()
-    .pipe(
-      map((session) =>
-        session.onboarded ? true : router.parseUrl("/onboarding"),
-      ),
-    );
+  return restoreAuthentication().pipe(
+    switchMap((authenticated) =>
+      authenticated === true
+        ? api.getSession().pipe(
+            map((session) => selectRoute(session, router)),
+            catchError(() => {
+              auth.clear();
+              return of(router.parseUrl("/sign-in"));
+            }),
+          )
+        : of(authenticated),
+    ),
+  );
 }
-export function requireNeedsOnboarding(): Observable<
-  boolean | import("@angular/router").UrlTree
-> {
-  const router = inject(Router);
-  const api = inject(LedgerApi);
-  return api
-    .getSession()
-    .pipe(
-      map((session) =>
-        session.onboarded ? router.parseUrl("/dashboard") : true,
-      ),
-    );
+
+export function requireOnboarded(): Observable<true | UrlTree> {
+  return requireSessionRoute((session, router) =>
+    session.onboarded ? true : router.parseUrl("/onboarding"),
+  );
+}
+
+export function requireNeedsOnboarding(): Observable<true | UrlTree> {
+  return requireSessionRoute((session, router) =>
+    session.onboarded ? router.parseUrl("/dashboard") : true,
+  );
 }

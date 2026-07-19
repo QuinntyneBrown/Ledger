@@ -2,6 +2,12 @@ import { isPlatformBrowser } from "@angular/common";
 import { Component, inject, PLATFORM_ID, signal } from "@angular/core";
 import { RouterLink, RouterOutlet, Routes } from "@angular/router";
 
+const applicationUrl = (): string =>
+  typeof location !== "undefined" &&
+  ["localhost", "127.0.0.1"].includes(location.hostname)
+    ? "http://localhost:4200"
+    : "https://ledger-app-qbrown.azurewebsites.net";
+
 @Component({
   selector: "ledger-marketing",
   standalone: true,
@@ -10,7 +16,7 @@ import { RouterLink, RouterOutlet, Routes } from "@angular/router";
       <a routerLink="/" class="wordmark">◒ Ledger</a>
       <nav aria-label="Public">
         <a routerLink="/">Product</a><a routerLink="/privacy">Privacy</a
-        ><a class="button secondary" href="http://localhost:8080/sign-in"
+        ><a class="button secondary" [href]="appUrl + '/sign-in'"
           >Sign in</a
         >
       </nav>
@@ -38,6 +44,7 @@ import { RouterLink, RouterOutlet, Routes } from "@angular/router";
 })
 export class MarketingComponent {
   private platform = inject(PLATFORM_ID);
+  readonly appUrl = applicationUrl();
   showConsent = signal(false);
   constructor() {
     if (isPlatformBrowser(this.platform))
@@ -63,7 +70,7 @@ export class MarketingComponent {
         you’re heading.
       </p>
       <div class="hero-actions">
-        <a class="button primary" href="http://localhost:8080/register"
+        <a class="button primary" [href]="appUrl + '/register'"
           >Start your ledger</a
         ><a class="button secondary" href="#how">See how it works</a>
       </div>
@@ -109,12 +116,14 @@ export class MarketingComponent {
     </section>
     <section class="cta">
       <h2>Your weight is data.<br />Your progress is a story.</h2>
-      <a class="button primary" href="http://localhost:8080/register"
+      <a class="button primary" [href]="appUrl + '/register'"
         >Create your free account</a
       >
     </section>`,
 })
-export class LandingPage {}
+export class LandingPage {
+  readonly appUrl = applicationUrl();
+}
 
 @Component({
   standalone: true,

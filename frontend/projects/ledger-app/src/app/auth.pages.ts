@@ -4,6 +4,12 @@ import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { LedgerApi } from "@ledger/api";
 
+const publicSiteUrl = (): string =>
+  typeof location !== "undefined" &&
+  ["localhost", "127.0.0.1"].includes(location.hostname)
+    ? "http://localhost:4300"
+    : "https://thankful-coast-02639fc0f.7.azurestaticapps.net";
+
 @Component({
   selector: "ledger-sign-in",
   standalone: true,
@@ -88,8 +94,8 @@ export class SignInPage {
       ><label class="check"
         ><input type="checkbox" formControlName="termsAccepted" />
         <span
-          >I accept the <a href="http://localhost:8081/terms">Terms</a> and
-          <a href="http://localhost:8081/privacy">Privacy Policy</a>.</span
+          >I accept the <a [href]="legalSiteUrl + '/terms'">Terms</a> and
+          <a [href]="legalSiteUrl + '/privacy'">Privacy Policy</a>.</span
         ></label
       >
       @if (error()) {
@@ -113,6 +119,7 @@ export class SignInPage {
 export class RegisterPage {
   private fb = inject(FormBuilder);
   private api = inject(LedgerApi);
+  readonly legalSiteUrl = publicSiteUrl();
   form = this.fb.nonNullable.group({
     name: ["", Validators.required],
     email: ["", [Validators.required, Validators.email]],

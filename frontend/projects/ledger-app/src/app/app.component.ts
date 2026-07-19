@@ -20,7 +20,6 @@ import {
   DisplayPreferencesService,
   LedgerApi,
   RealtimeService,
-  requireAuth,
   requireNeedsOnboarding,
   requireOnboarded,
 } from "@ledger/api";
@@ -197,42 +196,42 @@ export const routes: Routes = [
     path: "onboarding",
     loadComponent: () =>
       import("./feature.pages").then((m) => m.OnboardingPage),
-    canActivate: [requireAuth, requireNeedsOnboarding],
+    canActivate: [requireNeedsOnboarding],
   },
   {
     path: "dashboard",
     loadComponent: () => import("./feature.pages").then((m) => m.DashboardPage),
-    canActivate: [requireAuth, requireOnboarded],
+    canActivate: [requireOnboarded],
   },
   {
     path: "log",
     loadComponent: () => import("./feature.pages").then((m) => m.LogPage),
-    canActivate: [requireAuth, requireOnboarded],
+    canActivate: [requireOnboarded],
   },
   {
     path: "history",
     loadComponent: () => import("./feature.pages").then((m) => m.HistoryPage),
-    canActivate: [requireAuth, requireOnboarded],
+    canActivate: [requireOnboarded],
   },
   {
     path: "trends",
     loadComponent: () => import("./feature.pages").then((m) => m.TrendsPage),
-    canActivate: [requireAuth, requireOnboarded],
+    canActivate: [requireOnboarded],
   },
   {
     path: "goal",
     loadComponent: () => import("./feature.pages").then((m) => m.GoalPage),
-    canActivate: [requireAuth, requireOnboarded],
+    canActivate: [requireOnboarded],
   },
   {
     path: "badges",
     loadComponent: () => import("./feature.pages").then((m) => m.BadgesPage),
-    canActivate: [requireAuth, requireOnboarded],
+    canActivate: [requireOnboarded],
   },
   {
     path: "account",
     loadComponent: () => import("./feature.pages").then((m) => m.AccountPage),
-    canActivate: [requireAuth, requireOnboarded],
+    canActivate: [requireOnboarded],
   },
   { path: "", pathMatch: "full", redirectTo: "dashboard" },
   { path: "**", redirectTo: "dashboard" },
