@@ -2,7 +2,12 @@ import { TestBed } from "@angular/core/testing";
 import { ActivatedRoute, Router } from "@angular/router";
 import { LedgerApi } from "@ledger/api";
 import { of, throwError } from "rxjs";
-import { BadgesPage, HistoryPage, OnboardingPage } from "./feature.pages";
+import {
+  AccountPage,
+  BadgesPage,
+  HistoryPage,
+  OnboardingPage,
+} from "./feature.pages";
 
 describe("OnboardingPage", () => {
   const api = {
@@ -14,6 +19,10 @@ describe("OnboardingPage", () => {
     acknowledgeMilestone: jest.fn(),
     signOut: jest.fn(),
     problem: jest.fn(),
+    dashboard: jest.fn(),
+    profile: jest.fn(),
+    preferences: jest.fn(),
+    updateProfile: jest.fn(),
   };
   const router = {
     navigateByUrl: jest.fn(),
@@ -28,7 +37,7 @@ describe("OnboardingPage", () => {
     api.problem.mockReturnValue("Please try again.");
     api.acknowledgeMilestone.mockReturnValue(of(undefined));
     await TestBed.configureTestingModule({
-      imports: [OnboardingPage, HistoryPage, BadgesPage],
+      imports: [OnboardingPage, HistoryPage, BadgesPage, AccountPage],
       providers: [
         { provide: LedgerApi, useValue: api },
         { provide: Router, useValue: router },
@@ -129,5 +138,47 @@ describe("OnboardingPage", () => {
     fixture.componentInstance.dismissCelebration();
 
     expect(api.acknowledgeMilestone).toHaveBeenCalledWith("milestone-1");
+  });
+
+  it("edits height through a focused dialog instead of the inline forms", () => {
+    api.dashboard.mockReturnValue(of(null));
+    api.profile.mockReturnValue(
+      of({ name: "Alex", email: "alex@email.com", heightCm: 176 }),
+    );
+    api.preferences.mockReturnValue(
+      of({
+        unit: "Kg",
+        theme: "System",
+        weekStartsOn: "Monday",
+        reminderEnabled: false,
+        reminderTime: "08:00:00",
+        quietHoursEnabled: false,
+        quietHoursStart: "22:00:00",
+        quietHoursEnd: "07:00:00",
+      }),
+    );
+    api.updateProfile.mockReturnValue(of(undefined));
+
+    const fixture = TestBed.createComponent(AccountPage);
+    const page = fixture.componentInstance;
+    fixture.detectChanges();
+
+    page.openHeightEdit();
+
+    expect(page.heightEdit()).toBe(true);
+    expect(page.manage()).toBe(false);
+    expect(page.heightDraft).toBe(176);
+
+    page.heightDraft = 180;
+    page.saveHeight();
+
+    expect(api.updateProfile).toHaveBeenCalledWith({
+      name: "Alex",
+      email: "alex@email.com",
+      heightCm: 180,
+    });
+    expect(page.heightEdit()).toBe(false);
+    expect(page.profile.controls.heightCm.value).toBe(180);
+    expect(page.message()).toBe("Height saved");
   });
 });
