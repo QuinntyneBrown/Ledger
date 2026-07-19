@@ -158,7 +158,7 @@ public sealed class PushSubscription
 public static class WeightMath
 {
     public const decimal PoundsPerKilogram = 2.2046226218m;
-    public static decimal ToKilograms(decimal value, WeightUnit unit) => Math.Round(unit == WeightUnit.Kg ? value : value / PoundsPerKilogram, 1, MidpointRounding.AwayFromZero);
+    public static decimal ToKilograms(decimal value, WeightUnit unit) => Math.Round(unit == WeightUnit.Kg ? value : value / PoundsPerKilogram, unit == WeightUnit.Kg ? 1 : 3, MidpointRounding.AwayFromZero);
     public static decimal FromKilograms(decimal value, WeightUnit unit) => Math.Round(unit == WeightUnit.Kg ? value : value * PoundsPerKilogram, 1, MidpointRounding.AwayFromZero);
     public static decimal PercentComplete(decimal start, decimal goal, decimal current)
     {

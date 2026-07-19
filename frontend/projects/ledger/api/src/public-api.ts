@@ -68,7 +68,7 @@ export class DisplayPreferencesService {
   }
   toKg(value: number): number {
     return this.preferences().unit === "Lbs"
-      ? this.round(value / DisplayPreferencesService.poundsPerKilogram)
+      ? this.round(value / DisplayPreferencesService.poundsPerKilogram, 3)
       : this.round(value);
   }
   apply(preferences: Preferences, persist = true): void {
@@ -83,8 +83,9 @@ export class DisplayPreferencesService {
           : "dark"
         : theme;
   }
-  private round(value: number): number {
-    return Math.round(value * 10) / 10;
+  private round(value: number, digits = 1): number {
+    const factor = 10 ** digits;
+    return Math.round(value * factor) / factor;
   }
 }
 

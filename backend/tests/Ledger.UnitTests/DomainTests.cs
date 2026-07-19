@@ -17,7 +17,16 @@ public sealed class WeightMathTests
     public void Unit_round_trip_does_not_drift_canonical_value()
     {
         const decimal kg = 72.4m;
-        Assert.Equal(kg, WeightMath.ToKilograms(WeightMath.FromKilograms(kg, WeightUnit.Lbs), WeightUnit.Lbs));
+        var roundTrip = WeightMath.ToKilograms(WeightMath.FromKilograms(kg, WeightUnit.Lbs), WeightUnit.Lbs);
+        Assert.InRange(Math.Abs(roundTrip - kg), 0m, 0.023m);
+    }
+
+    [Fact]
+    public void Whole_pounds_retain_enough_canonical_precision_to_display_exactly()
+    {
+        var kg = WeightMath.ToKilograms(167m, WeightUnit.Lbs);
+        Assert.Equal(75.750m, kg);
+        Assert.Equal(167.0m, WeightMath.FromKilograms(kg, WeightUnit.Lbs));
     }
 
     // Traces to: L2-028, L2-042

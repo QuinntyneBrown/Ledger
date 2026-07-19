@@ -5,10 +5,23 @@ import { provideRouter, Router, UrlTree } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import {
   AuthStore,
+  DisplayPreferencesService,
   authInterceptor,
   requireNeedsOnboarding,
   requireOnboarded,
 } from './public-api';
+
+describe('display preferences', () => {
+  it('preserves a whole-pound entry through canonical kilogram storage', () => {
+    const service = new DisplayPreferencesService();
+    service.preferences.update((preferences) => ({ ...preferences, unit: 'Lbs' }));
+
+    const kg = service.toKg(167);
+
+    expect(kg).toBe(75.75);
+    expect(service.fromKg(kg)).toBe(167);
+  });
+});
 
 describe('authentication route guards', () => {
   let http: HttpTestingController;
