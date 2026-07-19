@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
@@ -21,7 +22,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor(); builder.Services.AddScoped<IUserContext, HttpUserContext>();
 builder.Services.ConfigureHttpJsonOptions(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddSingleton<MetricsState>(); builder.Services.AddSingleton<ILedgerMetrics>(x => x.GetRequiredService<MetricsState>());
-builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(RegisterCommand).Assembly)); builder.Services.AddLedgerInfrastructure(builder.Configuration);
+builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(RegisterCommand).Assembly)); builder.Services.AddLedgerInfrastructure(builder.Configuration); builder.Services.AddScoped<IEmailSender, ConfiguredEmailSender>();
 builder.Services.Configure<FormOptions>(x => x.MultipartBodyLengthLimit = 5 * 1024 * 1024);
 var jwtKey = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? "development-only-key-change-this-32-bytes");
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o => { o.TokenValidationParameters = new TokenValidationParameters { ValidateIssuer = true, ValidateAudience = true, ValidateLifetime = true, ValidateIssuerSigningKey = true, ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? "ledger", ValidAudience = builder.Configuration["Jwt:Audience"] ?? "ledger-app", IssuerSigningKey = new SymmetricSecurityKey(jwtKey), NameClaimType = ClaimTypes.NameIdentifier }; o.Events = new JwtBearerEvents { OnMessageReceived = c => { if (c.HttpContext.Request.Path.StartsWithSegments("/hubs/ledger")) c.Token = c.Request.Query["access_token"]; return Task.CompletedTask; } }; });
@@ -33,7 +34,16 @@ builder.Services.AddOpenTelemetry().WithTracing(x => x.AddAspNetCoreInstrumentat
 
 var app = builder.Build(); app.UseMiddleware<RequestMetricsMiddleware>(); app.UseMiddleware<ProblemMiddleware>(); app.UseMiddleware<SecurityHeadersMiddleware>(); if (!app.Environment.IsDevelopment()) { app.UseHsts(); app.UseHttpsRedirection(); }
 if (builder.Configuration.GetValue("Database:MigrateOnStartup", false)) { using var scope = app.Services.CreateScope(); await scope.ServiceProvider.GetRequiredService<LedgerDbContext>().Database.MigrateAsync(); }
-app.UseCors("app"); app.UseRateLimiter(); app.UseAuthentication(); app.UseAuthorization(); app.UseStaticFiles(); if (app.Environment.IsDevelopment()) { app.UseSwagger(); app.UseSwaggerUI(); }
+app.UseCors("app"); app.UseRateLimiter(); app.UseAuthentication(); app.UseAuthorization(); app.UseStaticFiles();
+var avatarPath = builder.Configuration["Storage:AvatarPath"];
+if (!string.IsNullOrWhiteSpace(avatarPath))
+{
+    avatarPath = Path.IsPathRooted(avatarPath) ? avatarPath : Path.GetFullPath(avatarPath, app.Environment.ContentRootPath);
+    builder.Configuration["Storage:AvatarPath"] = avatarPath;
+    Directory.CreateDirectory(avatarPath);
+    app.UseStaticFiles(new StaticFileOptions { FileProvider = new PhysicalFileProvider(avatarPath), RequestPath = "/avatars" });
+}
+if (app.Environment.IsDevelopment()) { app.UseSwagger(); app.UseSwaggerUI(); }
 
 var api = app.MapGroup("/api/v1"); var auth = api.MapGroup("/auth").RequireRateLimiting("auth");
 auth.MapPost("/register", async (RegisterCommand command, ISender sender, CancellationToken ct) => Results.Created("/api/v1/auth/session", new { userId = await sender.Send(command, ct) }));
@@ -62,8 +72,27 @@ secured.MapDelete("/account/data", async ([FromBody] DeleteConfirmation b, Ledge
 secured.MapDelete("/account", async ([FromBody] DeleteConfirmation b, LedgerDbContext db, IUserContext current, ILocalDate clock, CancellationToken ct) => { if (b.Confirmation != "DELETE") throw AppProblem.Validation("confirmation", "Type DELETE to continue."); var id = current.UserId; await db.WeighIns.Where(x => x.UserId == id).ExecuteDeleteAsync(ct); await db.Goals.Where(x => x.UserId == id).ExecuteDeleteAsync(ct); await db.Milestones.Where(x => x.UserId == id).ExecuteDeleteAsync(ct); await db.Streaks.Where(x => x.UserId == id).ExecuteDeleteAsync(ct); await db.RefreshSessions.Where(x => x.UserId == id).ExecuteDeleteAsync(ct); await db.OneTimeTokens.Where(x => x.UserId == id).ExecuteDeleteAsync(ct); await db.OnboardingDrafts.Where(x => x.UserId == id).ExecuteDeleteAsync(ct); await db.Preferences.Where(x => x.UserId == id).ExecuteDeleteAsync(ct); await db.PushSubscriptions.Where(x => x.UserId == id).ExecuteDeleteAsync(ct); await db.SyncChanges.Where(x => x.UserId == id).ExecuteDeleteAsync(ct); var u = await db.Users.SingleAsync(x => x.Id == id, ct); u.Name = "Deleted member"; u.Email = $"deleted-{id:N}@invalid.local"; u.NormalizedEmail = u.Email.ToUpperInvariant(); u.PasswordHash = "deleted"; u.AvatarUrl = null; u.HeightCm = null; u.IsDeleted = true; db.AuditRecords.Add(new AuditRecord { ActorId = null, Action = "account.deleted", Timestamp = clock.UtcNow }); await db.SaveChangesAsync(ct); return Results.NoContent(); });
 secured.MapGet("/sync/changes", async (DateTimeOffset? since, LedgerDbContext db, IUserContext user, CancellationToken ct) => await db.SyncChanges.AsNoTracking().Where(x => x.UserId == user.UserId && x.ServerTimestamp > (since ?? DateTimeOffset.MinValue)).OrderBy(x => x.ServerTimestamp).Take(1000).ToListAsync(ct));
 
-app.MapHub<LedgerHub>("/hubs/ledger").RequireAuthorization(); app.MapHealthChecks("/health/live", new() { Predicate = _ => false }); app.MapHealthChecks("/health/ready"); app.MapGet("/", () => Results.Ok(new { service = "Ledger API", version = "v1" }));
+app.MapHub<LedgerHub>("/hubs/ledger").RequireAuthorization(); app.MapHealthChecks("/health/live", new() { Predicate = _ => false }); app.MapHealthChecks("/health/ready"); app.MapGet("/api", () => Results.Ok(new { service = "Ledger API", version = "v1" }));
 app.MapGet("/metrics", (MetricsState metrics) => Results.Text(metrics.Export(), "text/plain; version=0.0.4"));
+var spaIndex = Path.Combine(app.Environment.WebRootPath ?? Path.Combine(AppContext.BaseDirectory, "wwwroot"), "index.html");
+if (File.Exists(spaIndex))
+{
+    app.MapFallback(async context =>
+    {
+        if (context.Request.Path.StartsWithSegments("/api") || context.Request.Path.StartsWithSegments("/hubs") || context.Request.Path.StartsWithSegments("/health") || context.Request.Path.StartsWithSegments("/metrics") || context.Request.Path.StartsWithSegments("/avatars"))
+        {
+            context.Response.StatusCode = StatusCodes.Status404NotFound;
+            return;
+        }
+
+        context.Response.ContentType = "text/html; charset=utf-8";
+        await context.Response.SendFileAsync(spaIndex);
+    });
+}
+else
+{
+    app.MapGet("/", () => Results.Ok(new { service = "Ledger API", version = "v1" }));
+}
 app.Run();
 
 static void SetSessionCookies(HttpContext http, string refresh) { var secure = !http.RequestServices.GetRequiredService<IWebHostEnvironment>().IsDevelopment(); http.Response.Cookies.Append("ledger_refresh", refresh, new CookieOptions { HttpOnly = true, Secure = secure, SameSite = SameSiteMode.Strict, Path = "/api/v1/auth", Expires = DateTimeOffset.UtcNow.AddDays(30) }); var csrf = Convert.ToHexString(System.Security.Cryptography.RandomNumberGenerator.GetBytes(24)); http.Response.Cookies.Append("ledger_csrf", csrf, new CookieOptions { HttpOnly = false, Secure = secure, SameSite = SameSiteMode.Strict, Path = "/", Expires = DateTimeOffset.UtcNow.AddDays(30) }); }

@@ -34,7 +34,18 @@ public sealed class SecurityHeadersMiddleware(RequestDelegate next)
 {
     public async Task Invoke(HttpContext context)
     {
-        context.Response.OnStarting(() => { var h = context.Response.Headers; h.XContentTypeOptions = "nosniff"; h["Referrer-Policy"] = "strict-origin-when-cross-origin"; h.XFrameOptions = "DENY"; h.ContentSecurityPolicy = "default-src 'none'; frame-ancestors 'none'; base-uri 'none'"; return Task.CompletedTask; }); await next(context);
+        context.Response.OnStarting(() =>
+        {
+            var h = context.Response.Headers;
+            h.XContentTypeOptions = "nosniff";
+            h["Referrer-Policy"] = "strict-origin-when-cross-origin";
+            h.XFrameOptions = "DENY";
+            h.ContentSecurityPolicy = context.Request.Path.StartsWithSegments("/api") || context.Request.Path.StartsWithSegments("/health") || context.Request.Path.StartsWithSegments("/metrics")
+                ? "default-src 'none'; frame-ancestors 'none'; base-uri 'none'"
+                : "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' ws: wss:; img-src 'self' data: blob:; font-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'";
+            return Task.CompletedTask;
+        });
+        await next(context);
     }
 }
 
