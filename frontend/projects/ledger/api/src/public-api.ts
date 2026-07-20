@@ -10,6 +10,7 @@ import * as signalR from "@microsoft/signalr";
 import {
   BehaviorSubject,
   catchError,
+  from,
   map,
   Observable,
   of,
@@ -20,6 +21,88 @@ import {
 import { AuthResult, Dashboard, Preferences, Session } from "@ledger/domain";
 
 export const API_URL = "/api/v1";
+
+const MAX_AVATAR_DIMENSION = 2048;
+const MAX_PREPARED_AVATAR_BYTES = 4 * 1024 * 1024;
+
+class AvatarImageError extends Error {}
+
+/**
+ * Phone cameras commonly produce HEIC images that the API cannot decode, or
+ * JPEGs that exceed its upload and dimension limits. Browsers on those phones
+ * can decode their native camera format, so draw it to a bounded canvas and
+ * upload a metadata-free JPEG instead.
+ */
+export async function prepareAvatarImage(file: File): Promise<File> {
+  if (!file.size) throw new AvatarImageError("Choose a non-empty photo.");
+
+  const image = await loadAvatarImage(file);
+  const scale = Math.min(
+    1,
+    MAX_AVATAR_DIMENSION / Math.max(image.naturalWidth, image.naturalHeight),
+  );
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+  canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+  const context = canvas.getContext("2d");
+  if (!context)
+    throw new AvatarImageError("This browser could not prepare the photo.");
+
+  context.fillStyle = "#ffffff";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+  let quality = 0.88;
+  let blob = await canvasToJpeg(canvas, quality);
+  while (blob.size > MAX_PREPARED_AVATAR_BYTES && quality > 0.5) {
+    quality -= 0.12;
+    blob = await canvasToJpeg(canvas, quality);
+  }
+  if (blob.size > MAX_PREPARED_AVATAR_BYTES)
+    throw new AvatarImageError(
+      "This photo is too detailed to upload. Try a smaller photo.",
+    );
+
+  const stem = file.name.replace(/\.[^.]+$/, "") || "avatar";
+  return new File([blob], `${stem}.jpg`, {
+    type: "image/jpeg",
+    lastModified: file.lastModified,
+  });
+}
+
+function loadAvatarImage(file: File): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const image = new Image();
+    const cleanUp = () => URL.revokeObjectURL(url);
+    image.onload = () => {
+      cleanUp();
+      resolve(image);
+    };
+    image.onerror = () => {
+      cleanUp();
+      reject(
+        new AvatarImageError(
+          "This photo format is not supported by your browser. Try JPEG, PNG, or WebP.",
+        ),
+      );
+    };
+    image.src = url;
+  });
+}
+
+function canvasToJpeg(canvas: HTMLCanvasElement, quality: number): Promise<Blob> {
+  return new Promise((resolve, reject) =>
+    canvas.toBlob(
+      (blob) =>
+        blob
+          ? resolve(blob)
+          : reject(new AvatarImageError("The photo could not be prepared.")),
+      "image/jpeg",
+      quality,
+    ),
+  );
+}
 
 @Injectable({ providedIn: "root" })
 export class AuthStore {
@@ -226,9 +309,13 @@ export class LedgerApi {
     return this.http.put<void>(`${API_URL}/profile`, body);
   }
   uploadAvatar(file: File): Observable<{ url: string }> {
-    const body = new FormData();
-    body.append("file", file);
-    return this.http.post<{ url: string }>(`${API_URL}/profile/avatar`, body);
+    return from(prepareAvatarImage(file)).pipe(
+      switchMap((prepared) => {
+        const body = new FormData();
+        body.append("file", prepared);
+        return this.http.post<{ url: string }>(`${API_URL}/profile/avatar`, body);
+      }),
+    );
   }
   pushPublicKey(): Observable<{ publicKey: string }> {
     return this.http.get<{ publicKey: string }>(`${API_URL}/push/public-key`);
@@ -250,6 +337,7 @@ export class LedgerApi {
     });
   }
   problem(error: unknown): string {
+    if (error instanceof AvatarImageError) return error.message;
     const e = error as HttpErrorResponse;
     const body = e.error as {
       title?: string;

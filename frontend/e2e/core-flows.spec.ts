@@ -5,7 +5,7 @@ const preferences={unit:'Kg',theme:'System',weekStartsOn:'Monday',timeZone:'Amer
 function dashboard(currentWeightKg=80){return {greeting:'Good morning, Alex',progress:{percentComplete:4,startWeightKg:80,currentWeightKg,goalWeightKg:70,remainingKg:currentWeightKg-70,targetDate:'2026-10-20',reached:false,hasSufficientData:true,pace:{weeklyRateKg:-0.4,message:'On track'}},thisWeekChangeKg:currentWeightKg-80,averageWeeklyChangeKg:-0.4,currentStreak:1,trend:[{id:'entry-1',date:'2026-07-20',weightKg:currentWeightKg,note:'Morning check-in',updatedAt:'2026-07-20T08:00:00Z'}],celebrations:[]};}
 
 async function mockLedger(page:Page,onboarded:boolean){
-  const state={onboarded,heightCm:176,currentWeightKg:80,name:'Alex Rivera',email:'alex@example.test',preferences:{...preferences}};
+  const state={onboarded,heightCm:176,currentWeightKg:80,name:'Alex Rivera',email:'alex@example.test',avatarUrl:null as string|null,uploadedAvatarBody:'',preferences:{...preferences}};
   await page.route('**/api/v1/**',async(route:Route)=>{
     const request=route.request();
     const path=new URL(request.url()).pathname;
@@ -15,8 +15,9 @@ async function mockLedger(page:Page,onboarded:boolean){
     if(path.endsWith('/onboarding')&&request.method()==='GET')return json({complete:false,draft:null});
     if(path.endsWith('/onboarding')&&request.method()==='PATCH')return json({});
     if(path.endsWith('/onboarding/complete')){state.onboarded=true;return json({});}
-    if(path.endsWith('/profile')&&request.method()==='GET')return json({name:state.name,email:state.email,heightCm:state.heightCm});
+    if(path.endsWith('/profile')&&request.method()==='GET')return json({name:state.name,email:state.email,heightCm:state.heightCm,avatarUrl:state.avatarUrl});
     if(path.endsWith('/profile')&&request.method()==='PUT'){const body=request.postDataJSON();state.name=body.name;state.email=body.email;state.heightCm=body.heightCm;return json({});}
+    if(path.endsWith('/profile/avatar')&&request.method()==='POST'){state.uploadedAvatarBody=request.postDataBuffer()?.toString('latin1')??'';state.avatarUrl='/avatars/mobile-avatar.jpg';return json({url:state.avatarUrl});}
     if(path.endsWith('/preferences')&&request.method()==='GET')return json(state.preferences);
     if(path.endsWith('/preferences')&&request.method()==='PATCH'){state.preferences={...state.preferences,...request.postDataJSON()};return json(state.preferences);}
     if(path.endsWith('/reminders')&&request.method()==='PUT'){const body=request.postDataJSON();state.preferences={...state.preferences,reminderEnabled:body.enabled,reminderTime:body.time,quietHoursEnabled:body.quietHoursEnabled,quietHoursStart:body.quietHoursStart,quietHoursEnd:body.quietHoursEnd,timeZone:body.timeZone};return json(state.preferences);}
@@ -27,6 +28,23 @@ async function mockLedger(page:Page,onboarded:boolean){
   });
   return state;
 }
+
+test('a mobile camera photo is converted and shown as the profile avatar',async({page})=>{
+  const state=await mockLedger(page,true);
+  await signIn(page);
+  await page.getByRole('link',{name:'Profile'}).click();
+  const dialog=await openFocusedEditor(page,'Edit profile','Edit profile');
+  await dialog.getByLabel('Profile photo').setInputFiles({
+    name:'camera.heic',
+    mimeType:'image/heic',
+    buffer:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=','base64'),
+  });
+
+  await expect(page.getByRole('status')).toContainText('Profile photo updated');
+  expect(state.uploadedAvatarBody).toContain('filename="camera.jpg"');
+  expect(state.uploadedAvatarBody).toContain('Content-Type: image/jpeg');
+  await expect(page.locator('.profile-hero .au-avatar img')).toHaveAttribute('src','/avatars/mobile-avatar.jpg');
+});
 
 async function openFocusedEditor(page:Page,buttonName:string|RegExp,dialogName:string){
   await page.getByRole('button',{name:buttonName}).click();

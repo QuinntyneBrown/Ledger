@@ -36,7 +36,7 @@ export class WelcomePage {}
     <div class="onb-progress" aria-label="Profile setup"><i class="is-done"></i><i class="is-done"></i><i class="is-done"></i><i class="is-done"></i></div>
     <div class="onb-step"><p class="onb-step-num">FINAL STEP</p><h1 class="onb-step-title">Set up your profile</h1><p class="onb-step-sub">A few details make your trends more useful. You can change these anytime.</p></div>
     <form class="onb-form" [formGroup]="form" (ngSubmit)="save()">
-      <div class="profile-avatar"><span class="au-avatar au-avatar--lg">{{ initial() }}</span><label class="au-icon-btn profile-camera" aria-label="Choose profile photo"><svg class="au-icon"><use href="#i-camera" /></svg><input class="sr-only" type="file" accept="image/jpeg,image/png,image/webp" (change)="upload($event)" /></label></div>
+      <div class="profile-avatar"><span class="au-avatar au-avatar--lg">@if (avatarUrl()) { <img [src]="avatarUrl()" alt="" /> } @else { {{ initial() }} }</span><label class="au-icon-btn profile-camera" aria-label="Choose profile photo"><svg class="au-icon"><use href="#i-camera" /></svg><input class="sr-only" type="file" accept="image/*" (change)="upload($event)" /></label></div>
       <div class="au-field"><label class="au-label" for="profile-name">Your name</label><div class="au-input-wrap"><svg class="au-icon"><use href="#i-user" /></svg><input id="profile-name" class="au-input" formControlName="name" autocomplete="name" /></div></div>
       <div class="au-field"><label class="au-label" for="profile-height">Height <span class="au-text-lo">optional</span></label><div class="au-input-wrap"><svg class="au-icon"><use href="#i-ruler" /></svg><input id="profile-height" class="au-input" type="number" min="50" max="272" formControlName="heightCm" /><span class="au-input-affix">cm</span></div></div>
       @if (error()) { <p class="au-help is-error" role="alert">{{ error() }}</p> }
@@ -49,10 +49,11 @@ export class ProfileSetupPage {
   private api = inject(LedgerApi);
   private router = inject(Router);
   error = signal("");
+  avatarUrl = signal<string | null>(null);
   form = this.fb.nonNullable.group({ name: ["", Validators.required], heightCm: [null as number | null] });
-  constructor() { this.api.profile().subscribe((p: any) => this.form.patchValue({ name: p.name, heightCm: p.heightCm })); }
+  constructor() { this.api.profile().subscribe((p: any) => { this.form.patchValue({ name: p.name, heightCm: p.heightCm }); this.avatarUrl.set(p.avatarUrl ?? null); }); }
   initial(): string { return this.form.controls.name.value.trim().charAt(0).toUpperCase() || "L"; }
-  upload(event: Event): void { const file = (event.target as HTMLInputElement).files?.[0]; if (file) this.api.uploadAvatar(file).subscribe({ error: (e) => this.error.set(this.api.problem(e)) }); }
+  upload(event: Event): void { const input = event.target as HTMLInputElement; const file = input.files?.[0]; input.value = ""; if (file) this.api.uploadAvatar(file).subscribe({ next: ({ url }) => this.avatarUrl.set(url), error: (e) => this.error.set(this.api.problem(e)) }); }
   save(): void { if (this.form.invalid) return; this.api.profile().subscribe((p: any) => this.api.updateProfile({ ...p, ...this.form.getRawValue() }).subscribe({ next: () => this.skip(), error: (e) => this.error.set(this.api.problem(e)) })); }
   skip(): void { void this.router.navigateByUrl("/dashboard"); }
 }
@@ -854,7 +855,12 @@ type AccountEditor =
   | "data"
   | "signout";
 
-type ProfileValue = { name: string; email: string; heightCm: number | null };
+type ProfileValue = {
+  name: string;
+  email: string;
+  heightCm: number | null;
+  avatarUrl: string | null;
+};
 
 @Component({
   selector: "ledger-account",
@@ -873,7 +879,7 @@ type ProfileValue = { name: string; email: string; heightCm: number | null };
     </header>
     @if (loading()) { <div class="au-skeleton" style="height:256px"></div><div class="au-skeleton au-mt-6" style="height:360px"></div> } @else if (error()) { <ledger-empty-state title="We couldn’t load your profile" [message]="error()"><button class="au-btn au-btn--primary au-mt-4" type="button" (click)="load()">Try again</button></ledger-empty-state> } @else {
     <section class="au-card profile-hero au-rise au-rise-1">
-      <div class="profile-avatar"><span class="au-avatar au-avatar--lg">{{ savedProfile.name.charAt(0).toUpperCase() || "L" }}</span><button class="au-icon-btn profile-camera" type="button" aria-label="Change photo" (click)="openEditor('profile')"><svg class="au-icon"><use href="#i-camera" /></svg></button></div>
+      <div class="profile-avatar"><span class="au-avatar au-avatar--lg">@if (savedProfile.avatarUrl) { <img [src]="savedProfile.avatarUrl" alt="" /> } @else { {{ savedProfile.name.charAt(0).toUpperCase() || "L" }} }</span><button class="au-icon-btn profile-camera" type="button" aria-label="Change photo" (click)="openEditor('profile')"><svg class="au-icon"><use href="#i-camera" /></svg></button></div>
       <div><h2 class="au-display">{{ savedProfile.name || "Ledger member" }}</h2><p class="au-mono au-text-mid">{{ savedProfile.email }}</p></div>
       <div class="au-row-flex au-gap-2 au-wrap"><span class="au-chip"><svg class="au-icon"><use href="#i-ruler" /></svg>{{ savedProfile.heightCm || "—" }} cm</span><span class="au-chip"><svg class="au-icon"><use href="#i-scale" /></svg>{{ savedPreferences?.unit || "Kg" }}</span></div>
     </section>
@@ -907,7 +913,7 @@ type ProfileValue = { name: string; email: string; heightCm: number | null };
               <form [formGroup]="profile" (ngSubmit)="saveProfile()">
                 <label class="au-field"><span class="au-label">Name</span><div class="au-input-wrap"><svg class="au-icon"><use href="#i-user" /></svg><input class="au-input" formControlName="name" autocomplete="name" /></div></label>
                 <label class="au-field"><span class="au-label">Email</span><div class="au-input-wrap"><svg class="au-icon"><use href="#i-mail" /></svg><input class="au-input" type="email" formControlName="email" autocomplete="email" /></div><span class="au-help">Changing your email requires verification.</span></label>
-                <label class="au-field"><span class="au-label">Profile photo</span><input class="au-input file-input" type="file" accept="image/jpeg,image/png,image/webp" (change)="uploadAvatar($event)" /></label>
+                <label class="au-field"><span class="au-label">Profile photo</span><input class="au-input file-input" type="file" accept="image/*" [disabled]="editorBusy()" (change)="uploadAvatar($event)" /></label>
                 <div class="au-dialog-actions"><button class="au-btn au-btn--outlined" type="button" (click)="closeEditor()">Cancel</button><button class="au-btn au-btn--primary" [disabled]="profile.invalid || editorBusy()">{{ editorBusy() ? "Saving…" : "Save profile" }}</button></div>
               </form>
             }
@@ -979,7 +985,12 @@ export class AccountPage {
   editorError = signal("");
   heightDraft: number | null = null;
   journey = signal<Dashboard | null>(null);
-  savedProfile: ProfileValue = { name: "", email: "", heightCm: null };
+  savedProfile: ProfileValue = {
+    name: "",
+    email: "",
+    heightCm: null,
+    avatarUrl: null,
+  };
   savedPreferences: Preferences | null = null;
   profile = this.fb.nonNullable.group({
     name: ["", Validators.required],
@@ -1084,7 +1095,7 @@ export class AccountPage {
     this.editorBusy.set(true);
     this.api.updateProfile(value).subscribe({
       next: () => {
-        this.savedProfile = { ...value };
+        this.savedProfile = { ...this.savedProfile, ...value };
         this.closeEditor(true);
         this.showMessage("Profile saved");
       },
@@ -1126,11 +1137,15 @@ export class AccountPage {
     });
   }
   uploadAvatar(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = "";
     if (!file) return;
+    this.editorError.set("");
     this.editorBusy.set(true);
     this.api.uploadAvatar(file).subscribe({
-      next: () => {
+      next: ({ url }) => {
+        this.savedProfile = { ...this.savedProfile, avatarUrl: url };
         this.editorBusy.set(false);
         this.showMessage("Profile photo updated");
       },

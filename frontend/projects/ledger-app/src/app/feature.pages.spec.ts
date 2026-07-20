@@ -62,6 +62,7 @@ describe("OnboardingPage", () => {
     );
     api.preferences.mockReturnValue(of(accountPreferences));
     api.updateProfile.mockReturnValue(of(undefined));
+    api.uploadAvatar.mockReturnValue(of({ url: "/avatars/alex.jpg" }));
     api.changePassword.mockReturnValue(of(undefined));
     api.updatePreferences.mockReturnValue(of(accountPreferences));
     api.scheduleReminder.mockReturnValue(of(accountPreferences));
@@ -218,6 +219,29 @@ describe("OnboardingPage", () => {
       heightCm: 176,
     });
     expect(page.savedProfile.name).toBe("Alex");
+  });
+
+  it("shows a newly uploaded profile photo immediately", () => {
+    const fixture = TestBed.createComponent(AccountPage);
+    const page = fixture.componentInstance;
+    fixture.detectChanges();
+    page.openEditor("profile");
+    fixture.detectChanges();
+    const input = fixture.nativeElement.querySelector(
+      'input[type="file"]',
+    ) as HTMLInputElement;
+    const photo = new File(["photo"], "camera.heic", { type: "image/heic" });
+    Object.defineProperty(input, "files", { value: [photo] });
+
+    input.dispatchEvent(new Event("change"));
+    fixture.detectChanges();
+
+    expect(api.uploadAvatar).toHaveBeenCalledWith(photo);
+    expect(page.savedProfile.avatarUrl).toBe("/avatars/alex.jpg");
+    expect(
+      fixture.nativeElement.querySelector(".profile-hero .au-avatar img")
+        .getAttribute("src"),
+    ).toBe("/avatars/alex.jpg");
   });
 
   it("validates password confirmation before saving the security editor", () => {
