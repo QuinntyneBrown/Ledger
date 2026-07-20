@@ -1,4 +1,5 @@
 import { CommonModule, DatePipe, DecimalPipe } from "@angular/common";
+import { A11yModule } from "@angular/cdk/a11y";
 import { Component, HostListener, inject, signal } from "@angular/core";
 import {
   FormBuilder,
@@ -847,7 +848,7 @@ export class BadgesPage {
 @Component({
   selector: "ledger-account",
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, EmptyStateComponent],
+  imports: [A11yModule, CommonModule, FormsModule, ReactiveFormsModule, RouterLink, EmptyStateComponent],
   template: `<header class="page-header app-route-header">
       <h1 class="app-header-title">Profile</h1>
       <button class="au-btn au-btn--text au-btn--sm" type="button" (click)="manage.set(!manage())" [attr.aria-label]="manage() ? 'Close edit forms' : 'Edit profile'"><svg class="au-icon"><use [attr.href]="manage() ? '#i-x' : '#i-edit'" /></svg>{{ manage() ? "Close" : "Edit" }}</button>
@@ -922,7 +923,7 @@ export class BadgesPage {
     </section>
     }
     @if (heightEdit()) {
-      <div class="au-scrim is-open" (click)="closeHeightEdit()"><section class="au-dialog" role="dialog" aria-modal="true" aria-labelledby="edit-height-title" (click)="$event.stopPropagation()"><div class="au-dialog-icon"><svg class="au-icon"><use href="#i-ruler" /></svg></div><h2 id="edit-height-title" class="au-dialog-title">Edit height</h2><p class="au-dialog-body">Your height is used to calculate your BMI.</p><label class="au-field"><span class="au-label">Height</span><div class="au-input-wrap"><svg class="au-icon"><use href="#i-ruler" /></svg><input class="au-input" type="number" min="50" max="272" [(ngModel)]="heightDraft" [ngModelOptions]="{ standalone: true }" (keyup.enter)="saveHeight()" /><span class="au-input-affix">cm</span></div></label><div class="au-dialog-actions"><button class="au-btn au-btn--outlined" type="button" (click)="closeHeightEdit()">Cancel</button><button class="au-btn au-btn--primary" type="button" (click)="saveHeight()">Save height</button></div></section></div>
+      <div class="au-scrim is-open" (click)="closeHeightEdit()"><section class="au-dialog" role="dialog" aria-modal="true" aria-labelledby="edit-height-title" aria-describedby="edit-height-description" cdkTrapFocus [cdkTrapFocusAutoCapture]="true" (keydown.escape)="closeHeightEdit()" (click)="$event.stopPropagation()"><div class="au-dialog-icon"><svg class="au-icon"><use href="#i-ruler" /></svg></div><h2 id="edit-height-title" class="au-dialog-title">Edit height</h2><p id="edit-height-description" class="au-dialog-body">Your height is used to calculate your BMI.</p><label class="au-field" [class.is-error]="heightError()"><span class="au-label">Height</span><div class="au-input-wrap"><svg class="au-icon"><use href="#i-ruler" /></svg><input class="au-input" type="number" min="50" max="272" [(ngModel)]="heightDraft" [ngModelOptions]="{ standalone: true }" (ngModelChange)="heightError.set('')" (keyup.enter)="saveHeight()" /><span class="au-input-affix">cm</span></div>@if (heightError()) { <span class="au-help is-error" role="alert">{{ heightError() }}</span> }</label><div class="au-dialog-actions"><button class="au-btn au-btn--outlined" type="button" (click)="closeHeightEdit()">Cancel</button><button class="au-btn au-btn--primary" type="button" [disabled]="!heightIsValid() || heightBusy()" (click)="saveHeight()">{{ heightBusy() ? "Saving…" : "Save height" }}</button></div></section></div>
     }
     @if (message()) {
       <div class="au-toast-region app-toast-region"><div class="au-toast au-toast--success" role="status"><svg class="au-icon au-toast-icon"><use href="#i-check-circle" /></svg><span class="au-toast-msg">{{ message() }}</span></div></div>
@@ -940,6 +941,8 @@ export class AccountPage {
   error = signal("");
   manage = signal(false);
   heightEdit = signal(false);
+  heightBusy = signal(false);
+  heightError = signal("");
   heightDraft: number | null = null;
   journey = signal<Dashboard | null>(null);
   profile = this.fb.nonNullable.group({
@@ -995,19 +998,42 @@ export class AccountPage {
   }
   openHeightEdit(): void {
     this.heightDraft = this.profile.controls.heightCm.value;
+    this.heightError.set("");
     this.heightEdit.set(true);
   }
   closeHeightEdit(): void {
     this.heightEdit.set(false);
+    this.heightBusy.set(false);
+    this.heightError.set("");
+  }
+  heightIsValid(): boolean {
+    return (
+      typeof this.heightDraft === "number" &&
+      Number.isFinite(this.heightDraft) &&
+      this.heightDraft >= 50 &&
+      this.heightDraft <= 272
+    );
   }
   saveHeight(): void {
+    if (!this.heightIsValid()) {
+      this.heightError.set("Enter a height between 50 and 272 cm.");
+      return;
+    }
     const heightCm = this.heightDraft;
+    this.heightBusy.set(true);
     this.api
       .updateProfile({ ...this.profile.getRawValue(), heightCm })
-      .subscribe(() => {
-        this.profile.controls.heightCm.setValue(heightCm);
-        this.heightEdit.set(false);
-        this.message.set("Height saved");
+      .subscribe({
+        next: () => {
+          this.profile.controls.heightCm.setValue(heightCm);
+          this.heightBusy.set(false);
+          this.heightEdit.set(false);
+          this.message.set("Height saved");
+        },
+        error: (e) => {
+          this.heightBusy.set(false);
+          this.heightError.set(this.api.problem(e));
+        },
       });
   }
   uploadAvatar(event: Event): void {

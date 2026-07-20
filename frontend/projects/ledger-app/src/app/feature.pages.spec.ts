@@ -181,4 +181,32 @@ describe("OnboardingPage", () => {
     expect(page.profile.controls.heightCm.value).toBe(180);
     expect(page.message()).toBe("Height saved");
   });
+
+  it("keeps the height dialog open for an out-of-range value", () => {
+    api.dashboard.mockReturnValue(of(null));
+    api.profile.mockReturnValue(
+      of({ name: "Alex", email: "alex@email.com", heightCm: 176 }),
+    );
+    api.preferences.mockReturnValue(
+      of({
+        unit: "Kg",
+        theme: "System",
+        weekStartsOn: "Monday",
+        reminderEnabled: false,
+        reminderTime: "08:00:00",
+        quietHoursEnabled: false,
+        quietHoursStart: "22:00:00",
+        quietHoursEnd: "07:00:00",
+      }),
+    );
+
+    const page = TestBed.createComponent(AccountPage).componentInstance;
+    page.openHeightEdit();
+    page.heightDraft = 40;
+    page.saveHeight();
+
+    expect(api.updateProfile).not.toHaveBeenCalled();
+    expect(page.heightEdit()).toBe(true);
+    expect(page.heightError()).toBe("Enter a height between 50 and 272 cm.");
+  });
 });

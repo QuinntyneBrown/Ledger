@@ -74,11 +74,11 @@ export class SignInPage {
     <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()">
       <div class="au-field"><label class="au-label" for="name">Full name</label><div class="au-input-wrap"><svg class="au-icon"><use href="#i-user" /></svg><input id="name" class="au-input" formControlName="name" placeholder="Your name" autocomplete="name" /></div></div>
       <div class="au-field"><label class="au-label" for="register-email">Email</label><div class="au-input-wrap"><svg class="au-icon"><use href="#i-mail" /></svg><input id="register-email" class="au-input" type="email" formControlName="email" placeholder="you@email.com" autocomplete="email" /></div></div>
-      <div class="au-field"><label class="au-label" for="register-password">Password</label><div class="au-input-wrap"><svg class="au-icon"><use href="#i-lock" /></svg><input id="register-password" class="au-input" [type]="show() ? 'text' : 'password'" formControlName="password" placeholder="Create a password" autocomplete="new-password" /><button type="button" class="au-icon-btn au-icon-btn--sm" (click)="show.set(!show())" [attr.aria-label]="show() ? 'Hide password' : 'Show password'"><svg class="au-icon"><use [attr.href]="show() ? '#i-eye-off' : '#i-eye'" /></svg></button></div><p class="au-help">At least 8 characters with a number and symbol.</p></div>
+      <div class="au-field"><label class="au-label" for="register-password">Password</label><div class="au-input-wrap"><svg class="au-icon"><use href="#i-lock" /></svg><input id="register-password" class="au-input" [type]="show() ? 'text' : 'password'" formControlName="password" placeholder="Create a password" autocomplete="new-password" /><button type="button" class="au-icon-btn au-icon-btn--sm" (click)="show.set(!show())" [attr.aria-label]="show() ? 'Hide password' : 'Show password'"><svg class="au-icon"><use [attr.href]="show() ? '#i-eye-off' : '#i-eye'" /></svg></button></div><div class="pw-meter" role="img" [attr.aria-label]="passwordHelp()">@for (n of [1,2,3,4]; track n) { <i [class.is-on]="n <= passwordScore()"></i> }</div><p class="au-help">{{ passwordHelp() }}</p></div>
       <label class="au-check"><input type="checkbox" formControlName="termsAccepted" /><span class="au-box"><svg class="au-icon"><use href="#i-check" /></svg></span><span class="au-text-mid">I agree to the <a [href]="legalSiteUrl + '/terms'">Terms of Service</a> and <a [href]="legalSiteUrl + '/privacy'">Privacy Policy</a>.</span></label>
       @if (error()) { <p class="au-help is-error" role="alert">{{ error() }}</p> }
       @if (done()) { <div class="au-banner au-banner--good" role="status"><svg class="au-icon"><use href="#i-check-circle" /></svg><div class="au-banner-body"><div class="au-banner-title">Check your email</div><div class="au-banner-text">Account created. Open the verification link to continue.</div><button type="button" class="au-btn au-btn--text au-btn--sm" (click)="resend()">Resend email</button></div></div> }
-      <button class="au-btn au-btn--primary au-btn--lg au-btn--block" [disabled]="form.invalid || busy()">{{ busy() ? "Creating…" : "Create account" }}</button>
+      <button class="au-btn au-btn--primary au-btn--lg au-btn--block" [disabled]="form.invalid || busy() || done()">{{ busy() ? "Creating…" : done() ? "Account created" : "Create account" }}</button>
     </form>
     <p class="auth-alt">Already have an account? <a routerLink="/sign-in">Sign in</a></p>
   </section>`,
@@ -90,13 +90,37 @@ export class RegisterPage {
   form = this.fb.nonNullable.group({
     name: ["", Validators.required],
     email: ["", [Validators.required, Validators.email]],
-    password: ["", [Validators.required, Validators.minLength(8)]],
+    password: [
+      "",
+      [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern(/^(?=.*\d)(?=.*[^A-Za-z0-9]).+$/),
+      ],
+    ],
     termsAccepted: [false, Validators.requiredTrue],
   });
   show = signal(false);
   busy = signal(false);
   done = signal(false);
   error = signal("");
+  passwordScore(): number {
+    const value = this.form.controls.password.value;
+    return [
+      value.length >= 8,
+      /[A-Z]/.test(value),
+      /\d/.test(value),
+      /[^A-Za-z0-9]/.test(value),
+    ].filter(Boolean).length;
+  }
+  passwordHelp(): string {
+    const score = this.passwordScore();
+    if (!this.form.controls.password.value)
+      return "At least 8 characters with a number and symbol.";
+    if (this.form.controls.password.valid && score === 4)
+      return "Strong — at least 8 characters with a number and symbol.";
+    return "Add at least 8 characters, a number, and a symbol.";
+  }
   submit(): void {
     if (this.form.invalid) return;
     this.busy.set(true);
@@ -195,7 +219,7 @@ export class ResetPage {
       <div class="au-empty-art"><svg class="au-icon"><use [attr.href]="message() === 'Email verified' ? '#i-check-circle' : '#i-mail'" /></svg></div>
       <h1 class="au-empty-title">{{ message() }}</h1>
       <p class="au-empty-text">{{ detail() }}</p>
-      <a class="au-btn au-btn--primary au-btn--lg au-btn--block au-mt-4" routerLink="/sign-in">Continue to sign in</a>
+      @if (message() !== "Verifying your email…") { <a class="au-btn au-btn--primary au-btn--lg au-btn--block au-mt-4" routerLink="/sign-in">Continue to sign in</a> }
     </div>
   </section>`,
 })
