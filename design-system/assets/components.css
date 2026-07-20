@@ -349,6 +349,7 @@ textarea.au-input { height: auto; min-height: 96px; padding: var(--space-3) 0; r
 .au-switch .au-switch-track {
   position: absolute;
   inset: 0;
+  pointer-events: none;
   background: var(--surface-3);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-pill);
@@ -356,6 +357,7 @@ textarea.au-input { height: auto; min-height: 96px; padding: var(--space-3) 0; r
 }
 .au-switch .au-switch-thumb {
   position: absolute;
+  pointer-events: none;
   top: 4px; left: 4px;
   width: 24px; height: 24px;
   background: var(--text-mid);
@@ -543,7 +545,7 @@ textarea.au-input { height: auto; min-height: 96px; padding: var(--space-3) 0; r
 /* --------------------------------------------------------------------------
    TOAST / SNACKBAR
    -------------------------------------------------------------------------- */
-.au-toast-region { position: fixed; left: 50%; bottom: calc(var(--space-6) + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: var(--z-toast); display: flex; flex-direction: column; gap: var(--space-2); width: min(420px, calc(100% - var(--space-8))); }
+.au-toast-region { position: fixed; left: 50%; bottom: calc(var(--space-6) + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: var(--z-toast); display: flex; flex-direction: column; gap: var(--space-2); width: min(420px, calc(100% - var(--space-8))); pointer-events:none; }
 .au-toast {
   display: flex; align-items: center; gap: var(--space-3);
   padding: var(--space-4);
@@ -555,7 +557,7 @@ textarea.au-input { height: auto; min-height: 96px; padding: var(--space-3) 0; r
 }
 .au-toast .au-toast-icon { width: 22px; height: 22px; flex: none; }
 .au-toast-msg { flex: 1; font-size: var(--text-sm); color: var(--text-hi); }
-.au-toast-action { color: var(--brand); font-weight: var(--weight-semibold); font-size: var(--text-sm); background: none; border: none; cursor: pointer; padding: var(--space-1) var(--space-2); }
+.au-toast-action { color: var(--brand); font-weight: var(--weight-semibold); font-size: var(--text-sm); background: none; border: none; cursor: pointer; padding: var(--space-1) var(--space-2); pointer-events:auto; }
 .au-toast--success .au-toast-icon { color: var(--good); }
 .au-toast--error .au-toast-icon { color: var(--bad); }
 .au-toast--info .au-toast-icon { color: var(--info); }

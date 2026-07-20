@@ -10,6 +10,17 @@ import {
 } from "./feature.pages";
 
 describe("OnboardingPage", () => {
+  const accountPreferences = {
+    unit: "Kg" as const,
+    theme: "System" as const,
+    weekStartsOn: "Monday" as const,
+    timeZone: "America/Toronto",
+    reminderEnabled: false,
+    reminderTime: "08:00:00",
+    quietHoursEnabled: false,
+    quietHoursStart: "22:00:00",
+    quietHoursEnd: "07:00:00",
+  };
   const api = {
     onboarding: jest.fn(),
     saveOnboarding: jest.fn(),
@@ -23,6 +34,15 @@ describe("OnboardingPage", () => {
     profile: jest.fn(),
     preferences: jest.fn(),
     updateProfile: jest.fn(),
+    uploadAvatar: jest.fn(),
+    changePassword: jest.fn(),
+    updatePreferences: jest.fn(),
+    scheduleReminder: jest.fn(),
+    pushPublicKey: jest.fn(),
+    savePushSubscription: jest.fn(),
+    deleteData: jest.fn(),
+    exportData: jest.fn(),
+    deleteAccount: jest.fn(),
   };
   const router = {
     navigateByUrl: jest.fn(),
@@ -36,6 +56,15 @@ describe("OnboardingPage", () => {
     api.saveOnboarding.mockReturnValue(of({}));
     api.problem.mockReturnValue("Please try again.");
     api.acknowledgeMilestone.mockReturnValue(of(undefined));
+    api.dashboard.mockReturnValue(of(null));
+    api.profile.mockReturnValue(
+      of({ name: "Alex", email: "alex@email.com", heightCm: 176 }),
+    );
+    api.preferences.mockReturnValue(of(accountPreferences));
+    api.updateProfile.mockReturnValue(of(undefined));
+    api.changePassword.mockReturnValue(of(undefined));
+    api.updatePreferences.mockReturnValue(of(accountPreferences));
+    api.scheduleReminder.mockReturnValue(of(accountPreferences));
     await TestBed.configureTestingModule({
       imports: [OnboardingPage, HistoryPage, BadgesPage, AccountPage],
       providers: [
@@ -141,32 +170,13 @@ describe("OnboardingPage", () => {
   });
 
   it("edits height through a focused dialog instead of the inline forms", () => {
-    api.dashboard.mockReturnValue(of(null));
-    api.profile.mockReturnValue(
-      of({ name: "Alex", email: "alex@email.com", heightCm: 176 }),
-    );
-    api.preferences.mockReturnValue(
-      of({
-        unit: "Kg",
-        theme: "System",
-        weekStartsOn: "Monday",
-        reminderEnabled: false,
-        reminderTime: "08:00:00",
-        quietHoursEnabled: false,
-        quietHoursStart: "22:00:00",
-        quietHoursEnd: "07:00:00",
-      }),
-    );
-    api.updateProfile.mockReturnValue(of(undefined));
-
     const fixture = TestBed.createComponent(AccountPage);
     const page = fixture.componentInstance;
     fixture.detectChanges();
 
     page.openHeightEdit();
 
-    expect(page.heightEdit()).toBe(true);
-    expect(page.manage()).toBe(false);
+    expect(page.editor()).toBe("height");
     expect(page.heightDraft).toBe(176);
 
     page.heightDraft = 180;
@@ -177,36 +187,101 @@ describe("OnboardingPage", () => {
       email: "alex@email.com",
       heightCm: 180,
     });
-    expect(page.heightEdit()).toBe(false);
+    expect(page.editor()).toBeNull();
+    expect(page.savedProfile.heightCm).toBe(180);
     expect(page.profile.controls.heightCm.value).toBe(180);
     expect(page.message()).toBe("Height saved");
   });
 
   it("keeps the height dialog open for an out-of-range value", () => {
-    api.dashboard.mockReturnValue(of(null));
-    api.profile.mockReturnValue(
-      of({ name: "Alex", email: "alex@email.com", heightCm: 176 }),
-    );
-    api.preferences.mockReturnValue(
-      of({
-        unit: "Kg",
-        theme: "System",
-        weekStartsOn: "Monday",
-        reminderEnabled: false,
-        reminderTime: "08:00:00",
-        quietHoursEnabled: false,
-        quietHoursStart: "22:00:00",
-        quietHoursEnd: "07:00:00",
-      }),
-    );
-
     const page = TestBed.createComponent(AccountPage).componentInstance;
     page.openHeightEdit();
     page.heightDraft = 40;
     page.saveHeight();
 
     expect(api.updateProfile).not.toHaveBeenCalled();
-    expect(page.heightEdit()).toBe(true);
-    expect(page.heightError()).toBe("Enter a height between 50 and 272 cm.");
+    expect(page.editor()).toBe("height");
+    expect(page.editorError()).toBe("Enter a height between 50 and 272 cm.");
+  });
+
+  it("discards unsaved profile edits when its focused editor is cancelled", () => {
+    const page = TestBed.createComponent(AccountPage).componentInstance;
+
+    page.openEditor("profile");
+    page.profile.patchValue({ name: "Unsaved", email: "draft@email.com" });
+    page.closeEditor();
+    page.openEditor("profile");
+
+    expect(page.profile.getRawValue()).toEqual({
+      name: "Alex",
+      email: "alex@email.com",
+      heightCm: 176,
+    });
+    expect(page.savedProfile.name).toBe("Alex");
+  });
+
+  it("validates password confirmation before saving the security editor", () => {
+    const page = TestBed.createComponent(AccountPage).componentInstance;
+    page.openEditor("password");
+    page.password.setValue({
+      currentPassword: "Old-password1!",
+      newPassword: "Fresh-password1!",
+      confirmPassword: "Different-password1!",
+    });
+
+    page.changePassword();
+
+    expect(api.changePassword).not.toHaveBeenCalled();
+    expect(page.editor()).toBe("password");
+    expect(page.editorError()).toContain("match");
+
+    page.password.controls.confirmPassword.setValue("Fresh-password1!");
+    page.changePassword();
+
+    expect(api.changePassword).toHaveBeenCalledWith(
+      "Old-password1!",
+      "Fresh-password1!",
+    );
+    expect(page.editor()).toBeNull();
+    expect(page.message()).toBe("Password changed");
+  });
+
+  it("saves preferences without revealing unrelated account forms", () => {
+    const updatedPreferences = {
+      ...accountPreferences,
+      unit: "Lbs" as const,
+      theme: "Dark" as const,
+      weekStartsOn: "Sunday" as const,
+    };
+    api.updatePreferences.mockReturnValue(of(updatedPreferences));
+    const page = TestBed.createComponent(AccountPage).componentInstance;
+    page.openEditor("preferences");
+    page.prefs.setValue({ unit: "Lbs", theme: "Dark", weekStartsOn: "Sunday" });
+
+    page.savePrefs();
+
+    expect(api.updatePreferences).toHaveBeenCalledWith(
+      expect.objectContaining({
+        unit: "Lbs",
+        theme: "Dark",
+        weekStartsOn: "Sunday",
+      }),
+    );
+    expect(page.savedPreferences).toEqual(updatedPreferences);
+    expect(page.editor()).toBeNull();
+  });
+
+  it("keeps a focused editor open and reports API failures in place", () => {
+    api.updatePreferences.mockReturnValue(
+      throwError(() => new Error("request failed")),
+    );
+    const page = TestBed.createComponent(AccountPage).componentInstance;
+    page.openEditor("preferences");
+
+    page.savePrefs();
+
+    expect(page.editor()).toBe("preferences");
+    expect(page.editorBusy()).toBe(false);
+    expect(page.editorError()).toBe("Please try again.");
   });
 });

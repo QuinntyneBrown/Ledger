@@ -845,89 +845,122 @@ export class BadgesPage {
   }
 }
 
+type AccountEditor =
+  | "profile"
+  | "height"
+  | "password"
+  | "preferences"
+  | "reminders"
+  | "data"
+  | "signout";
+
+type ProfileValue = { name: string; email: string; heightCm: number | null };
+
 @Component({
   selector: "ledger-account",
   standalone: true,
-  imports: [A11yModule, CommonModule, FormsModule, ReactiveFormsModule, RouterLink, EmptyStateComponent],
+  imports: [
+    A11yModule,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterLink,
+    EmptyStateComponent,
+  ],
   template: `<header class="page-header app-route-header">
       <h1 class="app-header-title">Profile</h1>
-      <button class="au-btn au-btn--text au-btn--sm" type="button" (click)="manage.set(!manage())" [attr.aria-label]="manage() ? 'Close edit forms' : 'Edit profile'"><svg class="au-icon"><use [attr.href]="manage() ? '#i-x' : '#i-edit'" /></svg>{{ manage() ? "Close" : "Edit" }}</button>
+      <button class="au-btn au-btn--text au-btn--sm" type="button" (click)="openEditor('profile')" aria-label="Edit profile"><svg class="au-icon"><use href="#i-edit" /></svg>Edit</button>
     </header>
     @if (loading()) { <div class="au-skeleton" style="height:256px"></div><div class="au-skeleton au-mt-6" style="height:360px"></div> } @else if (error()) { <ledger-empty-state title="We couldn’t load your profile" [message]="error()"><button class="au-btn au-btn--primary au-mt-4" type="button" (click)="load()">Try again</button></ledger-empty-state> } @else {
     <section class="au-card profile-hero au-rise au-rise-1">
-      <div class="profile-avatar"><span class="au-avatar au-avatar--lg">{{ profile.controls.name.value.charAt(0).toUpperCase() || "L" }}</span><label class="au-icon-btn profile-camera" aria-label="Change photo"><svg class="au-icon"><use href="#i-camera" /></svg><input class="sr-only" type="file" accept="image/jpeg,image/png,image/webp" (change)="uploadAvatar($event)" /></label></div>
-      <div><h2 class="au-display">{{ profile.controls.name.value || "Ledger member" }}</h2><p class="au-mono au-text-mid">{{ profile.controls.email.value }}</p></div>
-      <div class="au-row-flex au-gap-2 au-wrap"><span class="au-chip"><svg class="au-icon"><use href="#i-ruler" /></svg>{{ profile.controls.heightCm.value || "—" }} cm</span><span class="au-chip"><svg class="au-icon"><use href="#i-scale" /></svg>{{ prefs.controls.unit.value }}</span></div>
+      <div class="profile-avatar"><span class="au-avatar au-avatar--lg">{{ savedProfile.name.charAt(0).toUpperCase() || "L" }}</span><button class="au-icon-btn profile-camera" type="button" aria-label="Change photo" (click)="openEditor('profile')"><svg class="au-icon"><use href="#i-camera" /></svg></button></div>
+      <div><h2 class="au-display">{{ savedProfile.name || "Ledger member" }}</h2><p class="au-mono au-text-mid">{{ savedProfile.email }}</p></div>
+      <div class="au-row-flex au-gap-2 au-wrap"><span class="au-chip"><svg class="au-icon"><use href="#i-ruler" /></svg>{{ savedProfile.heightCm || "—" }} cm</span><span class="au-chip"><svg class="au-icon"><use href="#i-scale" /></svg>{{ savedPreferences?.unit || "Kg" }}</span></div>
     </section>
     @if (journey(); as d) { <div class="app-section-title"><h2>Your journey</h2><a routerLink="/trends">Trends</a></div><section class="dash-stats"><article class="au-card dash-ministat"><span class="au-stat-label">Start</span><strong class="au-stat-value">{{ display.fromKg(d.progress.startWeightKg) | number: "1.0-1" }}</strong><span class="au-caption">{{ display.unitLabel }}</span></article><article class="au-card dash-ministat"><span class="au-stat-label">Current</span><strong class="au-stat-value brand-value">{{ display.fromKg(d.progress.currentWeightKg) | number: "1.0-1" }}</strong><span class="au-caption">{{ display.unitLabel }}</span></article><article class="au-card dash-ministat"><span class="au-stat-label">Goal</span><strong class="au-stat-value">{{ display.fromKg(d.progress.goalWeightKg) | number: "1.0-1" }}</strong><span class="au-caption">{{ display.unitLabel }}</span></article></section><div class="au-card au-card--pad-sm journey-summary"><span class="au-chip au-chip--good"><svg class="au-icon"><use href="#i-trending-down" /></svg>{{ display.fromKg(d.progress.currentWeightKg - d.progress.startWeightKg) | number: "1.1-1" }} {{ display.unitLabel }}</span><span class="au-caption">{{ d.progress.percentComplete | number: "1.0-0" }}% of the way to your goal — {{ display.fromKg(d.progress.remainingKg) | number: "1.1-1" }} {{ display.unitLabel }} to go.</span></div> }
+
     <div class="set-group account-overview"><div class="set-group-title">Account details</div><div class="au-card au-card--flush">
-      <button class="set-row au-row--interactive overview-row" type="button" (click)="manage.set(true)"><span class="set-row-icon"><svg class="au-icon"><use href="#i-user" /></svg></span><span class="set-row-main"><span class="set-row-desc">Name</span><span class="set-row-label">{{ profile.controls.name.value }}</span></span><svg class="au-icon au-text-lo"><use href="#i-edit" /></svg></button>
-      <button class="set-row au-row--interactive overview-row" type="button" (click)="manage.set(true)"><span class="set-row-icon"><svg class="au-icon"><use href="#i-mail" /></svg></span><span class="set-row-main"><span class="set-row-desc">Email</span><span class="set-row-label">{{ profile.controls.email.value }}</span></span><svg class="au-icon au-text-lo"><use href="#i-edit" /></svg></button>
-      <button class="set-row au-row--interactive overview-row" type="button" (click)="openHeightEdit()"><span class="set-row-icon"><svg class="au-icon"><use href="#i-ruler" /></svg></span><span class="set-row-main"><span class="set-row-desc">Height</span><span class="set-row-label">{{ profile.controls.heightCm.value || "—" }} cm</span></span><svg class="au-icon au-text-lo"><use href="#i-edit" /></svg></button>
+      <button class="set-row au-row--interactive overview-row" type="button" (click)="openEditor('profile')"><span class="set-row-icon"><svg class="au-icon"><use href="#i-user" /></svg></span><span class="set-row-main"><span class="set-row-desc">Name</span><span class="set-row-label">{{ savedProfile.name }}</span></span><svg class="au-icon au-text-lo"><use href="#i-edit" /></svg></button>
+      <button class="set-row au-row--interactive overview-row" type="button" (click)="openEditor('profile')"><span class="set-row-icon"><svg class="au-icon"><use href="#i-mail" /></svg></span><span class="set-row-main"><span class="set-row-desc">Email</span><span class="set-row-label">{{ savedProfile.email }}</span></span><svg class="au-icon au-text-lo"><use href="#i-edit" /></svg></button>
+      <button class="set-row au-row--interactive overview-row" type="button" (click)="openHeightEdit()"><span class="set-row-icon"><svg class="au-icon"><use href="#i-ruler" /></svg></span><span class="set-row-main"><span class="set-row-desc">Height</span><span class="set-row-label">{{ savedProfile.heightCm || "—" }} cm</span></span><svg class="au-icon au-text-lo"><use href="#i-edit" /></svg></button>
     </div></div>
+
     <div class="set-group account-overview"><div class="set-group-title">Security</div><div class="au-card au-card--flush">
-      <button class="set-row au-row--interactive overview-row" type="button" (click)="manage.set(true)"><span class="set-row-icon"><svg class="au-icon"><use href="#i-lock" /></svg></span><span class="set-row-main"><span class="set-row-label">Change password</span><span class="set-row-desc">Keep your account secure</span></span><svg class="au-icon au-text-lo"><use href="#i-chevron-right" /></svg></button>
-      <button class="set-row au-row--interactive overview-row" type="button" (click)="signOut()"><span class="set-row-icon"><svg class="au-icon"><use href="#i-logout" /></svg></span><span class="set-row-main"><span class="set-row-label">Sign out</span><span class="set-row-desc">Sign out on this device</span></span><svg class="au-icon au-text-lo"><use href="#i-chevron-right" /></svg></button>
+      <button class="set-row au-row--interactive overview-row" type="button" (click)="openEditor('password')"><span class="set-row-icon"><svg class="au-icon"><use href="#i-lock" /></svg></span><span class="set-row-main"><span class="set-row-label">Change password</span><span class="set-row-desc">Update your credentials</span></span><svg class="au-icon au-text-lo"><use href="#i-chevron-right" /></svg></button>
+      <button class="set-row au-row--interactive overview-row" type="button" (click)="openEditor('signout')"><span class="set-row-icon"><svg class="au-icon"><use href="#i-logout" /></svg></span><span class="set-row-main"><span class="set-row-label">Sign out</span><span class="set-row-desc">Sign out on this device</span></span><svg class="au-icon au-text-lo"><use href="#i-chevron-right" /></svg></button>
     </div></div>
-    <div class="set-group account-overview"><div class="set-group-title">Preferences & data</div><div class="au-card au-card--flush"><button class="set-row au-row--interactive overview-row" type="button" (click)="manage.set(true)"><span class="set-row-icon"><svg class="au-icon"><use href="#i-settings" /></svg></span><span class="set-row-main"><span class="set-row-label">Preferences</span><span class="set-row-desc">Units, appearance and reminders</span></span><svg class="au-icon au-text-lo"><use href="#i-chevron-right" /></svg></button><button class="set-row au-row--interactive overview-row" type="button" (click)="exportData()"><span class="set-row-icon"><svg class="au-icon"><use href="#i-download" /></svg></span><span class="set-row-main"><span class="set-row-label">Export data</span><span class="set-row-desc">Download all entries as CSV</span></span><svg class="au-icon au-text-lo"><use href="#i-download" /></svg></button></div></div>
-    @if (manage()) {
-    <section class="settings-grid">
-      <article class="au-card">
-        <h2 class="au-card-title"><svg class="au-icon"><use href="#i-user" /></svg>Profile</h2>
-        <form [formGroup]="profile" (ngSubmit)="saveProfile()">
-          <label class="au-field"><span class="au-label">Name</span><div class="au-input-wrap"><svg class="au-icon"><use href="#i-user" /></svg><input class="au-input" formControlName="name" autocomplete="name" /></div></label>
-          <label class="au-field"><span class="au-label">Email</span><div class="au-input-wrap"><svg class="au-icon"><use href="#i-mail" /></svg><input class="au-input" type="email" formControlName="email" autocomplete="email" /></div></label>
-          <label class="au-field"><span class="au-label">Height</span><div class="au-input-wrap"><svg class="au-icon"><use href="#i-ruler" /></svg><input class="au-input" type="number" formControlName="heightCm" min="50" max="272" /><span class="au-input-affix">cm</span></div></label>
-          <label class="au-field"><span class="au-label">Profile photo</span><div class="au-input-wrap"><input class="au-input" type="file" accept="image/jpeg,image/png,image/webp" (change)="uploadAvatar($event)" /></div></label>
-          <button class="au-btn au-btn--primary au-btn--lg">Save profile</button>
-        </form>
-      </article>
-      <article class="au-card">
-        <h2 class="au-card-title"><svg class="au-icon"><use href="#i-moon" /></svg>Appearance & units</h2>
-        <form [formGroup]="prefs" (ngSubmit)="savePrefs()">
-          <label class="au-field"><span class="au-label">Unit</span><div class="au-select-wrap"><select class="au-select" formControlName="unit"><option>Kg</option><option>Lbs</option></select><svg class="au-icon"><use href="#i-chevron-down" /></svg></div></label>
-          <label class="au-field"><span class="au-label">Theme</span><div class="au-select-wrap"><select class="au-select" formControlName="theme"><option>System</option><option>Dark</option><option>Light</option></select><svg class="au-icon"><use href="#i-chevron-down" /></svg></div></label>
-          <label class="au-field"><span class="au-label">Week starts</span><div class="au-select-wrap"><select class="au-select" formControlName="weekStartsOn"><option>Monday</option><option>Sunday</option></select><svg class="au-icon"><use href="#i-chevron-down" /></svg></div></label>
-          <button class="au-btn au-btn--primary au-btn--lg">Save preferences</button>
-        </form>
-      </article>
-      <article class="au-card">
-        <h2 class="au-card-title"><svg class="au-icon"><use href="#i-bell" /></svg>Daily reminder</h2>
-        <form [formGroup]="reminder" (ngSubmit)="saveReminder()">
-          <div class="au-row-flex au-between"><span><strong>Enable reminder</strong><span class="au-caption" style="display:block">A quiet daily prompt</span></span><label class="au-switch"><input type="checkbox" formControlName="enabled" /><span class="au-switch-track"></span><span class="au-switch-thumb"></span></label></div>
-          <label class="au-field"><span class="au-label">Time</span><div class="au-input-wrap"><svg class="au-icon"><use href="#i-clock" /></svg><input class="au-input" type="time" formControlName="time" /></div></label>
-          <div class="au-row-flex au-between"><span><strong>Quiet hours</strong><span class="au-caption" style="display:block">Pause reminders overnight</span></span><label class="au-switch"><input type="checkbox" formControlName="quietHoursEnabled" /><span class="au-switch-track"></span><span class="au-switch-thumb"></span></label></div>
-          <div class="form-row">
-            <label class="au-field"><span class="au-label">From</span><div class="au-input-wrap"><input class="au-input" type="time" formControlName="quietHoursStart" /></div></label><label class="au-field"><span class="au-label">To</span><div class="au-input-wrap"><input class="au-input" type="time" formControlName="quietHoursEnd" /></div></label>
-          </div>
-          <button class="au-btn au-btn--primary au-btn--lg">Save reminder</button>
-        </form>
-        <button class="au-btn au-btn--outlined" type="button" (click)="enablePush()"><svg class="au-icon"><use href="#i-bell" /></svg>Enable browser notifications</button>
-      </article>
-      <article class="au-card">
-        <h2 class="au-card-title"><svg class="au-icon"><use href="#i-lock" /></svg>Security</h2>
-        <form [formGroup]="password" (ngSubmit)="changePassword()">
-          <label class="au-field"><span class="au-label">Current password</span><div class="au-input-wrap"><svg class="au-icon"><use href="#i-lock" /></svg><input class="au-input" type="password" formControlName="currentPassword" autocomplete="current-password" /></div></label>
-          <label class="au-field"><span class="au-label">New password</span><div class="au-input-wrap"><svg class="au-icon"><use href="#i-lock" /></svg><input class="au-input" type="password" formControlName="newPassword" autocomplete="new-password" /></div><span class="au-help">At least 8 characters.</span></label>
-          <button class="au-btn au-btn--primary au-btn--lg" [disabled]="password.invalid">Change password</button>
-        </form>
-      </article>
-      <article class="au-card danger-zone">
-        <h2 class="au-card-title"><svg class="au-icon"><use href="#i-download" /></svg>Your data</h2>
-        <button class="au-btn au-btn--outlined" type="button" (click)="exportData()"><svg class="au-icon"><use href="#i-download" /></svg>Export CSV</button>
-        <hr class="au-hairline" />
-        <label class="au-field"><span class="au-label">Type DELETE to confirm destructive actions</span><div class="au-input-wrap"><svg class="au-icon"><use href="#i-alert-triangle" /></svg><input class="au-input" [(ngModel)]="confirmation" [ngModelOptions]="{ standalone: true }" /></div></label>
-        <button class="au-btn au-btn--danger" [disabled]="confirmation !== 'DELETE'" (click)="erase()"><svg class="au-icon"><use href="#i-trash" /></svg>Erase tracking data</button>
-        <button class="au-btn au-btn--danger" [disabled]="confirmation !== 'DELETE'" (click)="removeAccount()"><svg class="au-icon"><use href="#i-trash" /></svg>Delete account permanently</button>
-      </article>
-    </section>
+
+    <div class="set-group account-overview"><div class="set-group-title">Preferences & data</div><div class="au-card au-card--flush">
+      <button class="set-row au-row--interactive overview-row" type="button" (click)="openEditor('preferences')"><span class="set-row-icon"><svg class="au-icon"><use href="#i-settings" /></svg></span><span class="set-row-main"><span class="set-row-label">Appearance & units</span><span class="set-row-desc">{{ savedPreferences?.unit || "Kg" }} · {{ savedPreferences?.theme || "System" }} · {{ savedPreferences?.weekStartsOn || "Monday" }} weeks</span></span><svg class="au-icon au-text-lo"><use href="#i-chevron-right" /></svg></button>
+      <button class="set-row au-row--interactive overview-row" type="button" (click)="openEditor('reminders')"><span class="set-row-icon"><svg class="au-icon"><use href="#i-bell" /></svg></span><span class="set-row-main"><span class="set-row-label">Reminders</span><span class="set-row-desc">{{ savedPreferences?.reminderEnabled ? "Daily at " + savedPreferences?.reminderTime?.slice(0, 5) : "Off" }}</span></span><svg class="au-icon au-text-lo"><use href="#i-chevron-right" /></svg></button>
+      <button class="set-row au-row--interactive overview-row" type="button" (click)="exportData()"><span class="set-row-icon"><svg class="au-icon"><use href="#i-download" /></svg></span><span class="set-row-main"><span class="set-row-label">Export data</span><span class="set-row-desc">Download all entries as CSV</span></span><svg class="au-icon au-text-lo"><use href="#i-download" /></svg></button>
+      <button class="set-row au-row--interactive overview-row" type="button" (click)="openEditor('data')"><span class="set-row-icon danger-icon"><svg class="au-icon"><use href="#i-trash" /></svg></span><span class="set-row-main"><span class="set-row-label">Data & privacy</span><span class="set-row-desc">Erase tracking data or delete your account</span></span><svg class="au-icon au-text-lo"><use href="#i-chevron-right" /></svg></button>
+    </div></div>
+
+    @if (editor()) {
+      <div class="au-scrim is-open" (click)="closeEditor()">
+        <section class="au-dialog settings-dialog" role="dialog" aria-modal="true" [attr.aria-label]="editorTitle()" cdkTrapFocus [cdkTrapFocusAutoCapture]="true" (keydown.escape)="closeEditor()" (click)="$event.stopPropagation()">
+          <button class="au-icon-btn au-dialog-close" type="button" aria-label="Close" [disabled]="editorBusy()" (click)="closeEditor()"><svg class="au-icon"><use href="#i-x" /></svg></button>
+          @switch (editor()) {
+            @case ("profile") {
+              <div class="au-dialog-icon"><svg class="au-icon"><use href="#i-user" /></svg></div><h2 class="au-dialog-title">Edit profile</h2><p class="au-dialog-body">Update the identity shown across your ledger.</p>
+              <form [formGroup]="profile" (ngSubmit)="saveProfile()">
+                <label class="au-field"><span class="au-label">Name</span><div class="au-input-wrap"><svg class="au-icon"><use href="#i-user" /></svg><input class="au-input" formControlName="name" autocomplete="name" /></div></label>
+                <label class="au-field"><span class="au-label">Email</span><div class="au-input-wrap"><svg class="au-icon"><use href="#i-mail" /></svg><input class="au-input" type="email" formControlName="email" autocomplete="email" /></div><span class="au-help">Changing your email requires verification.</span></label>
+                <label class="au-field"><span class="au-label">Profile photo</span><input class="au-input file-input" type="file" accept="image/jpeg,image/png,image/webp" (change)="uploadAvatar($event)" /></label>
+                <div class="au-dialog-actions"><button class="au-btn au-btn--outlined" type="button" (click)="closeEditor()">Cancel</button><button class="au-btn au-btn--primary" [disabled]="profile.invalid || editorBusy()">{{ editorBusy() ? "Saving…" : "Save profile" }}</button></div>
+              </form>
+            }
+            @case ("height") {
+              <div class="au-dialog-icon"><svg class="au-icon"><use href="#i-ruler" /></svg></div><h2 class="au-dialog-title">Edit height</h2><p class="au-dialog-body">Your height is used to calculate your BMI.</p>
+              <label class="au-field" [class.is-error]="editorError()"><span class="au-label">Height</span><div class="au-input-wrap"><svg class="au-icon"><use href="#i-ruler" /></svg><input class="au-input" type="number" min="50" max="272" [(ngModel)]="heightDraft" [ngModelOptions]="{ standalone: true }" (ngModelChange)="editorError.set('')" (keyup.enter)="saveHeight()" /><span class="au-input-affix">cm</span></div></label>
+              <div class="au-dialog-actions"><button class="au-btn au-btn--outlined" type="button" (click)="closeEditor()">Cancel</button><button class="au-btn au-btn--primary" type="button" [disabled]="!heightIsValid() || editorBusy()" (click)="saveHeight()">{{ editorBusy() ? "Saving…" : "Save height" }}</button></div>
+            }
+            @case ("password") {
+              <div class="au-dialog-icon"><svg class="au-icon"><use href="#i-shield" /></svg></div><h2 class="au-dialog-title">Change password</h2><p class="au-dialog-body">Choose a fresh password you don’t use elsewhere.</p>
+              <form [formGroup]="password" (ngSubmit)="changePassword()">
+                <label class="au-field"><span class="au-label">Current password</span><div class="au-input-wrap"><svg class="au-icon"><use href="#i-lock" /></svg><input class="au-input" type="password" formControlName="currentPassword" autocomplete="current-password" /></div></label>
+                <label class="au-field"><span class="au-label">New password</span><div class="au-input-wrap"><svg class="au-icon"><use href="#i-lock" /></svg><input class="au-input" type="password" formControlName="newPassword" autocomplete="new-password" /></div><div class="pw-meter" role="img" [attr.aria-label]="passwordHelp()">@for (n of [1,2,3,4]; track n) { <i [class.is-on]="n <= passwordScore()"></i> }</div><span class="au-help">{{ passwordHelp() }}</span></label>
+                <label class="au-field" [class.is-error]="password.controls.confirmPassword.dirty && !passwordsMatch()"><span class="au-label">Confirm new password</span><div class="au-input-wrap"><svg class="au-icon"><use href="#i-lock" /></svg><input class="au-input" type="password" formControlName="confirmPassword" autocomplete="new-password" /></div>@if (password.controls.confirmPassword.dirty && !passwordsMatch()) { <span class="au-help is-error">Passwords must match.</span> }</label>
+                <div class="au-dialog-actions"><button class="au-btn au-btn--outlined" type="button" (click)="closeEditor()">Cancel</button><button class="au-btn au-btn--primary" [disabled]="!passwordIsValid() || editorBusy()">{{ editorBusy() ? "Saving…" : "Save password" }}</button></div>
+              </form>
+            }
+            @case ("preferences") {
+              <div class="au-dialog-icon"><svg class="au-icon"><use href="#i-settings" /></svg></div><h2 class="au-dialog-title">Appearance & units</h2><p class="au-dialog-body">Choose how measurements and the app appear.</p>
+              <form [formGroup]="prefs" (ngSubmit)="savePrefs()">
+                <label class="au-field"><span class="au-label">Weight unit</span><div class="au-select-wrap"><select class="au-select" formControlName="unit"><option>Kg</option><option>Lbs</option></select><svg class="au-icon"><use href="#i-chevron-down" /></svg></div></label>
+                <label class="au-field"><span class="au-label">Theme</span><div class="au-select-wrap"><select class="au-select" formControlName="theme"><option>System</option><option>Dark</option><option>Light</option></select><svg class="au-icon"><use href="#i-chevron-down" /></svg></div></label>
+                <label class="au-field"><span class="au-label">Week starts on</span><div class="au-select-wrap"><select class="au-select" formControlName="weekStartsOn"><option>Monday</option><option>Sunday</option></select><svg class="au-icon"><use href="#i-chevron-down" /></svg></div></label>
+                <div class="au-dialog-actions"><button class="au-btn au-btn--outlined" type="button" (click)="closeEditor()">Cancel</button><button class="au-btn au-btn--primary" [disabled]="prefs.invalid || editorBusy()">{{ editorBusy() ? "Saving…" : "Save preferences" }}</button></div>
+              </form>
+            }
+            @case ("reminders") {
+              <div class="au-dialog-icon"><svg class="au-icon"><use href="#i-bell" /></svg></div><h2 class="au-dialog-title">Reminders</h2><p class="au-dialog-body">Set a quiet daily prompt that respects your schedule.</p>
+              <form [formGroup]="reminder" (ngSubmit)="saveReminder()">
+                <div class="dialog-setting-row"><span><strong>Daily reminder</strong><span class="au-caption">A gentle prompt to weigh in</span></span><label class="au-switch"><input type="checkbox" formControlName="enabled" aria-label="Daily reminder" /><span class="au-switch-track"></span><span class="au-switch-thumb"></span></label></div>
+                <label class="au-field"><span class="au-label">Reminder time</span><div class="au-input-wrap"><svg class="au-icon"><use href="#i-clock" /></svg><input class="au-input" type="time" formControlName="time" /></div></label>
+                <div class="dialog-setting-row"><span><strong>Quiet hours</strong><span class="au-caption">Pause reminders overnight</span></span><label class="au-switch"><input type="checkbox" formControlName="quietHoursEnabled" aria-label="Quiet hours" /><span class="au-switch-track"></span><span class="au-switch-thumb"></span></label></div>
+                <div class="form-row"><label class="au-field"><span class="au-label">From</span><div class="au-input-wrap"><input class="au-input" type="time" formControlName="quietHoursStart" /></div></label><label class="au-field"><span class="au-label">To</span><div class="au-input-wrap"><input class="au-input" type="time" formControlName="quietHoursEnd" /></div></label></div>
+                <button class="au-btn au-btn--text au-btn--block" type="button" [disabled]="editorBusy()" (click)="enablePush()"><svg class="au-icon"><use href="#i-bell" /></svg>Enable browser notifications</button>
+                <div class="au-dialog-actions"><button class="au-btn au-btn--outlined" type="button" (click)="closeEditor()">Cancel</button><button class="au-btn au-btn--primary" [disabled]="reminder.invalid || editorBusy()">{{ editorBusy() ? "Saving…" : "Save reminders" }}</button></div>
+              </form>
+            }
+            @case ("data") {
+              <div class="au-dialog-icon is-danger"><svg class="au-icon"><use href="#i-alert-triangle" /></svg></div><h2 class="au-dialog-title">Data & privacy</h2><p class="au-dialog-body">These actions permanently remove data and cannot be undone.</p>
+              <label class="au-field"><span class="au-label">Type <span class="au-mono">DELETE</span> to confirm</span><div class="au-input-wrap"><input class="au-input" [(ngModel)]="confirmation" [ngModelOptions]="{ standalone: true }" autocomplete="off" placeholder="DELETE" /></div></label>
+              <div class="dialog-danger-actions"><button class="au-btn au-btn--danger" type="button" [disabled]="confirmation !== 'DELETE' || editorBusy()" (click)="erase()"><svg class="au-icon"><use href="#i-trash" /></svg>Erase tracking data</button><button class="au-btn au-btn--danger" type="button" [disabled]="confirmation !== 'DELETE' || editorBusy()" (click)="removeAccount()"><svg class="au-icon"><use href="#i-trash" /></svg>Delete account permanently</button></div>
+              <button class="au-btn au-btn--outlined au-btn--block" type="button" (click)="closeEditor()">Cancel</button>
+            }
+            @case ("signout") {
+              <div class="au-dialog-icon"><svg class="au-icon"><use href="#i-logout" /></svg></div><h2 class="au-dialog-title">Sign out?</h2><p class="au-dialog-body">You’ll need to sign back in to log weigh-ins. Your data stays saved.</p>
+              <div class="au-dialog-actions"><button class="au-btn au-btn--outlined" type="button" (click)="closeEditor()">Cancel</button><button class="au-btn au-btn--primary" type="button" [disabled]="editorBusy()" (click)="signOut()">{{ editorBusy() ? "Signing out…" : "Sign out" }}</button></div>
+            }
+          }
+          @if (editorError()) { <div class="au-banner au-banner--bad editor-error" role="alert"><svg class="au-icon"><use href="#i-alert-circle" /></svg><div class="au-banner-body"><div class="au-banner-text">{{ editorError() }}</div></div></div> }
+        </section>
+      </div>
     }
-    @if (heightEdit()) {
-      <div class="au-scrim is-open" (click)="closeHeightEdit()"><section class="au-dialog" role="dialog" aria-modal="true" aria-labelledby="edit-height-title" aria-describedby="edit-height-description" cdkTrapFocus [cdkTrapFocusAutoCapture]="true" (keydown.escape)="closeHeightEdit()" (click)="$event.stopPropagation()"><div class="au-dialog-icon"><svg class="au-icon"><use href="#i-ruler" /></svg></div><h2 id="edit-height-title" class="au-dialog-title">Edit height</h2><p id="edit-height-description" class="au-dialog-body">Your height is used to calculate your BMI.</p><label class="au-field" [class.is-error]="heightError()"><span class="au-label">Height</span><div class="au-input-wrap"><svg class="au-icon"><use href="#i-ruler" /></svg><input class="au-input" type="number" min="50" max="272" [(ngModel)]="heightDraft" [ngModelOptions]="{ standalone: true }" (ngModelChange)="heightError.set('')" (keyup.enter)="saveHeight()" /><span class="au-input-affix">cm</span></div>@if (heightError()) { <span class="au-help is-error" role="alert">{{ heightError() }}</span> }</label><div class="au-dialog-actions"><button class="au-btn au-btn--outlined" type="button" (click)="closeHeightEdit()">Cancel</button><button class="au-btn au-btn--primary" type="button" [disabled]="!heightIsValid() || heightBusy()" (click)="saveHeight()">{{ heightBusy() ? "Saving…" : "Save height" }}</button></div></section></div>
-    }
-    @if (message()) {
-      <div class="au-toast-region app-toast-region"><div class="au-toast au-toast--success" role="status"><svg class="au-icon au-toast-icon"><use href="#i-check-circle" /></svg><span class="au-toast-msg">{{ message() }}</span></div></div>
-    }
+    @if (message()) { <div class="au-toast-region app-toast-region"><div class="au-toast" [class.au-toast--success]="messageKind() === 'success'" [class.au-toast--error]="messageKind() === 'error'" [attr.role]="messageKind() === 'error' ? 'alert' : 'status'"><svg class="au-icon au-toast-icon"><use [attr.href]="messageKind() === 'error' ? '#i-alert-circle' : '#i-check-circle'" /></svg><span class="au-toast-msg">{{ message() }}</span></div></div> }
     }`,
 })
 export class AccountPage {
@@ -935,16 +968,19 @@ export class AccountPage {
   private api = inject(LedgerApi);
   readonly display = inject(DisplayPreferencesService);
   private router = inject(Router);
+  private editorTrigger: HTMLElement | null = null;
   confirmation = "";
   message = signal("");
+  messageKind = signal<"success" | "error">("success");
   loading = signal(true);
   error = signal("");
-  manage = signal(false);
-  heightEdit = signal(false);
-  heightBusy = signal(false);
-  heightError = signal("");
+  editor = signal<AccountEditor | null>(null);
+  editorBusy = signal(false);
+  editorError = signal("");
   heightDraft: number | null = null;
   journey = signal<Dashboard | null>(null);
+  savedProfile: ProfileValue = { name: "", email: "", heightCm: null };
+  savedPreferences: Preferences | null = null;
   profile = this.fb.nonNullable.group({
     name: ["", Validators.required],
     email: ["", [Validators.required, Validators.email]],
@@ -952,19 +988,27 @@ export class AccountPage {
   });
   password = this.fb.nonNullable.group({
     currentPassword: ["", Validators.required],
-    newPassword: ["", [Validators.required, Validators.minLength(8)]],
+    newPassword: [
+      "",
+      [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern(/^(?=.*\d)(?=.*[^A-Za-z0-9]).+$/),
+      ],
+    ],
+    confirmPassword: ["", Validators.required],
   });
   prefs = this.fb.nonNullable.group({
-    unit: ["Kg"],
-    theme: ["System"],
-    weekStartsOn: ["Monday"],
+    unit: ["Kg", Validators.required],
+    theme: ["System", Validators.required],
+    weekStartsOn: ["Monday", Validators.required],
   });
   reminder = this.fb.nonNullable.group({
     enabled: [false],
-    time: ["08:00"],
+    time: ["08:00", Validators.required],
     quietHoursEnabled: [false],
-    quietHoursStart: ["22:00"],
-    quietHoursEnd: ["07:00"],
+    quietHoursStart: ["22:00", Validators.required],
+    quietHoursEnd: ["07:00", Validators.required],
   });
   constructor() {
     this.load();
@@ -972,39 +1016,86 @@ export class AccountPage {
   load(): void {
     this.loading.set(true);
     this.error.set("");
-    forkJoin({ journey: this.api.dashboard(), profile: this.api.profile(), preferences: this.api.preferences() }).subscribe({ next: ({ journey, profile: p, preferences }) => {
-      const profile = p as { name: string; email: string; heightCm: number | null };
-      this.journey.set(journey);
-      this.profile.patchValue({
-        name: profile.name,
-        email: profile.email,
-        heightCm: profile.heightCm,
+    forkJoin({
+      journey: this.api.dashboard(),
+      profile: this.api.profile(),
+      preferences: this.api.preferences(),
+    }).subscribe({
+      next: ({ journey, profile: value, preferences }) => {
+        const profile = value as ProfileValue;
+        this.journey.set(journey);
+        this.savedProfile = { ...profile };
+        this.savedPreferences = { ...preferences };
+        this.resetProfileDraft();
+        this.resetPreferenceDrafts();
+        this.loading.set(false);
+      },
+      error: (e) => {
+        this.error.set(this.api.problem(e));
+        this.loading.set(false);
+      },
+    });
+  }
+  openEditor(editor: AccountEditor): void {
+    this.editorTrigger =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+    this.editorError.set("");
+    this.editorBusy.set(false);
+    this.message.set("");
+    this.confirmation = "";
+    if (editor === "profile") this.resetProfileDraft();
+    if (editor === "height") this.heightDraft = this.savedProfile.heightCm;
+    if (editor === "preferences" || editor === "reminders")
+      this.resetPreferenceDrafts();
+    if (editor === "password")
+      this.password.reset({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
       });
-      this.prefs.patchValue(preferences);
-      this.reminder.patchValue({
-        enabled: preferences.reminderEnabled,
-        time: preferences.reminderTime.slice(0, 5),
-        quietHoursEnabled: preferences.quietHoursEnabled,
-        quietHoursStart: preferences.quietHoursStart.slice(0, 5),
-        quietHoursEnd: preferences.quietHoursEnd.slice(0, 5),
-      });
-      this.loading.set(false);
-    }, error: (e) => { this.error.set(this.api.problem(e)); this.loading.set(false); } });
+    this.editor.set(editor);
+  }
+  closeEditor(force = false): void {
+    if (this.editorBusy() && !force) return;
+    this.editor.set(null);
+    this.editorBusy.set(false);
+    this.editorError.set("");
+    queueMicrotask(() => this.editorTrigger?.focus());
+  }
+  editorTitle(): string {
+    return {
+      profile: "Edit profile",
+      height: "Edit height",
+      password: "Change password",
+      preferences: "Appearance & units",
+      reminders: "Reminders",
+      data: "Data & privacy",
+      signout: "Sign out",
+    }[this.editor() ?? "profile"];
   }
   saveProfile(): void {
-    this.api
-      .updateProfile(this.profile.getRawValue())
-      .subscribe(() => this.message.set("Profile saved"));
+    if (this.profile.invalid) {
+      this.editorError.set("Enter a valid name and email address.");
+      return;
+    }
+    const value = this.profile.getRawValue();
+    this.editorBusy.set(true);
+    this.api.updateProfile(value).subscribe({
+      next: () => {
+        this.savedProfile = { ...value };
+        this.closeEditor(true);
+        this.showMessage("Profile saved");
+      },
+      error: (e) => {
+        this.editorBusy.set(false);
+        this.editorError.set(this.api.problem(e));
+      },
+    });
   }
   openHeightEdit(): void {
-    this.heightDraft = this.profile.controls.heightCm.value;
-    this.heightError.set("");
-    this.heightEdit.set(true);
-  }
-  closeHeightEdit(): void {
-    this.heightEdit.set(false);
-    this.heightBusy.set(false);
-    this.heightError.set("");
+    this.openEditor("height");
   }
   heightIsValid(): boolean {
     return (
@@ -1016,124 +1107,267 @@ export class AccountPage {
   }
   saveHeight(): void {
     if (!this.heightIsValid()) {
-      this.heightError.set("Enter a height between 50 and 272 cm.");
+      this.editorError.set("Enter a height between 50 and 272 cm.");
       return;
     }
     const heightCm = this.heightDraft;
-    this.heightBusy.set(true);
-    this.api
-      .updateProfile({ ...this.profile.getRawValue(), heightCm })
-      .subscribe({
-        next: () => {
-          this.profile.controls.heightCm.setValue(heightCm);
-          this.heightBusy.set(false);
-          this.heightEdit.set(false);
-          this.message.set("Height saved");
-        },
-        error: (e) => {
-          this.heightBusy.set(false);
-          this.heightError.set(this.api.problem(e));
-        },
-      });
+    this.editorBusy.set(true);
+    this.api.updateProfile({ ...this.savedProfile, heightCm }).subscribe({
+      next: () => {
+        this.savedProfile = { ...this.savedProfile, heightCm };
+        this.profile.controls.heightCm.setValue(heightCm);
+        this.closeEditor(true);
+        this.showMessage("Height saved");
+      },
+      error: (e) => {
+        this.editorBusy.set(false);
+        this.editorError.set(this.api.problem(e));
+      },
+    });
   }
   uploadAvatar(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    this.api
-      .uploadAvatar(file)
-      .subscribe(() => this.message.set("Profile photo updated"));
+    this.editorBusy.set(true);
+    this.api.uploadAvatar(file).subscribe({
+      next: () => {
+        this.editorBusy.set(false);
+        this.showMessage("Profile photo updated");
+      },
+      error: (e) => {
+        this.editorBusy.set(false);
+        this.editorError.set(this.api.problem(e));
+      },
+    });
+  }
+  passwordsMatch(): boolean {
+    return (
+      this.password.controls.newPassword.value ===
+      this.password.controls.confirmPassword.value
+    );
+  }
+  passwordIsValid(): boolean {
+    return this.password.valid && this.passwordsMatch();
+  }
+  passwordScore(): number {
+    const value = this.password.controls.newPassword.value;
+    return [
+      value.length >= 8,
+      /[A-Z]/.test(value),
+      /\d/.test(value),
+      /[^A-Za-z0-9]/.test(value),
+    ].filter(Boolean).length;
+  }
+  passwordHelp(): string {
+    if (!this.password.controls.newPassword.value)
+      return "At least 8 characters with a number and symbol.";
+    return this.password.controls.newPassword.valid
+      ? "Strong — password requirements met."
+      : "Add at least 8 characters, a number, and a symbol.";
   }
   changePassword(): void {
+    if (!this.passwordIsValid()) {
+      this.editorError.set("Complete all password fields and make sure they match.");
+      return;
+    }
     const value = this.password.getRawValue();
-    this.api
-      .changePassword(value.currentPassword, value.newPassword)
-      .subscribe({
-        next: () => {
-          this.message.set("Password changed");
-          this.password.reset();
-        },
-        error: (e) => this.message.set(this.api.problem(e)),
-      });
+    this.editorBusy.set(true);
+    this.api.changePassword(value.currentPassword, value.newPassword).subscribe({
+      next: () => {
+        this.password.reset({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
+        this.closeEditor(true);
+        this.showMessage("Password changed");
+      },
+      error: (e) => {
+        this.editorBusy.set(false);
+        this.editorError.set(this.api.problem(e));
+      },
+    });
   }
   enablePush(): void {
     if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
-      this.message.set("Browser notifications are not supported here");
+      this.editorError.set("Browser notifications are not supported here.");
       return;
     }
-    this.api.pushPublicKey().subscribe(async ({ publicKey }) => {
-      if (!publicKey) {
-        this.message.set(
-          "Notifications need VAPID keys configured on the server",
-        );
-        return;
-      }
-      const registration =
-        await navigator.serviceWorker.register("/push-sw.js");
-      const bytes = Uint8Array.from(
-        atob(publicKey.replace(/-/g, "+").replace(/_/g, "/")),
-        (c) => c.charCodeAt(0),
-      );
-      const subscription = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: bytes,
-      });
-      const json = subscription.toJSON();
-      this.api
-        .savePushSubscription({
-          endpoint: subscription.endpoint,
-          p256dh: json.keys?.["p256dh"],
-          auth: json.keys?.["auth"],
-        })
-        .subscribe(() => this.message.set("Browser notifications enabled"));
+    this.editorBusy.set(true);
+    this.api.pushPublicKey().subscribe({
+      next: async ({ publicKey }) => {
+        if (!publicKey) {
+          this.editorBusy.set(false);
+          this.editorError.set(
+            "Notifications need VAPID keys configured on the server.",
+          );
+          return;
+        }
+        try {
+          const registration =
+            await navigator.serviceWorker.register("/push-sw.js");
+          const bytes = Uint8Array.from(
+            atob(publicKey.replace(/-/g, "+").replace(/_/g, "/")),
+            (c) => c.charCodeAt(0),
+          );
+          const subscription = await registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: bytes,
+          });
+          const json = subscription.toJSON();
+          this.api
+            .savePushSubscription({
+              endpoint: subscription.endpoint,
+              p256dh: json.keys?.["p256dh"],
+              auth: json.keys?.["auth"],
+            })
+            .subscribe({
+              next: () => {
+                this.editorBusy.set(false);
+                this.showMessage("Browser notifications enabled");
+              },
+              error: (e) => {
+                this.editorBusy.set(false);
+                this.editorError.set(this.api.problem(e));
+              },
+            });
+        } catch {
+          this.editorBusy.set(false);
+          this.editorError.set("Browser notification permission was not granted.");
+        }
+      },
+      error: (e) => {
+        this.editorBusy.set(false);
+        this.editorError.set(this.api.problem(e));
+      },
     });
   }
   savePrefs(): void {
+    if (this.prefs.invalid) return;
     const value = this.prefs.getRawValue() as Partial<Preferences>;
+    this.editorBusy.set(true);
     this.api
       .updatePreferences({
         ...value,
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       })
-      .subscribe((p) => {
-        this.display.apply(p);
-        this.message.set("Preferences saved");
+      .subscribe({
+        next: (preferences) => {
+          this.savedPreferences = { ...preferences };
+          this.display.apply(preferences);
+          this.closeEditor(true);
+          this.showMessage("Preferences saved");
+        },
+        error: (e) => {
+          this.editorBusy.set(false);
+          this.editorError.set(this.api.problem(e));
+        },
       });
   }
   saveReminder(): void {
-    const v = this.reminder.getRawValue();
+    if (this.reminder.invalid) return;
+    const value = this.reminder.getRawValue();
+    this.editorBusy.set(true);
     this.api
       .scheduleReminder({
-        ...v,
-        time: v.time + ":00",
-        quietHoursStart: v.quietHoursStart + ":00",
-        quietHoursEnd: v.quietHoursEnd + ":00",
+        ...value,
+        time: value.time + ":00",
+        quietHoursStart: value.quietHoursStart + ":00",
+        quietHoursEnd: value.quietHoursEnd + ":00",
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       })
-      .subscribe(() => this.message.set("Reminder saved"));
+      .subscribe({
+        next: (preferences) => {
+          this.savedPreferences = { ...preferences };
+          this.display.apply(preferences);
+          this.closeEditor(true);
+          this.showMessage("Reminders saved");
+        },
+        error: (e) => {
+          this.editorBusy.set(false);
+          this.editorError.set(this.api.problem(e));
+        },
+      });
   }
   erase(): void {
-    this.api.deleteData(this.confirmation).subscribe(() => {
-      this.message.set("Tracking data erased");
-      this.router.navigateByUrl("/onboarding");
+    if (this.confirmation !== "DELETE") return;
+    this.editorBusy.set(true);
+    this.api.deleteData(this.confirmation).subscribe({
+      next: () => {
+        this.closeEditor(true);
+        void this.router.navigateByUrl("/onboarding");
+      },
+      error: (e) => {
+        this.editorBusy.set(false);
+        this.editorError.set(this.api.problem(e));
+      },
     });
   }
   exportData(): void {
-    this.api.exportData().subscribe((blob) => {
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "ledger-export.csv";
-      link.click();
-      URL.revokeObjectURL(url);
+    this.api.exportData().subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "ledger-export.csv";
+        link.click();
+        URL.revokeObjectURL(url);
+        this.showMessage("Export downloaded");
+      },
+      error: (e) => this.showMessage(this.api.problem(e), "error"),
     });
   }
   removeAccount(): void {
-    this.api.deleteAccount(this.confirmation).subscribe(() => {
-      this.message.set("Account deleted");
-      this.router.navigateByUrl("/sign-in");
+    if (this.confirmation !== "DELETE") return;
+    this.editorBusy.set(true);
+    this.api.deleteAccount(this.confirmation).subscribe({
+      next: () => {
+        this.closeEditor(true);
+        void this.router.navigateByUrl("/sign-in");
+      },
+      error: (e) => {
+        this.editorBusy.set(false);
+        this.editorError.set(this.api.problem(e));
+      },
     });
   }
   signOut(): void {
-    this.api.signOut().subscribe(() => this.router.navigateByUrl("/sign-in"));
+    this.editorBusy.set(true);
+    this.api.signOut().subscribe({
+      next: () => {
+        this.closeEditor(true);
+        void this.router.navigateByUrl("/sign-in");
+      },
+      error: (e) => {
+        this.editorBusy.set(false);
+        this.editorError.set(this.api.problem(e));
+      },
+    });
+  }
+  private resetProfileDraft(): void {
+    this.profile.reset({ ...this.savedProfile });
+  }
+  private resetPreferenceDrafts(): void {
+    const preferences = this.savedPreferences;
+    if (!preferences) return;
+    this.prefs.reset({
+      unit: preferences.unit,
+      theme: preferences.theme,
+      weekStartsOn: preferences.weekStartsOn,
+    });
+    this.reminder.reset({
+      enabled: preferences.reminderEnabled,
+      time: preferences.reminderTime.slice(0, 5),
+      quietHoursEnabled: preferences.quietHoursEnabled,
+      quietHoursStart: preferences.quietHoursStart.slice(0, 5),
+      quietHoursEnd: preferences.quietHoursEnd.slice(0, 5),
+    });
+  }
+  private showMessage(
+    message: string,
+    kind: "success" | "error" = "success",
+  ): void {
+    this.messageKind.set(kind);
+    this.message.set(message);
   }
 }
