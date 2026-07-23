@@ -104,16 +104,35 @@ public sealed class WebPushSender(IVapidKeys keys) : IWebPushSender
     }
 }
 
-public sealed class ReminderWorker(IServiceScopeFactory scopes, ILocalDate clock, ILogger<ReminderWorker> logger) : BackgroundService
+public sealed class ReminderWorkerWakeSignal
+{
+    private readonly SemaphoreSlim signal = new(0, 1);
+
+    public void Pulse()
+    {
+        lock (signal)
+        {
+            if (signal.CurrentCount == 0) signal.Release();
+        }
+    }
+
+    public Task WaitAsync(CancellationToken ct) => signal.WaitAsync(ct);
+}
+
+public sealed class ReminderWorker(IServiceScopeFactory scopes, ILocalDate clock, ReminderWorkerWakeSignal wakeSignal, ILogger<ReminderWorker> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        using var timer = new PeriodicTimer(TimeSpan.FromMinutes(1));
-        while (await timer.WaitForNextTickAsync(stoppingToken))
+        while (!stoppingToken.IsCancellationRequested)
         {
+            var keepPolling = false;
             try
             {
-                using var scope = scopes.CreateScope(); var db = scope.ServiceProvider.GetRequiredService<LedgerDbContext>(); var push = scope.ServiceProvider.GetRequiredService<IWebPushSender>(); var prefs = await db.Preferences.Where(x => x.ReminderEnabled).ToListAsync(stoppingToken);
+                using var scope = scopes.CreateScope(); var db = scope.ServiceProvider.GetRequiredService<LedgerDbContext>(); var push = scope.ServiceProvider.GetRequiredService<IWebPushSender>();
+                var prefs = await db.Preferences
+                    .Where(x => x.ReminderEnabled && db.PushSubscriptions.Any(subscription => subscription.UserId == x.UserId))
+                    .ToListAsync(stoppingToken);
+                keepPolling = prefs.Count > 0;
                 foreach (var p in prefs)
                 {
                     TimeZoneInfo zone; try { zone = TimeZoneInfo.FindSystemTimeZoneById(p.TimeZone); } catch { zone = TimeZoneInfo.Utc; }
@@ -122,7 +141,15 @@ public sealed class ReminderWorker(IServiceScopeFactory scopes, ILocalDate clock
                     var subscriptions = await db.PushSubscriptions.Where(x => x.UserId == p.UserId).ToListAsync(stoppingToken); foreach (var s in subscriptions) await push.SendAsync(s, "Time for your weigh-in", "A small honest entry keeps your trend useful.", stoppingToken); if (subscriptions.Count > 0) { p.LastReminderSentOn = today; await db.SaveChangesAsync(stoppingToken); }
                 }
             }
-            catch (Exception ex) { logger.LogError(ex, "Reminder evaluation failed"); }
+            catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) { break; }
+            catch (Exception ex)
+            {
+                keepPolling = true;
+                logger.LogError(ex, "Reminder evaluation failed");
+            }
+
+            if (keepPolling) await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+            else await wakeSignal.WaitAsync(stoppingToken);
         }
     }
 }
@@ -131,12 +158,12 @@ public sealed class SyncRetentionWorker(IServiceScopeFactory scopes, ILocalDate 
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        using var timer = new PeriodicTimer(TimeSpan.FromHours(6));
-        do
+        using var timer = new PeriodicTimer(TimeSpan.FromDays(7));
+        while (await timer.WaitForNextTickAsync(stoppingToken))
         {
             try { using var scope = scopes.CreateScope(); var db = scope.ServiceProvider.GetRequiredService<LedgerDbContext>(); var removed = await db.SyncChanges.Where(x => x.ServerTimestamp < clock.UtcNow.AddDays(-30)).ExecuteDeleteAsync(stoppingToken); if (removed > 0) logger.LogInformation("Expired {Count} synchronization feed records", removed); }
             catch (Exception ex) { logger.LogError(ex, "Synchronization retention cleanup failed"); }
-        } while (await timer.WaitForNextTickAsync(stoppingToken));
+        }
     }
 }
 
@@ -145,7 +172,7 @@ public static class InfrastructureRegistration
     public static IServiceCollection AddLedgerPersistence(this IServiceCollection services, IConfiguration config)
     {
         var connection = config.GetConnectionString("Ledger") ?? "Server=(localdb)\\mssqllocaldb;Database=Ledger;Trusted_Connection=True;TrustServerCertificate=True";
-        services.AddDbContext<LedgerDbContext>(o => o.UseSqlServer(connection));
+        services.AddDbContext<LedgerDbContext>(o => o.UseSqlServer(connection, sql => sql.EnableRetryOnFailure(8, TimeSpan.FromSeconds(15), null)));
         services.AddScoped<ILedgerDbContext>(x => x.GetRequiredService<LedgerDbContext>());
         services.AddSingleton<IPasswordService, PasswordService>();
         services.AddSingleton<ITokenService, TokenService>();
@@ -156,6 +183,6 @@ public static class InfrastructureRegistration
     public static IServiceCollection AddLedgerInfrastructure(this IServiceCollection services, IConfiguration config)
     {
         services.AddLedgerPersistence(config);
-        services.AddSingleton<IVapidKeys, VapidKeyProvider>(); services.AddSingleton<IAppLinks, AppLinks>(); services.AddScoped<IEmailSender, SmtpEmailSender>(); services.AddScoped<IRealtimeNotifier, SignalRNotifier>(); services.AddScoped<IAvatarStore, FileAvatarStore>(); services.AddScoped<IWebPushSender, WebPushSender>(); services.AddHostedService<ReminderWorker>(); services.AddHostedService<SyncRetentionWorker>(); return services;
+        services.AddSingleton<IVapidKeys, VapidKeyProvider>(); services.AddSingleton<IAppLinks, AppLinks>(); services.AddScoped<IEmailSender, SmtpEmailSender>(); services.AddScoped<IRealtimeNotifier, SignalRNotifier>(); services.AddScoped<IAvatarStore, FileAvatarStore>(); services.AddScoped<IWebPushSender, WebPushSender>(); services.AddSingleton<ReminderWorkerWakeSignal>(); services.AddHostedService<ReminderWorker>(); services.AddHostedService<SyncRetentionWorker>(); return services;
     }
 }

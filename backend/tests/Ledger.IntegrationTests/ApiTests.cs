@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Xunit;
@@ -26,6 +27,37 @@ public sealed class LedgerFactory : WebApplicationFactory<Program>
 
 public sealed class ApiTests(LedgerFactory factory) : IClassFixture<LedgerFactory>
 {
+    [Fact]
+    public async Task Reminder_wake_signal_coalesces_pending_notifications()
+    {
+        var signal = new ReminderWorkerWakeSignal();
+        signal.Pulse();
+        signal.Pulse();
+        await signal.WaitAsync(CancellationToken.None);
+
+        using var timeout = new CancellationTokenSource(TimeSpan.FromMilliseconds(50));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => signal.WaitAsync(timeout.Token));
+    }
+
+    [Fact]
+    public void Sql_server_persistence_retries_transient_failures()
+    {
+        var services = new ServiceCollection();
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["ConnectionStrings:Ledger"] = "Server=localhost;Database=Ledger;User ID=test;Password=test;TrustServerCertificate=True",
+            })
+            .Build();
+        services.AddLedgerPersistence(configuration);
+
+        using var provider = services.BuildServiceProvider();
+        using var scope = provider.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<LedgerDbContext>();
+
+        Assert.True(db.Database.CreateExecutionStrategy().RetriesOnFailure);
+    }
+
     // Traces to: L2-083, L2-088
     [Fact]
     public async Task Liveness_and_root_are_available()
