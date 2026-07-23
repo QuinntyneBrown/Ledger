@@ -22,4 +22,7 @@
     <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
     <None Update="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Ledger.CliTests" />
+  </ItemGroup>
 </Project>

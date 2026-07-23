@@ -31,6 +31,8 @@ dotnet run --project backend/src/Ledger.Cli -- database migrate
 $env:LEDGER_CLI_PASSWORD = 'a-strong-temporary-password1!'
 dotnet run --project backend/src/Ledger.Cli -- users add --email admin@example.com --name Administrator
 dotnet run --project backend/src/Ledger.Cli -- users reset-password --email admin@example.com
+$env:LEDGER_SQL_CONNECTION_STRING = '<Azure SQL connection string>'
+dotnet run --project backend/src/Ledger.Cli -- users set-password --username admin@example.com
 ```
 
 Use `--help` at any command level for the full command catalog. See [the CLI operations guide](backend/src/Ledger.Cli/README.md) for local configuration, non-interactive use, Docker, and Azure deployment patterns.

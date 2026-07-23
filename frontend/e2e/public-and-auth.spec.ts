@@ -6,4 +6,16 @@ test('marketing site presents the product and links into the application',async(
 // Traces to: L2-001, L2-002, L2-004, L2-005, L2-064, L2-079
 test('authentication surfaces are keyboard reachable and use the public legal pages',async({page})=>{await page.goto('/sign-in');await expect(page.getByRole('heading',{level:1})).toHaveText('Welcome back');await page.keyboard.press('Tab');await expect(page.locator(':focus')).toBeVisible();await page.getByRole('link',{name:/create an account/i}).click();await expect(page.getByRole('heading',{level:1})).toHaveText('Create your account');await expect(page.getByRole('link',{name:'Terms of Service'})).toHaveAttribute('href','http://localhost:4300/terms');await expect(page.getByRole('link',{name:'Privacy Policy'})).toHaveAttribute('href','http://localhost:4300/privacy');});
 
+test('desktop sign-in card is centered in the viewport',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await page.goto('/sign-in');
+  const card=page.locator('.auth-card');
+  await expect(card).toBeVisible();
+  await card.evaluate(element=>Promise.all(element.getAnimations().map(animation=>animation.finished)));
+  const box=await card.boundingBox();
+  expect(box).not.toBeNull();
+  expect(box!.x+box!.width/2).toBeCloseTo(720,0);
+  expect(box!.y+box!.height/2).toBeCloseTo(450,0);
+});
+
 test('nested application routes load root assets before auth redirects',async({page})=>{const failures:string[]=[];page.on('response',response=>{if(response.status()>=400)failures.push(response.url());});await page.goto('/onboarding/profile');await expect(page.getByRole('heading',{level:1})).toHaveText('Welcome back');expect(failures.filter(url=>/\/(styles\.css|main\.js|scripts\.js)$/.test(url))).toEqual([]);});

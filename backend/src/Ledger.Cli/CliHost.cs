@@ -13,13 +13,25 @@ public static class CliHost
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) { WriteIndented = true };
 
-    public static async Task<int> RunAsync<THandler>(ParseResult parseResult, CancellationToken cancellationToken, Func<THandler, CancellationToken, Task> action)
+    public static Task<int> RunAsync<THandler>(ParseResult parseResult, CancellationToken cancellationToken, Func<THandler, CancellationToken, Task> action)
+        where THandler : notnull
+        => RunAsync(parseResult, cancellationToken, action, requireAzureSql: false);
+
+    public static Task<int> RunAzureSqlAsync<THandler>(ParseResult parseResult, CancellationToken cancellationToken, Func<THandler, CancellationToken, Task> action)
+        where THandler : notnull
+        => RunAsync(parseResult, cancellationToken, action, requireAzureSql: true);
+
+    private static async Task<int> RunAsync<THandler>(
+        ParseResult parseResult,
+        CancellationToken cancellationToken,
+        Func<THandler, CancellationToken, Task> action,
+        bool requireAzureSql)
         where THandler : notnull
     {
         var json = parseResult.GetValue(CliOptions.Json);
         try
         {
-            using var host = Build(parseResult);
+            using var host = Build(parseResult, requireAzureSql);
             using var scope = host.Services.CreateScope();
             await action(scope.ServiceProvider.GetRequiredService<THandler>(), cancellationToken);
             return 0;
@@ -37,7 +49,7 @@ public static class CliHost
         }
     }
 
-    private static IHost Build(ParseResult parseResult)
+    private static IHost Build(ParseResult parseResult, bool requireAzureSql)
     {
         var environment = parseResult.GetValue(CliOptions.Environment)
             ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT")
@@ -50,6 +62,8 @@ public static class CliHost
         });
 
         ApplyConnectionOverride(builder.Configuration, parseResult.GetValue(CliOptions.ConnectionString));
+        if (requireAzureSql)
+            AzureSqlConnectionGuard.EnsureTargetsAzureSql(builder.Configuration.GetConnectionString("Ledger"));
         builder.Logging.ClearProviders();
         if (parseResult.GetValue(CliOptions.Verbose))
             builder.Logging.AddSimpleConsole(options => options.SingleLine = true).SetMinimumLevel(LogLevel.Debug);

@@ -12,6 +12,7 @@ database seed         Idempotently create a representative demo member and data
 users add              Create an account and default preferences
 users list             List active or deleted accounts
 users reset-password   Set a password, unlock the account, and revoke sessions
+users set-password     Set a password in deployed Azure SQL by sign-in username
 users verify-email     Administratively verify an email
 users unlock           Clear a sign-in lockout
 users revoke-sessions  Sign the member out everywhere
@@ -89,9 +90,18 @@ Run migration as a single-instance release step before shifting traffic to a new
 Examples:
 
 ```text
-dotnet /app/cli/ledger.dll users reset-password --email member@example.com --json
+LEDGER_CLI_PASSWORD='<new password>' \
+LEDGER_SQL_CONNECTION_STRING='<Azure SQL connection string>' \
+dotnet /app/cli/ledger.dll users set-password --username member@example.com --json
 dotnet /app/cli/ledger.dll users revoke-sessions --email member@example.com --json
 dotnet /app/cli/ledger.dll data export --email member@example.com --output /tmp/member-export.json --json
 ```
+
+`--username` is the email address used to sign in to Ledger. `users set-password` refuses
+LocalDB and non-Azure SQL connection strings so that it cannot silently update a local
+database. It uses Ledger's production password hasher, clears any login lockout, revokes
+active refresh sessions, and consumes outstanding password-reset tokens. You may pass
+`--password` instead of `LEDGER_CLI_PASSWORD`, but doing so can expose it in shell history
+and process listings.
 
 Treat exported data as sensitive, copy it only to an approved encrypted destination, and delete the short-lived job/container afterward.
