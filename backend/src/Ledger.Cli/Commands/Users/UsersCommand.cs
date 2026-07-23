@@ -10,6 +10,7 @@ public static class UsersCommand
         command.Subcommands.Add(UserAddCommand.Create());
         command.Subcommands.Add(UserListCommand.Create());
         command.Subcommands.Add(UserResetPasswordCommand.Create());
+        command.Subcommands.Add(UserSetPasswordCommand.Create());
         command.Subcommands.Add(UserVerifyEmailCommand.Create());
         command.Subcommands.Add(UserUnlockCommand.Create());
         command.Subcommands.Add(UserRevokeSessionsCommand.Create());
